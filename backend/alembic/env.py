@@ -1,7 +1,9 @@
 """
 Alembic environment configuration.
 
-This file is used by Alembic to generate and run database migrations.
+Used by Alembic to generate and run database migrations (plan/coding_plan.md Slice 0).
+Uses Base.metadata from app.db.base; add model imports below as models are created
+so autogenerate can detect schema changes. See DATA_MODEL.md.
 """
 
 from logging.config import fileConfig
@@ -11,14 +13,13 @@ from sqlalchemy import pool
 
 from alembic import context
 
-# Import the base model and all models for autogenerate
+# Base and model imports — Alembic discovers tables via Base.metadata
 from app.db.base import Base
-# TODO: Import all models here so Alembic can discover them
+# Import app models here when added (e.g. User, Exercise, WorkoutSession)
 # from app.models.user import User
 # from app.models.exercise import Exercise
 # etc.
 
-# Import settings
 from app.core.config import settings
 
 # this is the Alembic Config object, which provides

@@ -11,22 +11,31 @@ This plan implements the Progressive Overload Tracker in feature slices. Each sl
 - **Code one slice at a time.** Do not implement the next slice until the current slice's checkpoint is met.
 - **Within a slice,** follow the numbered substeps in order. Do not skip steps (e.g. do not add frontend before backend endpoints and tests).
 - **Scope:** When working on Slice N, do not add features, endpoints, or pages that belong to Slice N+1 or later. If something is "optional" or "later," leave it out until that slice.
-- **Checkpoint:** At the end of each slice, verify the listed checkpoint before starting the next slice. If the checkpoint fails, fix the current slice before proceeding.
+- **Checkpoint:** At the end of each slice, verify the listed checkpoint before starting the next slice. If the checkpoint fails, fix the current slice before proceeding. Ask/prompt the user if there are any ambiguities, gaps, or confusion
 - **References:** For frontend work, use the design references below for layout, styling, and consistency.
 
 ---
 
-## Design references (Stitch from Google + frontend_references)
+## Design references (Stitch-inspired + frontend_references)
 
-The UI design ideas in this project are inspired by **Stitch (Google)**. For consistency and visual direction when building frontend slices:
+The UI is inspired by **Stitch (Google)**. Design direction lives in **[frontend_references/](../frontend_references/)** at project root. Each reference is **for inspiration only**—not copy-paste. Interpret freely; implement in React with Tailwind and shadcn/ui.
 
-- **Reference folder:** [frontend_references/](../frontend_references/) at project root. Static HTML mockups:
-  - [code_log_in.html](../frontend_references/code_log_in.html) — Login: layout, card, primary color, dark mode, Inter font.
-  - [code_create_account.html](../frontend_references/code_create_account.html) — Signup: same design language.
-  - [code_todays_log.html](../frontend_references/code_todays_log.html) — Today's workout log: nav, layout, logging UI.
-  - [code_analytics.html](../frontend_references/code_analytics.html) — Analytics: sidebar, chart area, exercise selector.
-- **When implementing any frontend slice:** Open the corresponding reference file for layout, spacing, colors (e.g. primary `#137fec`, background-dark `#101922`), typography (Inter), and component patterns. Implement in React with Tailwind and shadcn/ui.
+- **Structure:** Each screen has a subfolder with `code.html` (and optional screen image). Full map and per-screen notes: [frontend_references/README.md](../frontend_references/README.md).
+- **Key tokens:** Primary `#137fec`, background-dark `#101922`, Inter font, Material Symbols Outlined, dark mode via `class`.
+- **When implementing a frontend slice:** Open the matching reference folder’s `code.html` for layout and patterns; then build the page in React. Keep layout and design language consistent; omit or simplify features not in scope (e.g. OAuth, RPE) until the plan includes them.
 - See also [frontend/README.md](../frontend/README.md) "Design references" section.
+
+| Slice / Page | Reference folder |
+|--------------|------------------|
+| Auth (login, signup) | `login_page_-_lift_tracker/`, `signup_page_-_lift_tracker/` |
+| Dashboard | `main_dashboard_-_lift_tracker/` |
+| Exercises list / create-edit | `exercises_library_-_lift_tracker/` |
+| Today's log | `today's_log_-_lift_tracker/` |
+| History | `workout_history_-_lift_tracker/` |
+| Progress / Analytics | `progress_analytics_-_lift_tracker/` |
+| Templates | `workout_templates_-_lift_tracker/` |
+| Profile & Settings | `app_settings_-_lift_tracker/` |
+| Help / FAQ | `help_&_faq_-_lift_tracker/` |
 
 ---
 
@@ -44,7 +53,7 @@ The UI design ideas in this project are inspired by **Stitch (Google)**. For con
 
 ---
 
-## Slice 0: Project readiness (pre-coding)
+## Slice 0: Project readiness (pre-coding) — ✅ Complete
 
 **Scope:** Only Slice 0. Do not implement auth, exercises, or any other feature.
 
@@ -75,7 +84,7 @@ The UI design ideas in this project are inspired by **Stitch (Google)**. For con
 6. **Backend — Endpoints:** Create `backend/app/api/v1/endpoints/auth.py`: POST `/register`, POST `/login`, POST `/logout`. Include in router with prefix `/auth`, tags `["authentication"]`.
 7. **Backend — Contract and test:** Update [API_CONTRACT.md](../API_CONTRACT.md) if needed. Add at least one test: register then login → 200 and access_token. Run tests.
 8. **Frontend — API:** Create `frontend/src/api/auth.ts`: register, login, logout; store token; use `Authorization: Bearer <token>` for subsequent requests.
-9. **Frontend — Design reference:** Use [frontend_references/code_log_in.html](../frontend_references/code_log_in.html) and [code_create_account.html](../frontend_references/code_create_account.html) (Stitch-inspired).
+9. **Frontend — Design reference:** Use [frontend_references/login_page_-_lift_tracker/](../frontend_references/login_page_-_lift_tracker/) and [signup_page_-_lift_tracker/](../frontend_references/signup_page_-_lift_tracker/) for layout and styling inspiration (see [frontend_references/README.md](../frontend_references/README.md)).
 10. **Frontend — Pages:** Login and Signup pages in `frontend/src/pages/`; on success redirect to Dashboard placeholder.
 11. **Frontend — Auth context:** Auth context or hook at app root; protected routes redirect to `/login` if not authenticated. Routes: `/login`, `/signup`, `/` or `/dashboard`.
 12. **Checkpoint:** Register, log in, see Dashboard. Protected endpoint without token → 401; with token → 200. Do not proceed to Slice 2 until this passes.
@@ -97,7 +106,7 @@ The UI design ideas in this project are inspired by **Stitch (Google)**. For con
 5. **Backend — Endpoints:** Create `backend/app/api/v1/endpoints/exercises.py`: GET/POST `/api/v1/exercises`, GET/PUT/DELETE `/api/v1/exercises/{exercise_id}`. Include in router with prefix `/exercises`.
 6. **Backend — Contract and test:** Update API_CONTRACT.md; test create, list, get; other user's exercise → 404. Run tests.
 7. **Frontend — API:** Create `frontend/src/api/exercises.ts`: list, get, create, update, delete (with auth header).
-8. **Frontend — Pages:** Exercises list page; create/edit exercise form. Use [frontend_references](../frontend_references/) for consistency.
+8. **Frontend — Pages:** Exercises list page; create/edit exercise form. Use [frontend_references/exercises_library_-_lift_tracker/](../frontend_references/exercises_library_-_lift_tracker/) for inspiration (see [frontend_references/README.md](../frontend_references/README.md)).
 9. **Frontend — Routing:** `/exercises`, optionally `/exercises/new`, `/exercises/:id/edit`. Auth required.
 10. **Checkpoint:** Add, list, edit, delete exercise; other user's exercise → 404. Do not proceed to Slice 3 until this passes.
 
@@ -118,7 +127,7 @@ The UI design ideas in this project are inspired by **Stitch (Google)**. For con
 5. **Backend — Endpoints:** Create `backend/app/api/v1/endpoints/sessions.py`: GET/POST `/api/v1/sessions`, GET/PUT/DELETE `/api/v1/sessions/{session_id}`. Return 409 on POST when date already has session. Include router with prefix `/sessions`.
 6. **Backend — Contract and test:** Update API_CONTRACT.md; test create session with sets, get, POST same date → 409. Run tests.
 7. **Frontend — API:** Create `frontend/src/api/sessions.ts`: list, get, create, update, delete; handle 409.
-8. **Frontend — Design reference:** Use [frontend_references/code_todays_log.html](../frontend_references/code_todays_log.html).
+8. **Frontend — Design reference:** Use [frontend_references/today's_log_-_lift_tracker/](../frontend_references/today's_log_-_lift_tracker/) for Today's log page and [frontend_references/workout_history_-_lift_tracker/](../frontend_references/workout_history_-_lift_tracker/) for History page (see [frontend_references/README.md](../frontend_references/README.md)).
 9. **Frontend — Pages:** "Today's log" page (create/edit today's session); History page (list, view/edit). Session form: date, notes, add exercises, add sets (set_number, weight, reps).
 10. **Frontend — Routing:** `/log` or `/workout`, `/history`, `/history/:id`. Auth required.
 11. **Checkpoint:** Create today's workout with 2+ exercises and sets; view and edit; duplicate date → 409 with clear message. Do not proceed to Slice 4 until this passes.
@@ -140,7 +149,7 @@ The UI design ideas in this project are inspired by **Stitch (Google)**. For con
 3. **Backend — Chart endpoint:** GET `/api/v1/analytics/progress/{exercise_id}/chart` with params metric, set_number, start_date, end_date. Generate line chart (matplotlib or Plotly); return PNG. Document in API_CONTRACT.md.
 4. **Backend — Contract and test:** Update API_CONTRACT.md; test progress JSON and chart for an exercise. Run tests.
 5. **Frontend — API:** Create `frontend/src/api/analytics.ts`: getProgress, getChartImageUrl or image URL.
-6. **Frontend — Design reference:** Use [frontend_references/code_analytics.html](../frontend_references/code_analytics.html).
+6. **Frontend — Design reference:** Use [frontend_references/progress_analytics_-_lift_tracker/](../frontend_references/progress_analytics_-_lift_tracker/) for inspiration.
 7. **Frontend — Pages:** Progress page: exercise selector, set_number filter, date range; display chart (img); optionally raw data table.
 8. **Frontend — Routing:** `/progress`, `/progress/:exerciseId`. Auth required.
 9. **Checkpoint:** Progress and chart for an exercise; set_number filter works. Do not proceed to Slice 5 until this passes.
@@ -161,9 +170,10 @@ The UI design ideas in this project are inspired by **Stitch (Google)**. For con
 4. **Backend — Endpoints:** Create `backend/app/api/v1/endpoints/templates.py`: GET/POST `/api/v1/templates`, GET/PUT/DELETE `/api/v1/templates/{template_id}`. Optional: apply template. Include router. Update API_CONTRACT.md.
 5. **Backend — Test:** Create template, list, get. Run tests.
 6. **Frontend — API:** Create `frontend/src/api/templates.ts`: list, get, create, update, delete; optional apply.
-7. **Frontend — Pages:** Templates list; create/edit template. Optionally "Start from template" on Log page.
-8. **Frontend — Routing:** `/templates`, `/templates/new`, `/templates/:id/edit`. Auth required.
-9. **Checkpoint:** Create template with 2+ exercises; optionally start session from template. Do not proceed to Slice 6 until this passes.
+7. **Frontend — Design reference:** Use [frontend_references/workout_templates_-_lift_tracker/](../frontend_references/workout_templates_-_lift_tracker/) for inspiration (see [frontend_references/README.md](../frontend_references/README.md)).
+8. **Frontend — Pages:** Templates list; create/edit template. Optionally "Start from template" on Log page.
+9. **Frontend — Routing:** `/templates`, `/templates/new`, `/templates/:id/edit`. Auth required.
+10. **Checkpoint:** Create template with 2+ exercises; optionally start session from template. Do not proceed to Slice 6 until this passes.
 
 ---
 
@@ -178,7 +188,7 @@ The UI design ideas in this project are inspired by **Stitch (Google)**. For con
 1. **Backend — Profile endpoints:** GET and PATCH `/api/v1/users/me` (id, email, username, etc.; optional password change). Document in API_CONTRACT.md.
 2. **Backend — Test:** Get me, update me. Run tests.
 3. **Frontend — API:** getProfile, updateProfile (auth header).
-4. **Frontend — Profile page:** Display user; form to edit username (and optionally password). Stitch/frontend_references styling.
+4. **Frontend — Profile page:** Display user; form to edit username (and optionally password). Use [frontend_references/app_settings_-_lift_tracker/](../frontend_references/app_settings_-_lift_tracker/) for Settings/Profile inspiration.
 5. **Frontend — App-wide polish:** Loading spinners/skeletons; error toasts or inline messages; redirect unauthenticated to login; basic a11y (focus, labels, semantic HTML).
 6. **Frontend — Routing:** `/profile` or `/settings`. Auth required.
 7. **Checkpoint:** View and edit profile; loading and error states visible; logged-out redirect works. Do not proceed to Slice 7 until this passes.
@@ -211,5 +221,5 @@ The UI design ideas in this project are inspired by **Stitch (Google)**. For con
 - **Charts:** Backend only (matplotlib or Plotly); frontend displays image. One chart per metric (weight, reps, volume), filter by set_number.
 - **One session per day:** DB unique (user_id, date); session create returns 409 if duplicate date.
 - **Tests:** At least one test per slice (happy path); add 401, 404, 409 as needed.
-- **Design:** For every frontend slice, refer to [frontend_references/](../frontend_references/) and Stitch design language.
+- **Design:** For every frontend slice, use [frontend_references/](../frontend_references/) (see [README.md](../frontend_references/README.md) for folder map and intent). References are for inspiration; implement in React with consistent design tokens (primary #137fec, background-dark #101922, Inter).
 - **Docs:** Keep API_CONTRACT.md and DATA_MODEL.md in sync with code; update PROJECT_GUIDE or README when adding top-level areas.

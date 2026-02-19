@@ -10,17 +10,15 @@ User interface for the Progressive Overload Tracker. This is a modern web applic
 
 Use `src/pages/` + React Router for routing. Do not use Next.js `app/` or `pages/` conventions.
 
-## Design references (Stitch from Google + frontend_references)
+## Design references (Stitch-inspired + frontend_references)
 
-UI design direction is inspired by **Stitch (Google)**. For consistency and ideas when building pages and components:
+UI design direction is inspired by **Stitch (Google)**. References live in **`frontend_references/`** at the **project root** (one level above `frontend/`). They are **for inspiration only**—not copy-paste. Use them for layout, patterns, and design language; implement in React with Tailwind and shadcn/ui and interpret freely.
 
-- **Reference folder:** `frontend_references/` at the **project root** (one level above `frontend/`). Static HTML mockups that reflect the intended look and feel:
-  - `code_log_in.html` — Login: card layout, primary color, dark mode, Inter font.
-  - `code_create_account.html` — Signup: same design language.
-  - `code_todays_log.html` — Today’s workout log: nav, logging UI.
-  - `code_analytics.html` — Analytics: sidebar, chart area, exercise selector.
-- When implementing a page, open the corresponding reference file for layout, spacing, colors (e.g. primary `#137fec`, dark background `#101922`), and typography. Implement in React with Tailwind and shadcn/ui; do not copy HTML literally—use it as a visual and structural reference.
-- The coding plan (`plan/coding_plan.md`) also points to these references for each frontend slice.
+- **Structure:** Each screen has a subfolder with `code.html` (and optional screen image). Full map and per-screen notes: **`frontend_references/README.md`** (at project root).
+- **Folders:** `login_page_-_lift_tracker/`, `signup_page_-_lift_tracker/`, `main_dashboard_-_lift_tracker/`, `today's_log_-_lift_tracker/`, `workout_history_-_lift_tracker/`, `progress_analytics_-_lift_tracker/`, `workout_templates_-_lift_tracker/`, `exercises_library_-_lift_tracker/`, `app_settings_-_lift_tracker/`, `help_&_faq_-_lift_tracker/`.
+- **Design tokens:** Primary `#137fec`, background-dark `#101922`, Inter font, Material Symbols Outlined, dark mode via `class`.
+- When implementing a page, open the matching folder's `code.html` for layout and styling; then build the page in React. Do not copy HTML literally; use it as a visual and structural reference.
+- The coding plan (`plan/coding_plan.md`) maps each slice to a reference folder.
 
 ## Setup
 

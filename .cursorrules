@@ -11,6 +11,7 @@ When working on features, always check these files first:
 2. `API_CONTRACT.md` - Know the endpoint specifications
 3. `DATA_MODEL.md` - Understand the database structure
 4. `README.md` - Know how to run the project
+5. For frontend pages: use `frontend_references/` (see `frontend_references/README.md`) for layout and styling inspiration per the coding plan; references are inspiration only, not copy-paste.
 
 Furthermore, when coding:
 1. Do not comment with "# Test" structure, but use "#test". That means always lowercase and no space in front of "#"

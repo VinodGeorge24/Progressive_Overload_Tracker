@@ -66,6 +66,8 @@ npm run dev
 
 - `backend/` - Python FastAPI application
 - `frontend/` - User interface application
+- `plan/` - Coding plan (slice-by-slice implementation order) and plan docs
+- `frontend_references/` - Design inspiration (screen mockups and code.html; not part of build)
 - `docs/` - Documentation and research notes
 - `logs/` - Project task logs and history
 - `infra/` - Infrastructure and deployment configuration
@@ -78,6 +80,8 @@ npm run dev
 - [Coding Standards](./CODING_STANDARDS.md) - Code style and conventions
 - [AI Usage Log](./AI_USAGE.md) - Record of AI assistance
 - [Documentation (docs/)](./docs/README.md) - Research notes, project log, and doc index
+- [Plan (plan/)](./plan/README.md) - Slice order and how to use the coding plan
+- [Frontend design references](./frontend_references/README.md) - Screen-to-folder map and design tokens for implementers
 
 ## Contributing
 

@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Workout Templates - LIFT TRACKER</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#137fec",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#101922",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .active-link {
+            background-color: rgba(19, 127, 236, 0.1);
+            border-right: 3px solid #137fec;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display">
+<div class="flex min-h-screen">
+<!-- Sidebar Navigation -->
+<aside class="w-64 border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-background-dark flex flex-col fixed h-full">
+<div class="p-6 flex items-center gap-3">
+<div class="bg-primary rounded-lg p-1.5 flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-2xl">fitness_center</span>
+</div>
+<div>
+<h1 class="text-slate-900 dark:text-white text-lg font-black tracking-tighter leading-none">LIFT TRACKER</h1>
+<p class="text-slate-500 dark:text-slate-400 text-[10px] uppercase font-bold tracking-widest mt-1">MVP v1.0</p>
+</div>
+</div>
+<nav class="flex-1 px-4 py-4 space-y-2">
+<a class="flex items-center gap-3 px-3 py-2 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary">dashboard</span>
+<span class="text-sm font-semibold">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-primary bg-primary/10 dark:bg-primary/5 rounded-lg transition-colors border-r-2 border-primary" href="#">
+<span class="material-symbols-outlined">description</span>
+<span class="text-sm font-semibold">Templates</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary">history</span>
+<span class="text-sm font-semibold">History</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary">monitoring</span>
+<span class="text-sm font-semibold">Statistics</span>
+</a>
+</nav>
+<div class="p-4 border-t border-slate-200 dark:border-slate-800">
+<div class="flex items-center gap-3 p-2 rounded-lg bg-slate-100 dark:bg-slate-800/50">
+<div class="size-8 rounded-full bg-slate-300 dark:bg-slate-700 overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="User profile picture of a fitness athlete" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBH9CvGOSTps9tMrHjwNH99UI_WALxLxJZZ-r3pOnmxsEjk5d9iy3xsow8a88v_fEXmZlpizo67LZ7kY0zd2Z2fZPF8gcUqKTnfENn-fh7dUudsUSngLN1AE0MILfAbAVCsVbWQiHTS20zdH2Y5awknXiEQLuzTgf92IgwLEpXGRSSFZIbZULwci5bXfE5jLCiiT_-fuX54QLKjAPXbCfnWaLE7cAVVLojz-WoaXm1ebNTlW142i_uQ-o_TO5TquXbNtWln1jExKVQR"/>
+</div>
+<div class="flex-1 min-w-0">
+<p class="text-xs font-bold text-slate-900 dark:text-white truncate">Alex Rivera</p>
+<p class="text-[10px] text-slate-500 dark:text-slate-400 truncate">Pro Member</p>
+</div>
+<span class="material-symbols-outlined text-slate-400 text-sm cursor-pointer">settings</span>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 ml-64 p-8">
+<!-- Header Section -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
+<div class="space-y-1">
+<h2 class="text-3xl font-black text-slate-900 dark:text-white tracking-tight">Workout Templates</h2>
+<p class="text-slate-500 dark:text-slate-400 max-w-lg">
+                        Manage your routines and track progressive overload. Select a template to start your session.
+                    </p>
+</div>
+<button class="bg-primary hover:bg-primary/90 text-white font-bold py-2.5 px-6 rounded-lg flex items-center gap-2 shadow-lg shadow-primary/20 transition-all active:scale-95">
+<span class="material-symbols-outlined">add</span>
+                    Create Template
+                </button>
+</div>
+<!-- Search and Filter Bar -->
+<div class="flex flex-col md:flex-row gap-4 mb-8">
+<div class="relative flex-1">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">search</span>
+<input class="w-full bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 rounded-lg pl-10 pr-4 py-2.5 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all placeholder:text-slate-500" placeholder="Search templates (e.g. Leg Day, Hypertrophy)..." type="text"/>
+</div>
+<div class="flex gap-2">
+<button class="px-4 py-2.5 bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 rounded-lg text-sm font-semibold flex items-center gap-2 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+<span class="material-symbols-outlined text-sm">filter_list</span>
+                        Category
+                    </button>
+<button class="px-4 py-2.5 bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 rounded-lg text-sm font-semibold flex items-center gap-2 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+<span class="material-symbols-outlined text-sm">sort</span>
+                        Latest
+                    </button>
+</div>
+</div>
+<!-- Templates Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+<!-- Template Card: Push Day -->
+<div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden hover:border-primary/50 transition-all group shadow-sm">
+<div class="h-48 relative overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Close up of a barbell with heavy weights in a gym" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCpd4iW0JuDrg6y-MDPVTXZSe89192KU8b7WrYJHjXuw4OLM9T_49SFIrYZl0pfA0_NuX8ksex0II23Er8PpSiwuFcstUDjlUl6Rbb4OYM7zxlLT0O1GrxoRkbL9H8O_r1NxFZkoXrRfhA3N-q3SUNMeixymdslrJOLjpdYsTCJFXT51L6vt4Pzva5lDciQLxFe9pTLqJVNDlQbZ5-1FahwtyzVgGEDCpWQHUFJcEMeQVN2otOO9YwC2RX4zG2hLxwLddIwzFbSBDsi"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-5">
+<span class="bg-primary/20 backdrop-blur-md text-primary text-[10px] font-bold px-2 py-1 rounded w-fit mb-2 border border-primary/30 uppercase tracking-widest">Hypertrophy</span>
+<h3 class="text-white text-xl font-black">Push Day (A)</h3>
+</div>
+</div>
+<div class="p-5 space-y-4">
+<div class="flex items-center justify-between text-xs font-semibold">
+<div class="flex items-center gap-1.5 text-slate-500 dark:text-slate-400">
+<span class="material-symbols-outlined text-sm">format_list_bulleted</span>
+                                8 Exercises
+                            </div>
+<div class="flex items-center gap-1.5 text-slate-500 dark:text-slate-400">
+<span class="material-symbols-outlined text-sm">calendar_today</span>
+                                2 days ago
+                            </div>
+</div>
+<div class="p-3 bg-emerald-500/5 border border-emerald-500/10 rounded-lg">
+<p class="text-[10px] font-bold text-emerald-500 uppercase tracking-widest mb-1">Last performance</p>
+<p class="text-xs font-medium text-slate-700 dark:text-slate-300">+5 lbs Bench Press (3x8 @ 185 lbs)</p>
+</div>
+<div class="flex gap-2 pt-2">
+<button class="flex-1 bg-primary hover:bg-primary/90 text-white text-sm font-bold py-2 rounded-lg transition-colors">Use Template</button>
+<button class="px-3 py-2 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors">
+<span class="material-symbols-outlined text-xl">edit</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Template Card: Pull Day -->
+<div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden hover:border-primary/50 transition-all group shadow-sm">
+<div class="h-48 relative overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Professional athlete performing heavy pull ups" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAIe71N-9Lvwm7S2NRrcywYSO23uV_VX1qKZOXWp14N6nTMoesSuvKcTDrJEN1vAZ6V3EDbyOa75xTTXUMRELLcjn2ZcmjcvClz_MakEceX_d7taCvXiaxYjsn2hoWP2EZZyuOS0yNERjE6YBVA_nVEbqnqpTHavNny_yrBhYbwgWIta5PEutDk6xtsgyRYPUzAGdXAuBLfPgJ9J-dGgRocNPubT8LX2_7kSuahc-uasfOoXPAMuVPVFfIGPK8vfINiIeOETO3J8BsP"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-5">
+<span class="bg-primary/20 backdrop-blur-md text-primary text-[10px] font-bold px-2 py-1 rounded w-fit mb-2 border border-primary/30 uppercase tracking-widest">Strength</span>
+<h3 class="text-white text-xl font-black">Pull Day (B)</h3>
+</div>
+</div>
+<div class="p-5 space-y-4">
+<div class="flex items-center justify-between text-xs font-semibold">
+<div class="flex items-center gap-1.5 text-slate-500 dark:text-slate-400">
+<span class="material-symbols-outlined text-sm">format_list_bulleted</span>
+                                7 Exercises
+                            </div>
+<div class="flex items-center gap-1.5 text-slate-500 dark:text-slate-400">
+<span class="material-symbols-outlined text-sm">calendar_today</span>
+                                5 days ago
+                            </div>
+</div>
+<div class="p-3 bg-blue-500/5 border border-blue-500/10 rounded-lg">
+<p class="text-[10px] font-bold text-blue-500 uppercase tracking-widest mb-1">Last performance</p>
+<p class="text-xs font-medium text-slate-700 dark:text-slate-300">+2 reps Weighted Pull Ups (Volume peak)</p>
+</div>
+<div class="flex gap-2 pt-2">
+<button class="flex-1 bg-primary hover:bg-primary/90 text-white text-sm font-bold py-2 rounded-lg transition-colors">Use Template</button>
+<button class="px-3 py-2 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors">
+<span class="material-symbols-outlined text-xl">edit</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Template Card: Leg Day -->
+<div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden hover:border-primary/50 transition-all group shadow-sm">
+<div class="h-48 relative overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Closeup of legs during a heavy back squat in a gym" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCbkiiMPVptEx5D24df7uFM7QwskUWVwbiORHe9KLS7GaTM4vhNNgYVZSwJmJWwllmEuYXQb-K7G9qCPeS4lwbmlBaj7Id_K4PRlbLVgMc5PUQEP0LkFgggHD2DiIZqmn5_ce55k1cTSgsbhggVjIM30lPSTvXF3lq2e3JnsOT0dUVnBX0di47jYJib7FtdY7gm-Xjd6FP06RgDlpu9u4PncciCV9GVjHY-z1hh4gOTkdpWjTY0ohzr9krv_bF2sW4TdUYGdCE4nS3_"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-5">
+<span class="bg-primary/20 backdrop-blur-md text-primary text-[10px] font-bold px-2 py-1 rounded w-fit mb-2 border border-primary/30 uppercase tracking-widest">Endurance</span>
+<h3 class="text-white text-xl font-black">Leg Day Focus</h3>
+</div>
+</div>
+<div class="p-5 space-y-4">
+<div class="flex items-center justify-between text-xs font-semibold">
+<div class="flex items-center gap-1.5 text-slate-500 dark:text-slate-400">
+<span class="material-symbols-outlined text-sm">format_list_bulleted</span>
+                                6 Exercises
+                            </div>
+<div class="flex items-center gap-1.5 text-slate-500 dark:text-slate-400">
+<span class="material-symbols-outlined text-sm">calendar_today</span>
+                                1 week ago
+                            </div>
+</div>
+<div class="p-3 bg-emerald-500/5 border border-emerald-500/10 rounded-lg">
+<p class="text-[10px] font-bold text-emerald-500 uppercase tracking-widest mb-1">Last performance</p>
+<p class="text-xs font-medium text-slate-700 dark:text-slate-300">+10 lbs Back Squat (New PR: 315 lbs)</p>
+</div>
+<div class="flex gap-2 pt-2">
+<button class="flex-1 bg-primary hover:bg-primary/90 text-white text-sm font-bold py-2 rounded-lg transition-colors">Use Template</button>
+<button class="px-3 py-2 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors">
+<span class="material-symbols-outlined text-xl">edit</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Template Card: Upper Body -->
+<div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden hover:border-primary/50 transition-all group shadow-sm">
+<div class="h-48 relative overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Muscular upper body showing back muscles during workout" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAIHJnk-0AqX1zjsPB_q_swxoPuUfMEtU2ZUUNFY6c9IyxyPPlRunV3fEsbocfE1RsURyRbgUSbV46k3Mi_eBFq8CVtB1WvLJrlVjIh9BjTtiCXi25v8miYi-NLgE9lLZg7DokM43cM3HJKdS39o3xpgtZBur2Op7p79YQ7Np0c4In2psl2mHAqV0TCcmmgeVajoP_h9tOWr4VyqhrfHFDkpPb0yectsb35L9fZJ3-JmTr3qCIawpAuy70MJHJjzlQP_rtoO3inwfku"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-5">
+<span class="bg-primary/20 backdrop-blur-md text-primary text-[10px] font-bold px-2 py-1 rounded w-fit mb-2 border border-primary/30 uppercase tracking-widest">Upper Body</span>
+<h3 class="text-white text-xl font-black">Upper Body Power</h3>
+</div>
+</div>
+<div class="p-5 space-y-4">
+<div class="flex items-center justify-between text-xs font-semibold">
+<div class="flex items-center gap-1.5 text-slate-500 dark:text-slate-400">
+<span class="material-symbols-outlined text-sm">format_list_bulleted</span>
+                                9 Exercises
+                            </div>
+<div class="flex items-center gap-1.5 text-slate-500 dark:text-slate-400">
+<span class="material-symbols-outlined text-sm">calendar_today</span>
+                                2 weeks ago
+                            </div>
+</div>
+<div class="p-3 bg-slate-500/5 border border-slate-500/10 rounded-lg">
+<p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Last performance</p>
+<p class="text-xs font-medium text-slate-700 dark:text-slate-300">Maintained volume. Focus on eccentric phase.</p>
+</div>
+<div class="flex gap-2 pt-2">
+<button class="flex-1 bg-primary hover:bg-primary/90 text-white text-sm font-bold py-2 rounded-lg transition-colors">Use Template</button>
+<button class="px-3 py-2 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors">
+<span class="material-symbols-outlined text-xl">edit</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Add New Template Placeholder -->
+<button class="border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-xl flex flex-col items-center justify-center p-8 gap-4 hover:border-primary/40 hover:bg-slate-50 dark:hover:bg-slate-900/30 transition-all group min-h-[420px]">
+<div class="size-16 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center group-hover:bg-primary/10 transition-colors">
+<span class="material-symbols-outlined text-3xl text-slate-400 group-hover:text-primary">add_circle</span>
+</div>
+<div class="text-center">
+<p class="text-lg font-bold text-slate-900 dark:text-white">Create New Template</p>
+<p class="text-sm text-slate-500 dark:text-slate-400">Build a custom routine to track your progress</p>
+</div>
+</button>
+</div>
+</main>
+</div>
+</body></html>

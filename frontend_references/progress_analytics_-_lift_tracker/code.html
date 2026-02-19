@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Progress Analytics - LIFT TRACKER</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#7f13ec",
+                        "background-light": "#f7f6f8",
+                        "background-dark": "#191022",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .active-nav {
+            background-color: rgba(127, 19, 236, 0.2);
+            border-left: 3px solid #7f13ec;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #362348;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen flex overflow-hidden">
+<!-- Sidebar Navigation -->
+<aside class="w-64 border-r border-primary/10 bg-background-light dark:bg-background-dark flex flex-col h-screen sticky top-0">
+<div class="p-6 flex items-center gap-3">
+<div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-xl">fitness_center</span>
+</div>
+<h1 class="text-xl font-black tracking-tighter text-primary">LIFT TRACKER</h1>
+</div>
+<nav class="flex-1 px-4 space-y-2 mt-4">
+<a class="flex items-center gap-3 px-3 py-3 rounded-lg text-slate-500 dark:text-slate-400 hover:bg-primary/10 transition-colors" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-medium text-sm">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-3 rounded-lg active-nav text-primary" href="#">
+<span class="material-symbols-outlined">monitoring</span>
+<span class="font-medium text-sm">Analytics</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-3 rounded-lg text-slate-500 dark:text-slate-400 hover:bg-primary/10 transition-colors" href="#">
+<span class="material-symbols-outlined">exercise</span>
+<span class="font-medium text-sm">Workouts</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-3 rounded-lg text-slate-500 dark:text-slate-400 hover:bg-primary/10 transition-colors" href="#">
+<span class="material-symbols-outlined">list_alt</span>
+<span class="font-medium text-sm">Exercise Library</span>
+</a>
+</nav>
+<div class="p-4 border-t border-primary/10">
+<div class="flex items-center gap-3 p-2">
+<div class="size-10 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold">JD</div>
+<div class="flex flex-col">
+<p class="text-sm font-semibold">John Doe</p>
+<p class="text-xs text-slate-500">Premium Member</p>
+</div>
+<button class="ml-auto text-slate-400 hover:text-primary">
+<span class="material-symbols-outlined">settings</span>
+</button>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 overflow-y-auto custom-scrollbar h-screen">
+<header class="p-8 pb-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
+<div>
+<h2 class="text-3xl font-black tracking-tight">Progress Analytics</h2>
+<p class="text-slate-500 dark:text-slate-400">Deep dive into your performance metrics and overload trends.</p>
+</div>
+<div class="flex gap-2">
+<button class="flex items-center gap-2 bg-primary/10 text-primary border border-primary/20 px-4 py-2 rounded-lg font-medium hover:bg-primary/20 transition-all">
+<span class="material-symbols-outlined text-lg">calendar_today</span>
+<span>Last 6 Months</span>
+</button>
+<button class="bg-primary text-white px-4 py-2 rounded-lg font-medium shadow-lg shadow-primary/20 hover:scale-[1.02] transition-transform">
+<span class="material-symbols-outlined align-middle mr-1">file_download</span>
+                    Export PDF
+                </button>
+</div>
+</header>
+<section class="px-8 py-4 grid grid-cols-1 xl:grid-cols-4 gap-6">
+<!-- Exercise & Metrics Selector -->
+<div class="xl:col-span-4 bg-white dark:bg-[#1f162a] p-4 rounded-xl border border-primary/10 shadow-sm flex flex-wrap items-center gap-6">
+<div class="flex-1 min-w-[240px]">
+<label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5 ml-1">Exercise</label>
+<div class="relative">
+<select class="w-full bg-background-light dark:bg-[#261933] border-primary/20 rounded-lg text-sm focus:ring-primary focus:border-primary transition-all pr-10 py-2.5">
+<option>Bench Press (Barbell)</option>
+<option>Back Squat (High Bar)</option>
+<option>Deadlift (Conventional)</option>
+<option>Overhead Press</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">expand_more</span>
+</div>
+</div>
+<div class="flex flex-col">
+<label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5 ml-1">Metric Type</label>
+<div class="flex bg-background-light dark:bg-[#261933] p-1 rounded-lg border border-primary/20">
+<button class="px-4 py-1.5 rounded-md text-sm font-semibold bg-primary text-white shadow-sm">Weight</button>
+<button class="px-4 py-1.5 rounded-md text-sm font-semibold text-slate-500 dark:text-slate-400 hover:text-primary transition-colors">Reps</button>
+<button class="px-4 py-1.5 rounded-md text-sm font-semibold text-slate-500 dark:text-slate-400 hover:text-primary transition-colors">Volume</button>
+<button class="px-4 py-1.5 rounded-md text-sm font-semibold text-slate-500 dark:text-slate-400 hover:text-primary transition-colors">1RM Est.</button>
+</div>
+</div>
+<div class="flex flex-col">
+<label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5 ml-1">Set Filter</label>
+<div class="flex bg-background-light dark:bg-[#261933] p-1 rounded-lg border border-primary/20">
+<button class="px-3 py-1.5 rounded-md text-xs font-bold text-slate-500 dark:text-slate-400 hover:bg-primary/10">All Sets</button>
+<button class="px-3 py-1.5 rounded-md text-xs font-bold bg-primary/20 text-primary">Top Set Only</button>
+</div>
+</div>
+</div>
+<!-- Stats Highlight -->
+<div class="xl:col-span-1 bg-white dark:bg-[#1f162a] p-6 rounded-xl border border-primary/10 flex flex-col justify-between">
+<div>
+<p class="text-slate-500 text-sm font-medium">Personal Best</p>
+<h3 class="text-4xl font-black mt-1">285 <span class="text-lg font-medium text-slate-400">lbs</span></h3>
+</div>
+<div class="mt-4 flex items-center gap-2 text-emerald-500 font-bold bg-emerald-500/10 w-fit px-2 py-1 rounded">
+<span class="material-symbols-outlined text-sm">trending_up</span>
+<span class="text-xs">+12.5% this month</span>
+</div>
+</div>
+<div class="xl:col-span-1 bg-white dark:bg-[#1f162a] p-6 rounded-xl border border-primary/10">
+<p class="text-slate-500 text-sm font-medium">Monthly Volume</p>
+<h3 class="text-4xl font-black mt-1">12,450 <span class="text-lg font-medium text-slate-400">lbs</span></h3>
+<p class="text-xs text-slate-500 mt-4">Total work capacity trend</p>
+</div>
+<!-- Main Chart Area -->
+<div class="xl:col-span-4 bg-white dark:bg-[#1f162a] p-6 rounded-xl border border-primary/10 relative overflow-hidden">
+<div class="flex justify-between items-center mb-8">
+<h4 class="font-bold text-lg">Performance Trend: Bench Press</h4>
+<div class="flex gap-4">
+<div class="flex items-center gap-2">
+<span class="w-3 h-3 rounded-full bg-primary"></span>
+<span class="text-xs font-bold text-slate-500">Working Weight</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="w-3 h-3 rounded-full bg-slate-400"></span>
+<span class="text-xs font-bold text-slate-500">Estimated 1RM</span>
+</div>
+</div>
+</div>
+<div class="h-[350px] w-full flex flex-col relative">
+<!-- SVG Chart Mock -->
+<svg class="w-full h-full" viewbox="0 0 1000 350">
+<!-- Grid Lines -->
+<line class="text-slate-100 dark:text-slate-800" stroke="currentColor" stroke-dasharray="4" x1="0" x2="1000" y1="50" y2="50"></line>
+<line class="text-slate-100 dark:text-slate-800" stroke="currentColor" stroke-dasharray="4" x1="0" x2="1000" y1="150" y2="150"></line>
+<line class="text-slate-100 dark:text-slate-800" stroke="currentColor" stroke-dasharray="4" x1="0" x2="1000" y1="250" y2="250"></line>
+<!-- Area Gradient -->
+<defs>
+<lineargradient id="chartGradient" x1="0%" x2="0%" y1="0%" y2="100%">
+<stop offset="0%" stop-color="#7f13ec" stop-opacity="0.3"></stop>
+<stop offset="100%" stop-color="#7f13ec" stop-opacity="0"></stop>
+</lineargradient>
+</defs>
+<!-- Path -->
+<path d="M0,300 L100,280 L200,290 L300,250 L400,220 L500,230 L600,180 L700,160 L800,140 L900,150 L1000,100" fill="none" stroke="#7f13ec" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"></path>
+<path d="M0,300 L100,280 L200,290 L300,250 L400,220 L500,230 L600,180 L700,160 L800,140 L900,150 L1000,100 V350 H0 Z" fill="url(#chartGradient)"></path>
+<!-- Data Points -->
+<circle cx="0" cy="300" fill="#7f13ec" r="5"></circle>
+<circle cx="300" cy="250" fill="#7f13ec" r="5"></circle>
+<circle cx="600" cy="180" fill="#7f13ec" r="5"></circle>
+<circle cx="1000" cy="100" fill="#7f13ec" r="5"></circle>
+<!-- Tooltip Callout -->
+<g transform="translate(600, 180)">
+<rect fill="#191022" height="40" rx="8" stroke="#7f13ec" stroke-width="1" width="80" x="-40" y="-55"></rect>
+<text fill="white" font-size="12" font-weight="bold" text-anchor="middle" x="0" y="-30">245 lbs</text>
+</g>
+</svg>
+<div class="flex justify-between mt-4 px-2">
+<span class="text-xs font-bold text-slate-500 uppercase">Jan</span>
+<span class="text-xs font-bold text-slate-500 uppercase">Feb</span>
+<span class="text-xs font-bold text-slate-500 uppercase">Mar</span>
+<span class="text-xs font-bold text-slate-500 uppercase">Apr</span>
+<span class="text-xs font-bold text-slate-500 uppercase">May</span>
+<span class="text-xs font-bold text-slate-500 uppercase">Jun</span>
+</div>
+</div>
+</div>
+<!-- Detailed Log Table -->
+<div class="xl:col-span-4 bg-white dark:bg-[#1f162a] rounded-xl border border-primary/10 overflow-hidden shadow-sm">
+<div class="p-6 border-b border-primary/10 flex items-center justify-between">
+<h4 class="font-bold text-lg">Session History</h4>
+<button class="text-primary text-sm font-bold hover:underline">View All Sessions</button>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left text-sm">
+<thead>
+<tr class="bg-primary/5 text-slate-500 uppercase font-black text-[10px] tracking-widest">
+<th class="px-6 py-4">Date</th>
+<th class="px-6 py-4">Weight</th>
+<th class="px-6 py-4">Sets x Reps</th>
+<th class="px-6 py-4">Total Volume</th>
+<th class="px-6 py-4">RPE</th>
+<th class="px-6 py-4">Notes</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-primary/5">
+<tr class="hover:bg-primary/5 transition-colors cursor-pointer">
+<td class="px-6 py-4 font-semibold">Jun 12, 2024</td>
+<td class="px-6 py-4">245 lbs</td>
+<td class="px-6 py-4 text-slate-500">3 x 5</td>
+<td class="px-6 py-4 font-mono">3,675 lbs</td>
+<td class="px-6 py-4"><span class="bg-amber-500/10 text-amber-500 px-2 py-0.5 rounded font-bold text-xs">8.5</span></td>
+<td class="px-6 py-4 text-slate-400 italic">Smooth, felt like I had 2 more.</td>
+</tr>
+<tr class="hover:bg-primary/5 transition-colors cursor-pointer">
+<td class="px-6 py-4 font-semibold">Jun 08, 2024</td>
+<td class="px-6 py-4">240 lbs</td>
+<td class="px-6 py-4 text-slate-500">3 x 5</td>
+<td class="px-6 py-4 font-mono">3,600 lbs</td>
+<td class="px-6 py-4"><span class="bg-emerald-500/10 text-emerald-500 px-2 py-0.5 rounded font-bold text-xs">8.0</span></td>
+<td class="px-6 py-4 text-slate-400 italic">Consistent speed.</td>
+</tr>
+<tr class="hover:bg-primary/5 transition-colors cursor-pointer">
+<td class="px-6 py-4 font-semibold">Jun 04, 2024</td>
+<td class="px-6 py-4">240 lbs</td>
+<td class="px-6 py-4 text-slate-500">3 x 4</td>
+<td class="px-6 py-4 font-mono">2,880 lbs</td>
+<td class="px-6 py-4"><span class="bg-rose-500/10 text-rose-500 px-2 py-0.5 rounded font-bold text-xs">9.5</span></td>
+<td class="px-6 py-4 text-slate-400 italic">Poor sleep, struggling.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<footer class="p-8 text-center text-slate-500 text-xs mt-12 mb-8 uppercase tracking-[0.2em]">
+            © 2024 LIFT TRACKER • Built for Progressive Overload
+        </footer>
+</main>
+</body></html>

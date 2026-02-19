@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Today's Log - LIFT TRACKER</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#137fec",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#101922",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        /* Custom scrollbar for dark mode */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #101922;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #334155;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display">
+<div class="flex min-h-screen">
+<!-- Sidebar Navigation -->
+<aside class="w-64 border-r border-slate-200 dark:border-slate-800 flex flex-col fixed h-full bg-background-light dark:bg-background-dark z-20">
+<div class="p-6 flex items-center gap-3">
+<div class="bg-primary rounded-lg p-1.5 flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-2xl">fitness_center</span>
+</div>
+<div>
+<h1 class="text-slate-900 dark:text-white font-black text-lg leading-none tracking-tight">LIFT TRACKER</h1>
+<p class="text-slate-500 dark:text-slate-400 text-xs mt-1">Progressive Overload</p>
+</div>
+</div>
+<nav class="flex-1 px-4 mt-4 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-primary/10 text-primary font-semibold" href="#">
+<span class="material-symbols-outlined">edit_note</span>
+<span>Log</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-symbols-outlined">history</span>
+<span>History</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-symbols-outlined">dashboard_customize</span>
+<span>Templates</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-symbols-outlined">monitoring</span>
+<span>Statistics</span>
+</a>
+</nav>
+<div class="p-4 border-t border-slate-200 dark:border-slate-800">
+<div class="flex items-center gap-3 px-2">
+<div class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-sm">person</span>
+</div>
+<div class="flex-1 overflow-hidden">
+<p class="text-sm font-medium truncate">Alex Johnson</p>
+<p class="text-xs text-slate-500 truncate">Pro Member</p>
+</div>
+<span class="material-symbols-outlined text-slate-400 text-lg">settings</span>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 ml-64 pb-24">
+<!-- Sticky Header -->
+<header class="sticky top-0 z-10 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800">
+<div class="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
+<div>
+<h2 class="text-2xl font-black text-slate-900 dark:text-white tracking-tight">Today's Log</h2>
+<p class="text-slate-500 dark:text-slate-400 text-sm font-medium">Monday, Oct 23, 2023</p>
+</div>
+<button class="flex items-center gap-2 px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-sm font-semibold transition-colors">
+<span class="material-symbols-outlined text-xl">auto_awesome</span>
+                        Start from Template
+                    </button>
+</div>
+</header>
+<div class="max-w-4xl mx-auto px-6 py-8 space-y-8">
+<!-- Add Exercise Section -->
+<div class="flex flex-col gap-3">
+<label class="text-sm font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">Add Exercise</label>
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors">search</span>
+<select class="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded-xl pl-12 pr-4 py-3.5 focus:ring-2 focus:ring-primary focus:border-primary appearance-none cursor-pointer text-slate-900 dark:text-slate-100 font-medium">
+<option value="">Search or select an exercise...</option>
+<option value="bench">Bench Press (Barbell)</option>
+<option value="squat">Back Squat (Barbell)</option>
+<option value="deadlift">Deadlift (Conventional)</option>
+<option value="rows">Bent Over Rows</option>
+</select>
+<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">unfold_more</span>
+</div>
+</div>
+<!-- Exercise List -->
+<div class="space-y-6">
+<!-- Exercise Card: Bench Press -->
+<div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden shadow-sm">
+<div class="p-5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-slate-50/50 dark:bg-slate-800/30">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-lg bg-slate-200 dark:bg-slate-800 overflow-hidden">
+<div class="w-full h-full bg-gradient-to-br from-primary/40 to-primary/10 flex items-center justify-center" data-alt="Illustration of a bench press exercise">
+<span class="material-symbols-outlined text-primary">fitness_center</span>
+</div>
+</div>
+<div>
+<h3 class="text-lg font-bold text-slate-900 dark:text-white">Bench Press (Barbell)</h3>
+<p class="text-slate-500 text-xs font-semibold uppercase tracking-widest">Chest &amp; Triceps</p>
+</div>
+</div>
+<button class="text-slate-400 hover:text-red-500 transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</div>
+<div class="p-0 overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest border-b border-slate-100 dark:border-slate-800">
+<th class="px-6 py-3 w-20">Set #</th>
+<th class="px-6 py-3">Weight (lbs)</th>
+<th class="px-6 py-3">Reps</th>
+<th class="px-6 py-3 text-right">Action</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+<tr class="group hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+<td class="px-6 py-4 font-bold text-slate-400">1</td>
+<td class="px-6 py-4">
+<input class="w-24 bg-transparent border-none focus:ring-0 p-0 text-lg font-semibold text-slate-900 dark:text-white" type="number" value="135"/>
+</td>
+<td class="px-6 py-4">
+<input class="w-24 bg-transparent border-none focus:ring-0 p-0 text-lg font-semibold text-slate-900 dark:text-white" type="number" value="10"/>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="w-8 h-8 rounded-full flex items-center justify-center text-slate-300 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all">
+<span class="material-symbols-outlined text-lg">delete</span>
+</button>
+</td>
+</tr>
+<tr class="group hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+<td class="px-6 py-4 font-bold text-slate-400">2</td>
+<td class="px-6 py-4">
+<input class="w-24 bg-transparent border-none focus:ring-0 p-0 text-lg font-semibold text-slate-900 dark:text-white" type="number" value="155"/>
+</td>
+<td class="px-6 py-4">
+<input class="w-24 bg-transparent border-none focus:ring-0 p-0 text-lg font-semibold text-slate-900 dark:text-white" type="number" value="8"/>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="w-8 h-8 rounded-full flex items-center justify-center text-slate-300 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all">
+<span class="material-symbols-outlined text-lg">delete</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="px-6 py-4 bg-slate-50/30 dark:bg-slate-800/10 flex flex-col gap-4">
+<button class="flex items-center justify-center gap-2 w-full py-2.5 rounded-lg border-2 border-dashed border-slate-200 dark:border-slate-800 text-slate-500 hover:text-primary hover:border-primary transition-all font-semibold text-sm">
+<span class="material-symbols-outlined">add</span>
+                                Add Set
+                            </button>
+<div class="relative">
+<textarea class="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg p-3 text-sm focus:ring-1 focus:ring-primary focus:border-primary placeholder:text-slate-400 min-h-[60px]" placeholder="Add exercise notes (e.g., 'Elbows tucked', 'Fast eccentric')"></textarea>
+</div>
+</div>
+</div>
+<!-- Exercise Card: Squat -->
+<div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden shadow-sm opacity-90">
+<div class="p-5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-slate-50/50 dark:bg-slate-800/30">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-lg bg-slate-200 dark:bg-slate-800 overflow-hidden">
+<div class="w-full h-full bg-gradient-to-br from-primary/40 to-primary/10 flex items-center justify-center" data-alt="Illustration of a back squat exercise">
+<span class="material-symbols-outlined text-primary">fitness_center</span>
+</div>
+</div>
+<div>
+<h3 class="text-lg font-bold text-slate-900 dark:text-white">Back Squat (Barbell)</h3>
+<p class="text-slate-500 text-xs font-semibold uppercase tracking-widest">Legs</p>
+</div>
+</div>
+<button class="text-slate-400 hover:text-red-500 transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</div>
+<div class="p-0 overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest border-b border-slate-100 dark:border-slate-800">
+<th class="px-6 py-3 w-20">Set #</th>
+<th class="px-6 py-3">Weight (lbs)</th>
+<th class="px-6 py-3">Reps</th>
+<th class="px-6 py-3 text-right">Action</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+<tr class="group hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+<td class="px-6 py-4 font-bold text-slate-400">1</td>
+<td class="px-6 py-4">
+<input class="w-24 bg-transparent border-none focus:ring-0 p-0 text-lg font-semibold text-slate-900 dark:text-white" placeholder="0" type="number"/>
+</td>
+<td class="px-6 py-4">
+<input class="w-24 bg-transparent border-none focus:ring-0 p-0 text-lg font-semibold text-slate-900 dark:text-white" placeholder="0" type="number"/>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="w-8 h-8 rounded-full flex items-center justify-center text-slate-300 hover:text-red-500 transition-all">
+<span class="material-symbols-outlined text-lg">delete</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="px-6 py-4 bg-slate-50/30 dark:bg-slate-800/10 flex flex-col gap-4">
+<button class="flex items-center justify-center gap-2 w-full py-2.5 rounded-lg border-2 border-dashed border-slate-200 dark:border-slate-800 text-slate-500 hover:text-primary hover:border-primary transition-all font-semibold text-sm">
+<span class="material-symbols-outlined">add</span>
+                                Add Set
+                            </button>
+<div class="relative">
+<textarea class="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg p-3 text-sm focus:ring-1 focus:ring-primary focus:border-primary placeholder:text-slate-400 min-h-[60px]" placeholder="Add exercise notes..."></textarea>
+</div>
+</div>
+</div>
+</div>
+<!-- Overall Workout Notes -->
+<div class="space-y-3">
+<label class="text-sm font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">Workout Notes</label>
+<textarea class="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded-xl p-4 focus:ring-2 focus:ring-primary focus:border-primary min-h-[120px] shadow-sm" placeholder="How was your energy? Any injuries?"></textarea>
+</div>
+</div>
+</main>
+<!-- Fixed Footer Actions -->
+<footer class="fixed bottom-0 left-64 right-0 bg-white/90 dark:bg-slate-950/90 backdrop-blur-md border-t border-slate-200 dark:border-slate-800 z-30 shadow-[0_-4px_12px_rgba(0,0,0,0.05)]">
+<div class="max-w-4xl mx-auto px-6 py-4 flex items-center justify-end gap-4">
+<button class="px-6 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 font-bold hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                    Cancel Workout
+                </button>
+<button class="bg-primary hover:bg-primary/90 text-white px-8 py-2.5 rounded-lg font-bold flex items-center gap-2 shadow-lg shadow-primary/25 transition-transform active:scale-95">
+<span class="material-symbols-outlined">save</span>
+                    Save Workout
+                </button>
+</div>
+</footer>
+</div>
+</body></html>

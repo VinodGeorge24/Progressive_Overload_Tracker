@@ -72,11 +72,18 @@ This document describes what every folder and file in the project does. Use it a
 
 | Item | Purpose |
 |------|---------|
-| **frontend_references/** | Static HTML mockups/references for the UI (not part of the built app). |
-| **frontend_references/code_analytics.html** | Reference UI for exercise analytics: dark theme, Tailwind, Inter font, primary #137fec, sidebar (Dashboard, Exercises, History, Settings), “New Workout,” main content area for analytics (e.g. Barbell Squat). Use as design reference for analytics page. |
-| **frontend_references/code_create_account.html** | Reference UI for signup: header (LIFT TRACKER, Features/Leaderboard/About, Log In), centered card with “Create Account,” email/username/password fields, styling consistent with other refs. |
-| **frontend_references/code_log_in.html** | Reference UI for login: centered card “Welcome back,” email/password, Forgot Password link, LIFT TRACKER branding. |
-| **frontend_references/code_todays_log.html** | Reference UI for “Today’s Log”: top nav (Log, History, Exercises, Templates), search, user avatar, main content for logging a workout. |
+| **frontend_references/** | Screen-level design references (not part of the built app). Each subfolder has code.html and optionally a screen image. Use for inspiration only; implement in React with Tailwind and shadcn/ui. See frontend_references/README.md for folder map and per-screen analysis. |
+| **frontend_references/README.md** | Folder map (screen to path), design tokens (primary #137fec, background-dark #101922, Inter), and short analysis per screen for the agent. |
+| **login_page_-_lift_tracker/** | Login: card layout, email/password, Forgot password, LIFT TRACKER branding. |
+| **signup_page_-_lift_tracker/** | Signup: username, email, password, confirm, terms; password checklist. |
+| **main_dashboard_-_lift_tracker/** | Dashboard: greeting, Log Today's Workout, stats grid, progress chart placeholder, recent sessions table. |
+| **today's_log_-_lift_tracker/** | Today's log: add exercise, sets table (set #, weight, reps), notes, Save/Cancel; Start from Template. |
+| **workout_history_-_lift_tracker/** | History: search, date filter, Export, table (date, exercises, duration, volume), view/edit/delete, pagination. |
+| **progress_analytics_-_lift_tracker/** | Analytics: exercise selector, metric/set filter, chart area, session history table. |
+| **workout_templates_-_lift_tracker/** | Templates: grid of template cards, Create Template, Use/Edit. |
+| **exercises_library_-_lift_tracker/** | Exercises: table (name, muscle group, created), search/filter, Create Exercise. |
+| **app_settings_-_lift_tracker/** | Settings: theme, units, date format, profile, change password, export data, danger zone. |
+| **help_&_faq_-_lift_tracker/** | Help and FAQ: search, topic chips, accordion FAQ, support CTA. |
 
 ---
 

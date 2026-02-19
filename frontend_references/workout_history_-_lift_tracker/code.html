@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Workout History - LIFT TRACKER</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#137fec",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#101922",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 antialiased">
+<div class="flex h-screen overflow-hidden">
+<!-- Sidebar -->
+<aside class="w-64 flex-shrink-0 bg-slate-50 dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col">
+<div class="p-6 flex items-center gap-3">
+<div class="bg-primary size-10 rounded-lg flex items-center justify-center text-white">
+<span class="material-symbols-outlined text-2xl">exercise</span>
+</div>
+<div>
+<h1 class="font-display font-black text-lg tracking-tight text-slate-900 dark:text-white leading-none">LIFT TRACKER</h1>
+<p class="text-[10px] font-bold text-primary tracking-widest uppercase mt-1">MVP Version</p>
+</div>
+</div>
+<nav class="flex-1 px-4 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-sm font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg bg-primary/10 text-primary" href="#">
+<span class="material-symbols-outlined">history</span>
+<span class="text-sm font-semibold">Workout History</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-symbols-outlined">fitness_center</span>
+<span class="text-sm font-medium">Exercises</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-symbols-outlined">monitoring</span>
+<span class="text-sm font-medium">Analytics</span>
+</a>
+</nav>
+<div class="p-4 border-t border-slate-200 dark:border-slate-800">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-sm font-medium">Settings</span>
+</a>
+<div class="mt-4 flex items-center gap-3 px-3 py-2">
+<div class="size-8 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden">
+<img alt="User Profile" data-alt="Minimalist geometric user profile avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBWs8z9NPPuwFPHgML98WJHccX6RqxWedeUcKWq-2SeLZRAsleGhT2N0hpckBzv8ohtmmdWZh6p4YLTODJEdihqvUpBmLfOjY21a5iijQBlNJx2kqJU_UThnuo64RB28AVXuHjKxPUQEyG-Of1VJO7WuduC4PhUjbJAHPFphVM_8LsqoP7wpwqOB4udxF_oz4VRLAUgJpzj6p8vAdo7LuJn8Rp9bVBzY80ypmmjkn0Lj6NgM9LazRwyELcv7H2a5zZQtQqxqKPAtAST"/>
+</div>
+<div class="flex-1 overflow-hidden">
+<p class="text-xs font-semibold truncate">Alex Johnson</p>
+<p class="text-[10px] text-slate-500 truncate">Pro Member</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 overflow-y-auto bg-background-light dark:bg-background-dark">
+<!-- Header Section -->
+<header class="p-8 border-b border-slate-200 dark:border-slate-800">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+<div>
+<h2 class="text-3xl font-black text-slate-900 dark:text-white tracking-tight">Workout History</h2>
+<p class="text-slate-500 dark:text-slate-400 mt-1">Analyze your progression and previous training loads.</p>
+</div>
+<div class="flex items-center gap-3">
+<button class="flex items-center gap-2 px-4 h-11 border border-slate-200 dark:border-slate-700 rounded-lg text-sm font-bold bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
+<span class="material-symbols-outlined text-[20px]">file_download</span>
+                            Export
+                        </button>
+<button class="flex items-center gap-2 px-6 h-11 bg-primary text-white rounded-lg text-sm font-bold hover:bg-primary/90 shadow-lg shadow-primary/20 transition-all">
+<span class="material-symbols-outlined text-[20px]">add</span>
+                            Log Workout
+                        </button>
+</div>
+</div>
+<!-- Search & Filters -->
+<div class="mt-8 flex flex-wrap items-center gap-3">
+<div class="relative flex-1 min-w-[300px]">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-[20px]">search</span>
+<input class="w-full pl-10 pr-4 h-11 bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg focus:ring-primary focus:border-primary text-sm dark:text-white placeholder:text-slate-500" placeholder="Search by exercise or routine name..." type="text"/>
+</div>
+<div class="flex items-center gap-2 h-11 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-3">
+<span class="material-symbols-outlined text-slate-400 text-[20px]">calendar_today</span>
+<select class="bg-transparent border-none text-sm font-medium focus:ring-0 cursor-pointer text-slate-700 dark:text-slate-200 pr-8">
+<option>Last 30 Days</option>
+<option>Last 3 Months</option>
+<option>This Year</option>
+<option>Custom Range</option>
+</select>
+</div>
+<button class="flex items-center justify-center h-11 w-11 border border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-500 dark:hover:text-white transition-colors">
+<span class="material-symbols-outlined">filter_list</span>
+</button>
+</div>
+</header>
+<!-- Table Container -->
+<div class="p-8">
+<div class="bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden shadow-sm">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800">
+<th class="px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Date &amp; Name</th>
+<th class="px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Main Exercises</th>
+<th class="px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Duration</th>
+<th class="px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Total Volume</th>
+<th class="px-6 py-4 text-right text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-200 dark:divide-slate-800">
+<!-- Row 1 -->
+<tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
+<td class="px-6 py-4">
+<div class="flex flex-col">
+<span class="text-sm font-bold text-slate-900 dark:text-white">Heavy Leg Day</span>
+<span class="text-xs text-slate-500">Oct 24, 2023 • 08:30 AM</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="flex flex-wrap gap-1">
+<span class="px-2 py-0.5 rounded-full bg-primary/10 text-primary text-[10px] font-bold">Squats</span>
+<span class="px-2 py-0.5 rounded-full bg-primary/10 text-primary text-[10px] font-bold">Leg Press</span>
+<span class="px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 text-[10px] font-bold">+3 more</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="text-sm font-medium">1h 15m</span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-1.5">
+<span class="text-sm font-bold">14,250</span>
+<span class="text-[10px] font-bold text-slate-500">LBS</span>
+<span class="material-symbols-outlined text-green-500 text-[16px]">trending_up</span>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex items-center justify-end gap-2">
+<button class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-md text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[20px]">visibility</span>
+</button>
+<button class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-md text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+<button class="p-2 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-md text-slate-400 hover:text-red-500 transition-colors">
+<span class="material-symbols-outlined text-[20px]">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
+<td class="px-6 py-4">
+<div class="flex flex-col">
+<span class="text-sm font-bold text-slate-900 dark:text-white">Push A (Chest/Shoulder)</span>
+<span class="text-xs text-slate-500">Oct 22, 2023 • 05:45 PM</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="flex flex-wrap gap-1">
+<span class="px-2 py-0.5 rounded-full bg-primary/10 text-primary text-[10px] font-bold">Bench Press</span>
+<span class="px-2 py-0.5 rounded-full bg-primary/10 text-primary text-[10px] font-bold">OHP</span>
+<span class="px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 text-[10px] font-bold">+4 more</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="text-sm font-medium">58m</span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-1.5">
+<span class="text-sm font-bold">9,800</span>
+<span class="text-[10px] font-bold text-slate-500">LBS</span>
+<span class="material-symbols-outlined text-slate-400 text-[16px]">horizontal_rule</span>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex items-center justify-end gap-2">
+<button class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-md text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[20px]">visibility</span>
+</button>
+<button class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-md text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+<button class="p-2 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-md text-slate-400 hover:text-red-500 transition-colors">
+<span class="material-symbols-outlined text-[20px]">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
+<td class="px-6 py-4">
+<div class="flex flex-col">
+<span class="text-sm font-bold text-slate-900 dark:text-white">Pull Day (Hypertrophy)</span>
+<span class="text-xs text-slate-500">Oct 20, 2023 • 07:15 AM</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="flex flex-wrap gap-1">
+<span class="px-2 py-0.5 rounded-full bg-primary/10 text-primary text-[10px] font-bold">Deadlifts</span>
+<span class="px-2 py-0.5 rounded-full bg-primary/10 text-primary text-[10px] font-bold">Pull Ups</span>
+<span class="px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 text-[10px] font-bold">+5 more</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="text-sm font-medium">1h 05m</span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-1.5">
+<span class="text-sm font-bold">11,100</span>
+<span class="text-[10px] font-bold text-slate-500">LBS</span>
+<span class="material-symbols-outlined text-green-500 text-[16px]">trending_up</span>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex items-center justify-end gap-2">
+<button class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-md text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[20px]">visibility</span>
+</button>
+<button class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-md text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+<button class="p-2 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-md text-slate-400 hover:text-red-500 transition-colors">
+<span class="material-symbols-outlined text-[20px]">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
+<td class="px-6 py-4">
+<div class="flex flex-col">
+<span class="text-sm font-bold text-slate-900 dark:text-white">Full Body Stability</span>
+<span class="text-xs text-slate-500">Oct 18, 2023 • 06:30 PM</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="flex flex-wrap gap-1">
+<span class="px-2 py-0.5 rounded-full bg-primary/10 text-primary text-[10px] font-bold">KB Swings</span>
+<span class="px-2 py-0.5 rounded-full bg-primary/10 text-primary text-[10px] font-bold">Plank</span>
+<span class="px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 text-[10px] font-bold">+2 more</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="text-sm font-medium">45m</span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-1.5">
+<span class="text-sm font-bold">6,400</span>
+<span class="text-[10px] font-bold text-slate-500">LBS</span>
+<span class="material-symbols-outlined text-red-500 text-[16px]">trending_down</span>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex items-center justify-end gap-2">
+<button class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-md text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[20px]">visibility</span>
+</button>
+<button class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-md text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+<button class="p-2 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-md text-slate-400 hover:text-red-500 transition-colors">
+<span class="material-symbols-outlined text-[20px]">delete</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<!-- Pagination -->
+<div class="px-6 py-4 bg-slate-50 dark:bg-slate-800/20 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
+<p class="text-xs text-slate-500 font-medium">Showing 1 to 4 of 28 workouts</p>
+<div class="flex items-center gap-2">
+<button class="px-3 py-1 text-xs font-bold border border-slate-200 dark:border-slate-700 rounded-md text-slate-400 cursor-not-allowed">Previous</button>
+<button class="px-3 py-1 text-xs font-bold bg-primary text-white rounded-md">1</button>
+<button class="px-3 py-1 text-xs font-bold text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-md">2</button>
+<button class="px-3 py-1 text-xs font-bold text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-md">3</button>
+<button class="px-3 py-1 text-xs font-bold border border-slate-200 dark:border-slate-700 rounded-md text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800">Next</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer Content / Stats Summary -->
+<div class="px-8 pb-12">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="p-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50">
+<p class="text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-2">Total Monthly Volume</p>
+<div class="flex items-end gap-2">
+<span class="text-2xl font-black text-slate-900 dark:text-white">124,580</span>
+<span class="text-xs font-bold text-slate-400 mb-1">LBS</span>
+</div>
+<div class="mt-4 h-1 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+<div class="bg-primary h-full w-[82%] rounded-full"></div>
+</div>
+<p class="text-[10px] text-slate-500 mt-2 font-medium">82% of monthly goal reached</p>
+</div>
+<div class="p-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50">
+<p class="text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-2">Workouts (Oct)</p>
+<div class="flex items-end gap-2">
+<span class="text-2xl font-black text-slate-900 dark:text-white">14</span>
+<span class="text-xs font-bold text-slate-400 mb-1">Sessions</span>
+</div>
+<div class="mt-4 flex gap-1 items-end h-8">
+<div class="flex-1 bg-primary/20 h-[60%] rounded-t-sm"></div>
+<div class="flex-1 bg-primary/20 h-[40%] rounded-t-sm"></div>
+<div class="flex-1 bg-primary h-full rounded-t-sm"></div>
+<div class="flex-1 bg-primary/20 h-[80%] rounded-t-sm"></div>
+<div class="flex-1 bg-primary/20 h-[50%] rounded-t-sm"></div>
+<div class="flex-1 bg-primary/20 h-[30%] rounded-t-sm"></div>
+<div class="flex-1 bg-primary/20 h-[70%] rounded-t-sm"></div>
+</div>
+<p class="text-[10px] text-slate-500 mt-2 font-medium">Consistent frequency (+2 vs last mo)</p>
+</div>
+<div class="p-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50">
+<p class="text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-2">Top Performance</p>
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-full bg-green-500/10 flex items-center justify-center text-green-500">
+<span class="material-symbols-outlined text-[20px]">military_tech</span>
+</div>
+<div>
+<p class="text-sm font-bold text-slate-900 dark:text-white leading-tight">Squat New PR</p>
+<p class="text-xs text-slate-500">315 lbs x 5 Reps</p>
+</div>
+</div>
+<button class="mt-5 w-full py-2 text-[10px] font-bold tracking-widest uppercase border border-primary/20 text-primary rounded-lg hover:bg-primary/5 transition-colors">
+                            View All Achievements
+                        </button>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

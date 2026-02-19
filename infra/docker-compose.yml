@@ -1,8 +1,7 @@
-# Docker is currently used ONLY to run PostgreSQL locally.
+# Docker is currently used ONLY to run PostgreSQL locally (plan/coding_plan.md Slice 0).
 # Backend and frontend run natively (uvicorn, npm run dev).
 # See backend/README.md and frontend/README.md for local setup.
-
-version: '3.8'
+# Note: "version" is obsolete in Compose V2 and ignored.
 
 services:
   # PostgreSQL Database
