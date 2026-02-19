@@ -152,6 +152,7 @@ Not required for the project; only “you may use them” in coding standards.
 ## 9. Summary: “Could install” (not yet declared)
 
 - **Backend**: `python-dotenv` (optional; pydantic-settings already loads `.env`).
+- **Backend charts (required for Slice 4)**: Add **matplotlib** or **Plotly** to `backend/pyproject.toml` before implementing analytics/charts. Not currently in pyproject.toml. Example: `matplotlib>=3.7.0` or `plotly>=5.18.0`. See `plan/coding_plan.md` (Libraries and install checklist).
 - **Frontend styling**: Tailwind CSS and shadcn/ui are installed. Add shadcn components via `npx shadcn@latest add <component>`.
 - **Charts**: Python-generated in backend (matplotlib/Plotly); frontend displays chart images. See PRD and ARCHITECTURE.
 - **Backend (if you add backend Docker image)**: Dockerfile and any base image (e.g. `python:3.11-slim`).

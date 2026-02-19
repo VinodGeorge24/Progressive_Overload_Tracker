@@ -10,6 +10,18 @@ User interface for the Progressive Overload Tracker. This is a modern web applic
 
 Use `src/pages/` + React Router for routing. Do not use Next.js `app/` or `pages/` conventions.
 
+## Design references (Stitch from Google + frontend_references)
+
+UI design direction is inspired by **Stitch (Google)**. For consistency and ideas when building pages and components:
+
+- **Reference folder:** `frontend_references/` at the **project root** (one level above `frontend/`). Static HTML mockups that reflect the intended look and feel:
+  - `code_log_in.html` — Login: card layout, primary color, dark mode, Inter font.
+  - `code_create_account.html` — Signup: same design language.
+  - `code_todays_log.html` — Today’s workout log: nav, logging UI.
+  - `code_analytics.html` — Analytics: sidebar, chart area, exercise selector.
+- When implementing a page, open the corresponding reference file for layout, spacing, colors (e.g. primary `#137fec`, dark background `#101922`), and typography. Implement in React with Tailwind and shadcn/ui; do not copy HTML literally—use it as a visual and structural reference.
+- The coding plan (`plan/coding_plan.md`) also points to these references for each frontend slice.
+
 ## Setup
 
 ### Prerequisites

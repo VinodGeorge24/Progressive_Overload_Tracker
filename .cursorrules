@@ -107,6 +107,7 @@ When using AI assistance:
 2. Test thoroughly
 3. Document in `AI_USAGE.md`
 4. Adapt code to fit project structure and conventions
+5. **End of session:** Update `~/.cursor/rules/global-memory.mdc` (Current state: project, slice, last session summary) so the next chat has continuity. See `plan/README.md` for details.
 
 ## Questions?
 

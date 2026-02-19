@@ -15,7 +15,6 @@ The project is committed locally on branch `main`. To put it on GitHub:
 In a terminal, from this project folder:
 
 ```powershell
-# Replace YOUR_USERNAME with your GitHub username
 git remote add origin https://github.com/VinodGeorge24/Progressive_Overload_Tracker.git
 git push -u origin main
 ```
