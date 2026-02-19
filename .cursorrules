@@ -1,0 +1,118 @@
+# Cursor Rules for Progressive Overload Tracker
+
+## Project Context
+
+This is a workout tracking application focused on progressive overload principles. The backend is Python (FastAPI), and the frontend is a modern web framework.
+
+## Documentation First
+
+When working on features, always check these files first:
+1. `PRD.md` - Understand what the feature should do
+2. `API_CONTRACT.md` - Know the endpoint specifications
+3. `DATA_MODEL.md` - Understand the database structure
+4. `README.md` - Know how to run the project
+
+Furthermore, when coding:
+1. Do not comment with "# Test" structure, but use "#test". That means always lowercase and no space in front of "#"
+
+## Feature Development Flow
+
+We move feature by feature. Each feature must satisfy all layers in order before moving on:
+
+1. **DB layer** — Models, Alembic migration, run migration
+2. **API layer** — Endpoints in `api/v1/endpoints/`, schemas in `schemas/`
+3. **Service layer** — Business logic in `services/`
+4. **Contract update** — Update `API_CONTRACT.md` to match
+5. **Minimal test** — At least one test (unit or integration) for the new behavior
+6. **Frontend integration** — Page/component + API helper, wired to backend
+
+**Non-negotiables:**
+- No skipping layers
+- No "we'll fix that later"
+- ALWAYS come back to chat or the user if there's a big decision to make and you are not completely certain
+
+Complete each layer before proceeding. That is how you build a working program without collapse.
+
+## Code Organization
+
+### Backend (`backend/app/`)
+- `models/` - SQLAlchemy database models only
+- `schemas/` - Pydantic schemas for request/response validation
+- `api/v1/endpoints/` - FastAPI route handlers (the one true router home; thin, delegate to services)
+- `services/` - Business logic, calculations, analytics
+- `core/` - Configuration, security, logging utilities
+- `db/` - Database session management
+
+**Rule**: Business logic belongs in `services/`, not in routes or models.
+
+### Frontend (`frontend/src/`)
+- `pages/` - Page components and routing (React Router)
+- `components/` - Reusable UI components
+- `api/` - Functions that call backend endpoints
+- `lib/` - Utilities (e.g. `utils.ts` for `cn()` with shadcn/ui)
+
+**Rule**: API calls should go through the `api/` helpers, not directly in components.
+
+## Important Principles
+
+1. **Analytics / Visualization**: Per-exercise progress metrics and chart generation (in `services/`) must be correct. Test volume and time-series calculations thoroughly.
+
+2. **Security**: Always validate user input, use parameterized queries (SQLAlchemy handles this), and check authentication/authorization.
+
+3. **Data Integrity**: Follow the relationships defined in `DATA_MODEL.md`. Use proper foreign keys and cascade deletes.
+
+4. **API Contract**: Don't change endpoint signatures without updating `API_CONTRACT.md` first.
+
+5. **Error Handling**: Return appropriate HTTP status codes and meaningful error messages.
+
+## Testing
+
+- Write unit tests for services (especially analytics)
+- Write integration tests for API endpoints
+- Test edge cases: empty data, invalid inputs, boundary conditions
+
+## Database Migrations
+
+- Always use Alembic for schema changes
+- Never modify the database directly
+- Test migrations on a copy of production data
+
+## Code Style
+
+**reference CODING_STANDARDS.md first!** After:
+ 
+- Follow PEP 8 for Python
+- Use type hints where possible
+- Document complex algorithms
+- Keep functions focused and small
+
+## Project Structure Boundaries
+
+- Do not add new top-level folders without updating README.md and PRD.md (tech stack / structure).
+- Do not add new dependencies (backend or frontend) without updating the relevant README and, if significant, PRD.md tech stack section.
+
+## What NOT to Do
+
+- Don't put business logic in route handlers
+- Don't skip authentication checks
+- Don't hardcode secrets (use environment variables)
+- Don't modify the API contract without updating documentation
+- Don't create database tables manually (use Alembic)
+- Don't ignore linter warnings
+
+## AI Usage
+
+When using AI assistance:
+1. Review all generated code carefully
+2. Test thoroughly
+3. Document in `AI_USAGE.md`
+4. Adapt code to fit project structure and conventions
+
+## Questions?
+
+If unsure about implementation:
+1. Check the relevant documentation file
+2. Look at existing code patterns
+3. Follow the established architecture
+4. When in doubt, ask for clarification rather than guessing
+

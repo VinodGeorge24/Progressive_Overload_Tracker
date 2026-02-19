@@ -1,0 +1,54 @@
+# Dependencies
+node_modules/
+venv/
+env/
+.venv/
+
+# Build artifacts
+dist/
+build/
+*.pyc
+__pycache__/
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Logs
+*.log
+logs/*.log
+!logs/README.md
+
+# Environment files
+.env
+.env.local
+
+# IDE files
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Test coverage
+.coverage
+htmlcov/
+.pytest_cache/
+
+# Documentation builds
+docs/_build/
+
+# Large media files (if any)
+*.mp4
+*.mov
+*.avi
+*.zip
+*.tar.gz
+
+# Screenshots (keep structure but ignore large files)
+docs/screenshots/*.png
+docs/screenshots/*.jpg
+!docs/screenshots/.gitkeep
+

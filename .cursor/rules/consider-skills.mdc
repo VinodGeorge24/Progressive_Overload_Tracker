@@ -1,0 +1,14 @@
+---
+description: Consider applicable Cursor skills before acting
+alwaysApply: true
+---
+
+# Consider Skills Before Acting
+
+Before answering or implementing:
+
+1. **Check available skills** (project and global). Use each skill’s **description** to see if it matches the request.
+2. **If a skill applies**, follow that skill’s instructions (e.g. spec-to-plan → produce the full plan before coding).
+3. **If none apply**, proceed as usual.
+
+This is efficient: descriptions are short and matching is a single mental step. It avoids skipping workflows (like planning before coding) when a skill exists for them.

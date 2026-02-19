@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Exercise Analytics - Barbell Squat</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#137fec",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#101922",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .chart-gradient {
+            background: linear-gradient(180deg, rgba(19, 127, 236, 0.2) 0%, rgba(19, 127, 236, 0) 100%);
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen">
+<div class="flex h-screen overflow-hidden">
+<!-- Sidebar Navigation -->
+<aside class="w-64 border-r border-slate-200 dark:border-slate-800 flex flex-col justify-between bg-white dark:bg-background-dark p-4 shrink-0">
+<div class="flex flex-col gap-8">
+<!-- Logo Section -->
+<div class="flex items-center gap-3 px-2">
+<div class="bg-primary rounded-lg p-1.5 flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-2xl" data-icon="fitness_center">fitness_center</span>
+</div>
+<div class="flex flex-col">
+<h1 class="text-slate-900 dark:text-white text-base font-bold leading-none tracking-tight">LIFT TRACKER</h1>
+<p class="text-slate-500 dark:text-[#92adc9] text-[10px] font-medium uppercase tracking-widest">Progressive Overload</p>
+</div>
+</div>
+<!-- Nav Links -->
+<nav class="flex flex-col gap-1">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="grid_view">grid_view</span>
+<span class="text-sm font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-primary/10 text-primary" href="#">
+<span class="material-symbols-outlined fill-1" data-icon="exercise">fitness_center</span>
+<span class="text-sm font-semibold">Exercises</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="history">history</span>
+<span class="text-sm font-medium">History</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="text-sm font-medium">Settings</span>
+</a>
+</nav>
+</div>
+<!-- New Workout Button -->
+<button class="w-full flex items-center justify-center gap-2 rounded-lg h-11 bg-primary text-white text-sm font-bold shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all">
+<span class="material-symbols-outlined text-sm">add</span>
+<span>New Workout</span>
+</button>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 overflow-y-auto bg-background-light dark:bg-background-dark">
+<div class="max-w-6xl mx-auto p-8">
+<!-- Breadcrumbs -->
+<nav class="flex items-center gap-2 mb-4">
+<a class="text-slate-500 dark:text-[#92adc9] text-sm font-medium hover:text-primary transition-colors" href="#">Exercises</a>
+<span class="text-slate-400 dark:text-[#92adc9] text-sm">/</span>
+<span class="text-slate-900 dark:text-white text-sm font-semibold">Barbell Squat</span>
+</nav>
+<!-- Page Heading -->
+<div class="flex flex-wrap items-end justify-between gap-6 mb-8">
+<div class="flex flex-col gap-1">
+<h2 class="text-slate-900 dark:text-white text-4xl font-black leading-tight tracking-tight">Barbell Squat</h2>
+<p class="text-slate-500 dark:text-[#92adc9] text-base font-normal">Last session: 2 days ago • Lower Body A</p>
+</div>
+<div class="flex gap-3">
+<button class="flex items-center gap-2 rounded-lg h-10 px-5 bg-slate-200 dark:bg-[#233648] text-slate-900 dark:text-white text-sm font-bold hover:bg-slate-300 dark:hover:bg-slate-700 transition-colors">
+<span class="material-symbols-outlined text-sm">edit</span>
+                            Edit Exercise
+                        </button>
+<button class="flex items-center gap-2 rounded-lg h-10 px-6 bg-primary text-white text-sm font-bold shadow-md shadow-primary/10 hover:bg-primary/90 transition-all">
+<span class="material-symbols-outlined text-sm">add_box</span>
+                            Log Set
+                        </button>
+</div>
+</div>
+<!-- Metric Filters & Chart Container -->
+<div class="bg-white dark:bg-[#16212c] rounded-xl border border-slate-200 dark:border-slate-800 p-6 mb-6">
+<div class="flex flex-wrap items-center justify-between gap-4 mb-8">
+<h3 class="text-slate-900 dark:text-white font-bold text-lg">Weight Progression</h3>
+<!-- Segmented Toggles -->
+<div class="flex h-10 bg-slate-100 dark:bg-[#233648] rounded-lg p-1 min-w-[300px]">
+<label class="flex-1 flex cursor-pointer items-center justify-center rounded-md px-2 has-[:checked]:bg-white dark:has-[:checked]:bg-[#111a22] has-[:checked]:shadow-sm text-slate-500 dark:text-[#92adc9] has-[:checked]:text-primary dark:has-[:checked]:text-white text-xs font-bold transition-all">
+<span>SET 1</span>
+<input class="hidden" name="set-filter" type="radio" value="Set 1"/>
+</label>
+<label class="flex-1 flex cursor-pointer items-center justify-center rounded-md px-2 has-[:checked]:bg-white dark:has-[:checked]:bg-[#111a22] has-[:checked]:shadow-sm text-slate-500 dark:text-[#92adc9] has-[:checked]:text-primary dark:has-[:checked]:text-white text-xs font-bold transition-all">
+<span>SET 2</span>
+<input class="hidden" name="set-filter" type="radio" value="Set 2"/>
+</label>
+<label class="flex-1 flex cursor-pointer items-center justify-center rounded-md px-2 has-[:checked]:bg-white dark:has-[:checked]:bg-[#111a22] has-[:checked]:shadow-sm text-slate-500 dark:text-[#92adc9] has-[:checked]:text-primary dark:has-[:checked]:text-white text-xs font-bold transition-all">
+<span>OVERALL</span>
+<input checked="" class="hidden" name="set-filter" type="radio" value="Overall"/>
+</label>
+</div>
+</div>
+<!-- Focal Chart Area -->
+<div class="relative w-full h-[350px] flex flex-col justify-end">
+<!-- Simplified representation of a line chart using SVG -->
+<div class="absolute inset-0 flex items-end">
+<svg class="w-full h-full" preserveaspectratio="none" viewbox="0 0 1000 300">
+<defs>
+<lineargradient id="chartLineGradient" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#137fec" stop-opacity="0.2"></stop>
+<stop offset="100%" stop-color="#137fec" stop-opacity="0"></stop>
+</lineargradient>
+</defs>
+<path d="M0,280 L100,260 L200,270 L300,240 L400,250 L500,200 L600,210 L700,160 L800,150 L900,120 L1000,110 V300 H0 Z" fill="url(#chartLineGradient)"></path>
+<path d="M0,280 L100,260 L200,270 L300,240 L400,250 L500,200 L600,210 L700,160 L800,150 L900,120 L1000,110" fill="none" stroke="#137fec" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"></path>
+<!-- Tooltip interaction point -->
+<circle cx="900" cy="120" fill="#137fec" r="6" stroke="white" stroke-width="2"></circle>
+</svg>
+<!-- Tooltip -->
+<div class="absolute left-[88%] bottom-[65%] transform -translate-x-1/2 bg-slate-900 text-white px-3 py-2 rounded-lg text-xs shadow-xl border border-slate-700">
+<p class="font-bold">315 lbs</p>
+<p class="text-[10px] opacity-70">Oct 12, 2023</p>
+</div>
+</div>
+<!-- Axis Labels -->
+<div class="flex justify-between text-[10px] text-slate-400 dark:text-[#92adc9] font-bold uppercase tracking-widest pt-4 border-t border-slate-200 dark:border-slate-800">
+<span>AUG 01</span>
+<span>AUG 15</span>
+<span>SEP 01</span>
+<span>SEP 15</span>
+<span>OCT 01</span>
+<span>OCT 12</span>
+</div>
+</div>
+</div>
+<!-- Stats Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+<div class="bg-white dark:bg-background-dark flex flex-col gap-2 rounded-xl p-6 border border-slate-200 dark:border-[#324d67]">
+<p class="text-slate-500 dark:text-white text-sm font-medium">Max Weight</p>
+<p class="text-slate-900 dark:text-white tracking-tight text-3xl font-black">315 <span class="text-lg font-normal opacity-50">lbs</span></p>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[#0bda5b] text-sm">trending_up</span>
+<p class="text-[#0bda5b] text-sm font-bold">+5%</p>
+</div>
+</div>
+<div class="bg-white dark:bg-background-dark flex flex-col gap-2 rounded-xl p-6 border border-slate-200 dark:border-[#324d67]">
+<p class="text-slate-500 dark:text-white text-sm font-medium">Total Volume</p>
+<p class="text-slate-900 dark:text-white tracking-tight text-3xl font-black">12.4k <span class="text-lg font-normal opacity-50">lbs</span></p>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[#0bda5b] text-sm">trending_up</span>
+<p class="text-[#0bda5b] text-sm font-bold">+2.4%</p>
+</div>
+</div>
+<div class="bg-white dark:bg-background-dark flex flex-col gap-2 rounded-xl p-6 border border-slate-200 dark:border-[#324d67]">
+<p class="text-slate-500 dark:text-white text-sm font-medium">Avg. Reps</p>
+<p class="text-slate-900 dark:text-white tracking-tight text-3xl font-black">8.2</p>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[#fa6238] text-sm">trending_down</span>
+<p class="text-[#fa6238] text-sm font-bold">-1%</p>
+</div>
+</div>
+<div class="bg-white dark:bg-background-dark flex flex-col gap-2 rounded-xl p-6 border border-slate-200 dark:border-[#324d67]">
+<p class="text-slate-500 dark:text-white text-sm font-medium">Personal Best</p>
+<p class="text-slate-900 dark:text-white tracking-tight text-2xl font-black">Oct 12, 2023</p>
+<p class="text-slate-400 dark:text-[#92adc9] text-xs font-bold uppercase tracking-widest mt-1">2 DAYS AGO</p>
+</div>
+</div>
+<!-- Recent History Table -->
+<div class="bg-white dark:bg-[#16212c] rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden">
+<div class="px-6 py-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+<h3 class="text-slate-900 dark:text-white font-bold">Recent History</h3>
+<button class="text-primary text-sm font-bold hover:underline">View All</button>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead>
+<tr class="text-slate-500 dark:text-[#92adc9] text-[10px] font-bold uppercase tracking-widest bg-slate-50 dark:bg-[#111a22]">
+<th class="px-6 py-3">Date</th>
+<th class="px-6 py-3">Sets</th>
+<th class="px-6 py-3">Max Weight</th>
+<th class="px-6 py-3">Volume</th>
+<th class="px-6 py-3">RPE</th>
+<th class="px-6 py-3 text-right">Action</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+<td class="px-6 py-4 text-sm font-medium">Oct 12, 2023</td>
+<td class="px-6 py-4 text-sm">3</td>
+<td class="px-6 py-4 text-sm font-bold text-primary">315 lbs</td>
+<td class="px-6 py-4 text-sm">7,560 lbs</td>
+<td class="px-6 py-4 text-sm"><span class="px-2 py-1 rounded bg-orange-500/10 text-orange-500 text-[10px] font-black">9.0</span></td>
+<td class="px-6 py-4 text-right">
+<button class="material-symbols-outlined text-slate-400 hover:text-white" data-icon="more_vert">more_vert</button>
+</td>
+</tr>
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+<td class="px-6 py-4 text-sm font-medium">Oct 09, 2023</td>
+<td class="px-6 py-4 text-sm">3</td>
+<td class="px-6 py-4 text-sm font-bold">310 lbs</td>
+<td class="px-6 py-4 text-sm">7,440 lbs</td>
+<td class="px-6 py-4 text-sm"><span class="px-2 py-1 rounded bg-green-500/10 text-green-500 text-[10px] font-black">8.5</span></td>
+<td class="px-6 py-4 text-right">
+<button class="material-symbols-outlined text-slate-400 hover:text-white" data-icon="more_vert">more_vert</button>
+</td>
+</tr>
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+<td class="px-6 py-4 text-sm font-medium">Oct 05, 2023</td>
+<td class="px-6 py-4 text-sm">3</td>
+<td class="px-6 py-4 text-sm font-bold">305 lbs</td>
+<td class="px-6 py-4 text-sm">7,320 lbs</td>
+<td class="px-6 py-4 text-sm"><span class="px-2 py-1 rounded bg-green-500/10 text-green-500 text-[10px] font-black">8.0</span></td>
+<td class="px-6 py-4 text-right">
+<button class="material-symbols-outlined text-slate-400 hover:text-white" data-icon="more_vert">more_vert</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>
