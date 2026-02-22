@@ -143,6 +143,8 @@ Store JWT tokens securely (e.g., in memory, httpOnly cookies, or secure storage)
 - `VITE_API_URL` or `REACT_APP_API_URL`: Backend API base URL
 - Other framework-specific variables as needed
 
+**Security:** Only use `VITE_*` (or equivalent) for **non-secret** config such as the API base URL. These values are embedded in the client bundle and are visible to anyone; never put API keys or other secrets in frontend env variables.
+
 ## Building for Production
 
 ```bash

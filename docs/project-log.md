@@ -4,6 +4,32 @@ Chronological log of project decisions and documentation updates. For weekly pro
 
 ---
 
+## 2026-02-22
+
+### Security and environment variable protection
+
+**Scope:** Documentation and config hardening per security audit plan (no slice scope change).
+
+**Done:**
+
+1. **README (root)** — Added "Security & environment" section: never commit `.env`; production must use strong random `SECRET_KEY` and different DB credentials; set `CORS_ORIGINS` to actual frontend origin(s) in production. Installation step now references this section.
+
+2. **Backend README** — Added "Security & environment" section: same guidance; documented that `CORS_ORIGINS` accepts either JSON array or comma-separated string (parsed automatically).
+
+3. **Frontend README** — Added security note under "Environment Variables": only use `VITE_*` for non-secret config (e.g. API base URL); these values are embedded in the client bundle and are public.
+
+4. **.env.example (root and backend)** — Added comments that production must use strong random `SECRET_KEY` and different DB credentials; clarified CORS format (comma-separated or JSON).
+
+5. **Backend config** — In `backend/app/core/config.py`, added `field_validator` for `CORS_ORIGINS` to accept comma-separated string from env (split and strip) in addition to list/JSON.
+
+6. **Backend main** — In `backend/app/main.py`, added optional startup warning when `ENVIRONMENT` is production and `SECRET_KEY` is still the default placeholder (log only; does not block startup).
+
+7. **Infra** — In `infra/docker-compose.yml`, added comment that `POSTGRES_PASSWORD` is for local development only; production should use env-injected credentials (e.g. `POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}`).
+
+**Reference:** Security plan at `.cursor/plans/security_and_env_protection_f10a345b.plan.md` (or Cursor plans). Aligned with `plan/coding_plan.md`; no slice order or feature scope changes.
+
+---
+
 ## 2026-02-19
 
 ### Slice 0: Project readiness (plan/coding_plan.md) — ✅ **COMPLETE**

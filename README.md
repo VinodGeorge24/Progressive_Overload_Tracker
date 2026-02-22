@@ -42,7 +42,7 @@ This application provides a workout tracker with per-set logging (weight and rep
 ### Installation
 
 1. Clone the repository
-2. Copy `.env.example` to `.env` and configure your environment variables
+2. Copy `.env.example` to `.env` and configure your environment variables (see [Security & environment](#security--environment) below).
 3. Set up the backend (see `backend/README.md`)
 4. Set up the frontend (see `frontend/README.md`)
 
@@ -71,6 +71,12 @@ npm run dev
 - `docs/` - Documentation and research notes
 - `logs/` - Project task logs and history
 - `infra/` - Infrastructure and deployment configuration
+
+## Security & environment
+
+- **Never commit `.env`.** Copy from `.env.example` and configure locally. `.env` and `.env.local` are in `.gitignore`.
+- **Production:** Use a **strong random `SECRET_KEY`** and different, strong database credentials. Do not use the example values in `.env.example`.
+- **CORS:** For production, set `CORS_ORIGINS` to the actual frontend origin(s). See backend README and `.env.example` for format (JSON array or comma-separated depending on config).
 
 ## Documentation
 

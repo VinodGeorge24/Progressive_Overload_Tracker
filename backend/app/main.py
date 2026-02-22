@@ -5,10 +5,20 @@ This module initializes the FastAPI application, configures middleware,
 and registers all route handlers.
 """
 
+import logging
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.config import settings
+
+logger = logging.getLogger(__name__)
+
+# Warn if production and SECRET_KEY is still the default placeholder
+if settings.ENVIRONMENT.lower() == "production" and settings.SECRET_KEY == "change-this-secret-key-in-production":
+    logger.warning(
+        "SECRET_KEY should be changed in production. Set a strong random value in your environment."
+    )
 
 app = FastAPI(
     title="Progressive Overload Tracker API",

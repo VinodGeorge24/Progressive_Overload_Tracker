@@ -117,5 +117,10 @@ See `pyproject.toml` for the complete list of dependencies.
 
 ## Environment Variables
 
-See `.env.example` in the project root for required environment variables.
+See `.env.example` in this directory (or the project root) for required environment variables.
+
+## Security & environment
+
+- **Never commit `.env`.** Copy from `.env.example` and set values locally. Use a **strong random `SECRET_KEY`** and strong database credentials for production; do not use the example values.
+- **Production:** Set `CORS_ORIGINS` to the actual frontend origin(s) (e.g. `https://your-app.com`). The app accepts either a JSON array in env (e.g. `CORS_ORIGINS='["https://your-app.com"]'`) or a comma-separated string (parsed automatically).
 

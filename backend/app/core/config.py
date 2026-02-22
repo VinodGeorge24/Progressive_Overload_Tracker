@@ -5,6 +5,7 @@ Loads settings from environment variables with sensible defaults.
 See plan/coding_plan.md Slice 0 and root .env.example (or backend/.env.example).
 """
 
+from pydantic import field_validator
 from pydantic_settings import BaseSettings
 
 
@@ -22,8 +23,16 @@ class Settings(BaseSettings):
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
 
-    # CORS — allow frontend dev server origins (Vite default 5173)
+    # CORS — allow frontend dev server origins (Vite default 5173). Env: comma-separated or JSON array.
     CORS_ORIGINS: list[str] = ["http://localhost:3000", "http://localhost:5173"]
+
+    @field_validator("CORS_ORIGINS", mode="before")
+    @classmethod
+    def parse_cors_origins(cls, v: object) -> object:
+        """Accept comma-separated string from env in addition to list/JSON."""
+        if isinstance(v, str):
+            return [origin.strip() for origin in v.split(",") if origin.strip()]
+        return v
 
     # Application
     ENVIRONMENT: str = "development"
