@@ -1,0 +1,32 @@
+---
+description: Avoid circular imports in the backend; where to import models for app vs Alembic
+alwaysApply: false
+globs: backend/**/*.py
+---
+
+# Avoid circular imports (backend)
+
+When adding or changing Python code in `backend/`, be mindful of **circular imports**.
+
+## Rule
+
+- **Do NOT import app models in `app/db/base.py`.**  
+  Models (e.g. `User`) inherit from `Base` and import `app.db.base`. If `base.py` in turn imports any model, you get: `user` → `base` → `user` → … and Python raises "partially initialized module" / circular import when the app or tests start (e.g. `uvicorn app.main:app`).
+
+- **For the running app:** Import models only where they are needed: endpoints, services, deps (e.g. `from app.models.user import User`). Prefer importing the concrete model module (`app.models.user`) rather than `app.models` when the chain goes through `api` or `services`, to keep load order simple.
+
+- **For Alembic (migrations):** Model discovery for `alembic revision --autogenerate` must attach tables to `Base.metadata`. That is done by importing models **in `alembic/env.py`** after `from app.db.base import Base` (e.g. `from app.models.user import User`). Keep model imports for migrations only in `env.py`, not in `app/db/base.py`.
+
+## When adding a new model
+
+1. Define the model in `app/models/<name>.py`; it should `from app.db.base import Base` and inherit from `Base`.
+2. Export it from `app/models/__init__.py` if other app code uses `from app.models import ...`.
+3. **Do not** add an import for it in `app/db/base.py`.
+4. **Do** add an import in `backend/alembic/env.py` (e.g. `from app.models.exercise import Exercise`) so autogenerate sees the new table.
+
+## Other fragile patterns
+
+- **Services importing models** is fine (e.g. `app.services.auth` imports `User`). Avoid models importing services or API layer.
+- **Schemas** should not import models or heavy app packages; keep them dependent only on stdlib/pydantic so they never participate in a cycle.
+
+If the app fails to start with an import error mentioning "partially initialized" or "circular import", check the chain that loads the failing module and remove the cycle (usually by moving the model import out of `base.py` into `alembic/env.py` only).

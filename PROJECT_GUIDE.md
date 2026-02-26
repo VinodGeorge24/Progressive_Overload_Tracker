@@ -31,7 +31,7 @@ This document describes what every folder and file in the project does. Use it a
 | **backend/pyproject.toml** | Project config: build (setuptools), project name/version/description, Python >=3.9, dependencies (fastapi, uvicorn, sqlalchemy, alembic, pydantic, pydantic-settings, python-jose, passlib[bcrypt], python-multipart, psycopg2-binary), optional dev (pytest, pytest-asyncio, httpx, black, ruff, mypy), package "app", black/ruff line-length 100, mypy settings. |
 | **backend/alembic.ini** | Alembic config: script_location=alembic, prepend_sys_path=., sqlalchemy.url placeholder, version_path_separator=os, logging config for root/sqlalchemy/alembic. |
 | **backend/alembic/** | Directory for database migration scripts and env. |
-| **backend/alembic/env.py** | Alembic environment: imports Base from app.db.base, overrides sqlalchemy.url from app.core.config settings, sets target_metadata = Base.metadata, defines run_migrations_offline/online and runs one based on context. Model imports are commented (to be added when models exist). |
+| **backend/alembic/env.py** | Alembic environment: imports Base from app.db.base, then imports all app models here (so Base.metadata is populated for autogenerate; avoids circular import that would occur if models were imported in app/db/base.py). Overrides sqlalchemy.url from settings, sets target_metadata = Base.metadata, run_migrations_offline/online. |
 | **backend/alembic/script.py.mako** | Mako template for new migration files: revision id, down_revision, upgrade/downgrade stubs. |
 | **backend/alembic/versions/** | Where migration version files live. Currently only .gitkeep (no migrations yet). |
 | **backend/app/** | Main application package. |
@@ -44,8 +44,8 @@ This document describes what every folder and file in the project does. Use it a
 | **backend/app/core/security.py** | Password hashing (passlib/bcrypt): verify_password, get_password_hash; JWT (python-jose): create_access_token, decode_access_token using settings. |
 | **backend/app/db/** | Database engine and session. |
 | **backend/app/db/__init__.py** | Package marker. |
-| **backend/app/db/base.py** | SQLAlchemy declarative Base; commented imports for future models (User, Exercise, WorkoutSession, etc.) for Alembic discovery. |
-| **backend/app/models/** | SQLAlchemy database models; exists with __init__.py and TODO imports. Add models here; import in db/base for Alembic discovery. |
+| **backend/app/db/base.py** | SQLAlchemy declarative Base. Do not import models here (causes circular import). Alembic discovers models via imports in alembic/env.py. |
+| **backend/app/models/** | SQLAlchemy database models; export from __init__.py. For migrations, import new models in alembic/env.py only (not in db/base). See .cursor/rules/avoid-circular-imports.mdc. |
 | **backend/app/db/session.py** | create_engine from settings.DATABASE_URL (with sqlite check_same_thread), SessionLocal sessionmaker, get_db() generator dependency for FastAPI. |
 | **backend/app/api/** | API router grouping: deps.py (shared dependencies), v1/router.py, v1/endpoints/ (the one true router home). |
 | **backend/app/schemas/__init__.py** | Pydantic schemas package; __all__ = []. |

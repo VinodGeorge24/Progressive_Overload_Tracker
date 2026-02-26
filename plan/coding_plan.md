@@ -68,7 +68,7 @@ The UI is inspired by **Stitch (Google)**. Design direction lives in **[frontend
 
 ---
 
-## Slice 1: Auth (register, login, logout, JWT)
+## Slice 1: Auth (register, login, logout, JWT) — ✅ Complete
 
 **Goal:** Users can register, log in, and receive a JWT; protected routes can read the current user.
 
@@ -76,12 +76,12 @@ The UI is inspired by **Stitch (Google)**. Design direction lives in **[frontend
 
 **Substeps (in order):**
 
-1. **DB — User model:** Add `User` model in `backend/app/models/` per [DATA_MODEL.md](../DATA_MODEL.md): id, email (unique), username (unique), hashed_password, created_at, updated_at, is_active. Export from `models/__init__.py`; import in `backend/app/db/base.py`.
-2. **DB — Migration:** Run `alembic revision --autogenerate -m "add users table"`, then `alembic upgrade head`. Confirm `users` table exists.
+1. **DB — User model:** Add `User` model in `backend/app/models/` per [DATA_MODEL.md](../DATA_MODEL.md): id, email (unique), username (unique), hashed_password, created_at, updated_at, is_active. Export from `models/__init__.py`. **Do NOT import models in `app/db/base.py`** (causes circular import); for Alembic, import models only in `alembic/env.py` (see Implementation notes — circular imports).
+2. **DB — Migration:** Run `alembic revision --autogenerate -m "add users table"` (from `backend/`; Alembic discovers models via `alembic/env.py`), then `alembic upgrade head`. Confirm `users` table exists.
 3. **Backend — Schemas:** Add Register, Login, Token, UserOut in `backend/app/schemas/`.
 4. **Backend — Service:** Add auth service in `backend/app/services/`: register (hash password, create user), login (verify password, create access token, return token + user). Use `backend/app/core/security.py`.
 5. **Backend — Deps:** In `backend/app/api/deps.py`, add `get_current_user`: extract Bearer token, decode, load user from DB; raise 401 if invalid/missing.
-6. **Backend — Endpoints:** Create `backend/app/api/v1/endpoints/auth.py`: POST `/register`, POST `/login`, POST `/logout`. Include in router with prefix `/auth`, tags `["authentication"]`.
+6. **Backend — Endpoints:** Create `backend/app/api/v1/endpoints/auth.py`: POST `/register`, POST `/login`, POST `/logout`, GET `/me` (current user; requires auth). Include in router with prefix `/auth`, tags `["authentication"]`. Logout: 200 OK, client discards token (no server-side invalidation in MVP).
 7. **Backend — Contract and test:** Update [API_CONTRACT.md](../API_CONTRACT.md) if needed. Add at least one test: register then login → 200 and access_token. Run tests.
 8. **Frontend — API:** Create `frontend/src/api/auth.ts`: register, login, logout; store token; use `Authorization: Bearer <token>` for subsequent requests.
 9. **Frontend — Design reference:** Use [frontend_references/login_page_-_lift_tracker/](../frontend_references/login_page_-_lift_tracker/) and [signup_page_-_lift_tracker/](../frontend_references/signup_page_-_lift_tracker/) for layout and styling inspiration (see [frontend_references/README.md](../frontend_references/README.md)).
@@ -99,7 +99,7 @@ The UI is inspired by **Stitch (Google)**. Design direction lives in **[frontend
 
 **Substeps (in order):**
 
-1. **DB — Exercise model:** Add `Exercise` (id, user_id FK, name, muscle_group, created_at, updated_at). Export; Alembic discovery.
+1. **DB — Exercise model:** Add `Exercise` (id, user_id FK, name, muscle_group, created_at, updated_at). Export from `models/__init__.py`; add import in `alembic/env.py` for Alembic (do not import in `app/db/base.py`).
 2. **DB — Migration:** Run `alembic revision --autogenerate -m "add exercises table"`, then `alembic upgrade head`.
 3. **Backend — Schemas:** ExerciseCreate, ExerciseUpdate, ExerciseOut.
 4. **Backend — Service:** Exercise service: list by user_id, get/create/update/delete; 404 if not owner.
@@ -223,3 +223,4 @@ The UI is inspired by **Stitch (Google)**. Design direction lives in **[frontend
 - **Tests:** At least one test per slice (happy path); add 401, 404, 409 as needed.
 - **Design:** For every frontend slice, use [frontend_references/](../frontend_references/) (see [README.md](../frontend_references/README.md) for folder map and intent). References are for inspiration; implement in React with consistent design tokens (primary #137fec, background-dark #101922, Inter).
 - **Docs:** Keep API_CONTRACT.md and DATA_MODEL.md in sync with code; update PROJECT_GUIDE or README when adding top-level areas.
+- **Circular imports:** Do not import app models in `app/db/base.py`; that creates a cycle (model → base → model). Import models only where needed (endpoints, services, deps). For Alembic autogenerate, import models in `alembic/env.py` after importing Base. See `.cursor/rules/avoid-circular-imports.mdc`.

@@ -2,30 +2,44 @@
 Security utilities for authentication and password hashing.
 
 This module handles:
-- Password hashing and verification (using bcrypt)
+- Password hashing and verification (using bcrypt directly; passlib is not used
+  to avoid passlib/bcrypt 4.1+ compatibility issues that cause 500 on register)
 - JWT token creation and verification
 """
 
 from datetime import datetime, timedelta
 from typing import Optional
 
+import bcrypt
 from jose import JWTError, jwt
-from passlib.context import CryptContext
 
 from app.core.config import settings
 
-# Password hashing context
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+# Bcrypt truncates at 72 bytes; we truncate before hashing to avoid surprises
+_BCRYPT_MAX_PASSWORD_BYTES = 72
+
+
+def _password_bytes(password: str) -> bytes:
+    """Encode password to UTF-8 and truncate to bcrypt's 72-byte limit."""
+    raw = password.encode("utf-8")
+    return raw[:_BCRYPT_MAX_PASSWORD_BYTES] if len(raw) > _BCRYPT_MAX_PASSWORD_BYTES else raw
 
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
-    """Verify a plain password against a hashed password."""
-    return pwd_context.verify(plain_password, hashed_password)
+    """Verify a plain password against a hashed password (bcrypt)."""
+    try:
+        return bcrypt.checkpw(
+            _password_bytes(plain_password),
+            hashed_password.encode("utf-8"),
+        )
+    except Exception:
+        return False
 
 
 def get_password_hash(password: str) -> str:
-    """Hash a password using bcrypt."""
-    return pwd_context.hash(password)
+    """Hash a password using bcrypt. Returns string suitable for DB storage."""
+    hashed = bcrypt.hashpw(_password_bytes(password), bcrypt.gensalt())
+    return hashed.decode("utf-8")
 
 
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -> str:

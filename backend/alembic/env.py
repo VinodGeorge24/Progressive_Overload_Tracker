@@ -13,10 +13,9 @@ from sqlalchemy import pool
 
 from alembic import context
 
-# Base and model imports — Alembic discovers tables via Base.metadata
+# Base and model imports — Alembic discovers tables via Base.metadata (models imported here to avoid circular import in app.db.base)
 from app.db.base import Base
-# Import app models here when added (e.g. User, Exercise, WorkoutSession)
-# from app.models.user import User
+from app.models.user import User  # noqa: F401
 # from app.models.exercise import Exercise
 # etc.
 

@@ -10,6 +10,8 @@ This log tracks:
 - What assistance was provided
 - How the output was modified or integrated
 
+**Habit:** When making adjustments (fixes, new rules, doc updates, or notable AI-assisted changes), add a corresponding note or entry to this log where relevant so the project maintains a clear record of AI usage and changes.
+
 ## Log Format
 
 Each entry should include:
@@ -79,6 +81,25 @@ Each entry should include:
 - Slice 0 is complete: backend config and DB wiring documented, frontend env and router in place, infra/docker-compose cleaned up, and checkpoint verified (health endpoint and placeholder page).
 - Project log, coding plan, and plan README state Slice 0 is complete and point to Slice 1 (Auth).
 - One consolidated commit was pushed to GitHub containing these changes.
+
+---
+
+### 2026-02-26 — Slice 1 (Auth), fixes, run guide, and push
+
+- **Tool**: Cursor AI (agent)
+- **Date**: 2026-02-26
+- **Task**: Implement Slice 1 (Auth) end-to-end; fix runtime and dependency issues; add run guide and circular-import rule; log adjustments; push to GitHub.
+
+**What the AI did**
+
+- **Slice 1 implementation:** User model, migration (add users table), auth schemas (RegisterIn, LoginIn, UserOut, TokenWithUser), auth service (register_user, authenticate_user), deps (get_current_user), auth endpoints (register, login, logout, GET /me). API_CONTRACT.md updated. Backend tests (conftest with in-memory SQLite, test_auth with mocked password hashing). Frontend: api/client.ts, api/auth.ts, AuthContext, ProtectedRoute, LoginPage, SignupPage, DashboardPage, routes (/login, /signup, /dashboard, /). Decisions logged: login by email only, token in localStorage, GET /me for session restore, logout client-side.
+- **Fixes:** (1) PEP 508: `pydantic[email]>={2.0.0}` → `pydantic[email]>=2.0.0` in pyproject.toml. (2) Circular import: removed model imports from app/db/base.py; added model imports in alembic/env.py so uvicorn starts and Alembic still discovers models. (3) Sign up 500: passlib/bcrypt 4.1+ incompatibility; replaced passlib with direct bcrypt in app/core/security.py (hash/verify with 72-byte truncation). (4) Frontend: SignupPage and LoginPage show “Something went wrong on the server. Please try again.” for 5xx.
+- **Docs and rules:** docs/slice1-run-and-test.md (run backend/frontend, manual test, pytest, build, checklist, troubleshooting). .cursor/rules/avoid-circular-imports.mdc (do not import models in base.py; use alembic/env.py for migrations). plan/coding_plan.md and PROJECT_GUIDE.md updated for circular-import and model-discovery. docs/project-log.md and backend/docs/log.md updated for all fixes and verified run (user VinodGeorge24, Dashboard).
+- **AI_USAGE:** Habit note added: log adjustments and notable AI-assisted changes here.
+
+**Modifications / final result**
+
+- User verified sign up and login (Dashboard “Hello, VinodGeorge24!”). User requested: (1) habit of logging adjustments to AI_USAGE.md, (2) push changes to GitHub per PUSH_TO_GITHUB.md. Push performed after commit with descriptive message.
 
 ---
 

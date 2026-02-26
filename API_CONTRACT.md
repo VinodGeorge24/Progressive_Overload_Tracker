@@ -79,7 +79,7 @@ Authenticate and receive JWT token.
 ```
 
 #### POST /api/v1/auth/logout
-Invalidate current token (if token blacklisting implemented).
+Client should discard the token. No server-side token invalidation in MVP.
 
 **Response (200):**
 ```json
@@ -87,6 +87,23 @@ Invalidate current token (if token blacklisting implemented).
   "message": "Successfully logged out"
 }
 ```
+
+#### GET /api/v1/auth/me
+Return the currently authenticated user. Requires `Authorization: Bearer <token>`.
+
+**Response (200):**
+```json
+{
+  "id": 1,
+  "email": "user@example.com",
+  "username": "username",
+  "is_active": true,
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z"
+}
+```
+
+**Errors:** 401 if missing or invalid token.
 
 ### Exercises
 
