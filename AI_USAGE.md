@@ -99,7 +99,26 @@ Each entry should include:
 
 **Modifications / final result**
 
-- User verified sign up and login (Dashboard “Hello, VinodGeorge24!”). User requested: (1) habit of logging adjustments to AI_USAGE.md, (2) push changes to GitHub per PUSH_TO_GITHUB.md. Push performed after commit with descriptive message.
+- User verified sign up and login (Dashboard “Hello, VinodGeorge24!”). User requested: (1) habit of logging adjustments to AI_USAGE.md, (2) push changes to GitHub per PUSH_TO_GITHUB.md. Push: root `.gitignore` had `lib/`, which ignored `frontend/src/lib/utils.ts`; added exception `!frontend/src/lib/` under Frontend. Staged, committed (message: Slice 1, fixes, run guide, rule, AI_USAGE, .gitignore), pushed with `git push -u origin main`. Commit 313dd4e.
+
+### 2026-02-26 — Session timeout (30 minutes)
+
+- **Tool**: Cursor AI (agent)
+- **Task**: Add session timeout so the user is logged out after a period of time (30 minutes).
+- **What was done:** Backend already had JWT expiry of 30 minutes (`ACCESS_TOKEN_EXPIRE_MINUTES`). Implemented frontend handling: API client response interceptor clears token and dispatches `auth:session-expired` on 401; AuthContext listens and sets user to null. Added `frontend/src/api/constants.ts` for `TOKEN_KEY` to avoid circular imports. Documented in API_CONTRACT, backend `.env.example`, docs/slice1-run-and-test.md, docs/project-log.md, backend/docs/log.md.
 
 ---
+
+### 2026-03-02 — Slice 2 (Exercises CRUD)
+
+- **Tool**: Cursor AI (agent)
+- **Task**: Implement Slice 2 end-to-end (backend + frontend) for exercises CRUD.
+- **Prompt/Request**: User approved a Slice 2 plan, asked for consistent logging and testing, then asked to proceed to frontend exercises UI once backend was verified.
+- **Output**:
+  - **Backend**: Added `Exercise` model + Alembic migration (`0483435f322d_add_exercises_table.py`), exercise schemas and service, `/api/v1/exercises` endpoints, and tests (`backend/app/tests/test_exercises.py`).
+  - **Frontend**: Added `frontend/src/api/exercises.ts` and a protected `frontend/src/pages/ExercisesPage.tsx` with create/edit/delete UI; wired `/exercises` route and added Dashboard navigation.
+  - **Verification**: Ran `pytest app/tests -q` (5 passed, warnings only) and `npm run build` (success). User manually sanity-checked login + exercises CRUD in the browser.
+  - **Docs**: Added Slice 2 entries to `docs/project-log.md` and `backend/docs/log.md`.
+- **Modifications**: The user validated the UI behavior manually (create/list/edit/delete exercises) and reported success. No additional feature scope was added beyond Slice 2.
+- **Final Result**: Exercises CRUD works end-to-end behind auth, with tests and logs updated. `frontend_references/` remains the source of design inspiration for future UI expansion.
 

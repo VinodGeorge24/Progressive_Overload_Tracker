@@ -25,3 +25,16 @@ Chronological log of backend-specific decisions and implementation notes. For pr
 **Fix (sign up 500):** Register was returning 500 due to passlib/bcrypt 4.1+ compatibility (internal 72-byte check and `__about__` attribute). Switched `app/core/security.py` to use the `bcrypt` library directly for hashing and verification; passwords truncated to 72 bytes UTF-8 before hashing. Frontend: SignupPage and LoginPage now show "Something went wrong on the server. Please try again." for 5xx responses.
 
 **Verified:** Successful sign up and login (user VinodGeorge24); Dashboard “Hello, VinodGeorge24!”; flow matches docs/slice1-run-and-test.md.
+
+**Session timeout (30 min):** JWT expiry was already 30 minutes (`ACCESS_TOKEN_EXPIRE_MINUTES` in config). No backend change. Frontend now clears token and updates UI on 401 (response interceptor + `auth:session-expired` event). Documented in API_CONTRACT, .env.example, slice1-run-and-test, and project log.
+
+---
+
+## 2026-03-02
+
+### Slice 2: Exercises CRUD — backend
+
+- **Model and migration:** Added `Exercise` model (`backend/app/models/exercise.py`) with fields id, user_id (FK to users with `ondelete="CASCADE"`), name, muscle_group, created_at, updated_at. Added `User.exercises` relationship (string-based to avoid imports) and `Exercise.user` relationship. Imported `Exercise` in `app/models/__init__.py` and `backend/alembic/env.py` so Alembic discovers the table; generated migration `0483435f322d_add_exercises_table.py` and applied it (`alembic upgrade head`).
+- **Schemas and service:** Created `backend/app/schemas/exercises.py` (ExerciseCreate, ExerciseUpdate, ExerciseOut). Implemented `backend/app/services/exercises.py` with helpers to list, create, get, update, and delete exercises scoped to the authenticated user (`user_id` filter). Returns Pydantic models via `ExerciseOut.model_validate(...)`.
+- **Endpoints and router:** Added `backend/app/api/v1/endpoints/exercises.py` with authenticated routes: `GET /api/v1/exercises/`, `POST /api/v1/exercises/`, `GET /api/v1/exercises/{a_exercise_id}`, `PUT /api/v1/exercises/{a_exercise_id}`, `DELETE /api/v1/exercises/{a_exercise_id}`. Each endpoint uses `get_current_user` and returns 404 with a shared `"Exercise not found"` message when the exercise does not exist or does not belong to the user. Included the router in `backend/app/api/v1/router.py` with prefix `/exercises` and tag `["exercises"]`.
+- **Tests:** Added `backend/app/tests/test_exercises.py` to verify (1) full CRUD for a single user (create → list → get → update → delete → 404 after delete) and (2) ownership: a second user cannot list, get, update, or delete another user’s exercise (all 404). Tests run with the in-memory SQLite fixture from `conftest.py`; `pytest app/tests/test_exercises.py -q` passes.

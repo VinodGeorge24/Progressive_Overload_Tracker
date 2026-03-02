@@ -33,7 +33,7 @@ This document describes what every folder and file in the project does. Use it a
 | **backend/alembic/** | Directory for database migration scripts and env. |
 | **backend/alembic/env.py** | Alembic environment: imports Base from app.db.base, then imports all app models here (so Base.metadata is populated for autogenerate; avoids circular import that would occur if models were imported in app/db/base.py). Overrides sqlalchemy.url from settings, sets target_metadata = Base.metadata, run_migrations_offline/online. |
 | **backend/alembic/script.py.mako** | Mako template for new migration files: revision id, down_revision, upgrade/downgrade stubs. |
-| **backend/alembic/versions/** | Where migration version files live. Currently only .gitkeep (no migrations yet). |
+| **backend/alembic/versions/** | Where migration version files live. Contains Alembic revisions for the users table and exercises table (Slices 1–2). |
 | **backend/app/** | Main application package. |
 | **backend/app/__init__.py** | Package marker (empty docstring). |
 | **backend/app/main.py** | FastAPI entry point: creates app with title/description/version, adds CORS middleware (from settings), includes v1 router with prefix /api/v1, defines GET / and GET /health. |
@@ -62,9 +62,9 @@ This document describes what every folder and file in the project does. Use it a
 | **frontend/README.md** | Frontend readme: tech stack (Vite + React + React Router, Tailwind CSS, shadcn/ui for select components), prerequisites (Node 18+, backend running), install (npm/yarn/pnpm), env (VITE_API_URL), dev server, suggested structure (pages, components/ui for shadcn, api, lib, hooks, utils, types), workflow, principles (separation of concerns, api abstraction, type safety, error handling, loading states, responsive), API integration example (uses /api/v1/), auth (JWT storage), build. |
 | **frontend/package.json** | Project name/version, type "module", scripts (dev, build, preview, lint, format), dependencies (react, react-dom, react-router-dom, axios, tailwindcss, shadcn-related: clsx, tailwind-merge, lucide-react, etc.), devDependencies (types, vite, @vitejs/plugin-react, @tailwindcss/vite, eslint, prettier, typescript). |
 | **frontend/src/** | Source code. |
-| **frontend/src/pages/** | Placeholder for page components (e.g. Login, Dashboard, WorkoutLog, History, Analytics); currently .gitkeep. |
+| **frontend/src/pages/** | Page components (e.g. Login, Signup, Dashboard, Exercises). Additional pages (WorkoutLog, History, Analytics) will be added in later slices. |
 | **frontend/src/components/** | Reusable UI components; `ui/` subfolder holds shadcn/ui components. |
-| **frontend/src/api/** | Placeholder for API helper functions that call backend; .gitkeep. |
+| **frontend/src/api/** | API helper modules that call backend endpoints (e.g. `auth.ts`, `client.ts`, `exercises.ts`). |
 
 ---
 

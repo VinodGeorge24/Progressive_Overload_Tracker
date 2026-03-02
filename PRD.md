@@ -58,6 +58,18 @@ Fitness enthusiasts need a reliable way to:
 - Exercise progress (per-exercise visualization, filterable by set_number)
 - Templates (if templates are in scope)
 
+### UI inspiration (logging experience)
+
+The visual design for workout logging should feel **clean and card-based**, similar to modern mobile trackers (see reference screenshots and `frontend_references/`). These are **inspiration only**, but the following aspects are desirable when we later implement the frontend:
+
+- **Per-exercise cards for a given day**: Each exercise appears as a card showing its name, muscle group/category, and all sets for that date.
+- **Set rows inside each card**: For each set, show weight (lbs), reps, and optional notes inline so a user can scan the entire workout quickly.
+- **Quick add/edit of sets**: Within a card, an obvious "Add set" affordance should append another set row without navigating away; editing a set should be a lightweight interaction (e.g., inline or small modal).
+- **Exercise selection with categories**: When choosing an exercise, the UI should support a searchable list grouped by categories/muscle groups (e.g., Abs, Back, Chest, Legs, Shoulders, Triceps), plus "Add exercise" as a first-class action.
+- **Add exercise form**: Creating a new exercise may include fields like name, category/muscle group, and type (e.g., strength with weight + reps), while data storage remains aligned with `DATA_MODEL.md` (exercise name + muscle_group; sets hold weight and reps).
+
+These notes are **non-binding UI guidance** for future frontend slices (especially Slices 3–5). Behavior, data model, and API scope remain as defined elsewhere in this PRD and in `DATA_MODEL.md` / `API_CONTRACT.md`.
+
 ### Should Have
 1. Workout templates (create workout or choose from presets)
 2. Exercise search and filtering

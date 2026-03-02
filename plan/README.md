@@ -8,7 +8,7 @@ This folder holds the **coding plan** for the Progressive Overload Tracker so th
 |------|--------|
 | **coding_plan.md** | Full slice-by-slice plan: Slices 0–7, substeps, checkpoints, design references (Stitch + frontend_references), libraries checklist, implementation notes. **Read this when starting or advancing a slice.** |
 
-**Status:** Slice 0 complete (see [docs/project-log.md](../docs/project-log.md) 2026-02-19). Next: Slice 1 (Auth).
+**Status:** Slice 0 and Slice 1 (Auth) complete (see [docs/project-log.md](../docs/project-log.md)). Next: Slice 2 (Exercises CRUD).
 
 For the full screen-to-folder map and design tokens, see [frontend_references/README.md](../frontend_references/README.md).
 

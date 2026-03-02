@@ -15,6 +15,8 @@ API_CONTRACT.md is the human-readable contract; FastAPI's auto-generated OpenAPI
 
 Most endpoints require authentication via JWT tokens.
 
+**Session expiry:** Access tokens expire after **30 minutes** (configurable via `ACCESS_TOKEN_EXPIRE_MINUTES` in backend config). After expiry, any request with that token returns 401. The client clears the stored token on 401 and treats the user as logged out (redirect to login when applicable).
+
 ### Headers
 ```
 Authorization: Bearer <jwt_token>

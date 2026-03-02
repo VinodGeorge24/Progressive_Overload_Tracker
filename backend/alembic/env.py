@@ -16,7 +16,7 @@ from alembic import context
 # Base and model imports — Alembic discovers tables via Base.metadata (models imported here to avoid circular import in app.db.base)
 from app.db.base import Base
 from app.models.user import User  # noqa: F401
-# from app.models.exercise import Exercise
+from app.models.exercise import Exercise  # noqa: F401
 # etc.
 
 from app.core.config import settings

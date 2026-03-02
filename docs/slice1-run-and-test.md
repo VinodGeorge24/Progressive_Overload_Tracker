@@ -47,6 +47,10 @@ npm run dev
 
 ---
 
+**Session timeout:** Access tokens expire after 30 minutes. If the token is expired or invalid, the next API call returns 401; the client then clears the token and the app shows as logged out (redirect to login when on a protected page).
+
+---
+
 ## 3. Manual test (Slice 1 checkpoint)
 
 1. **Welcome** — Open app; you should see “Progressive Overload Tracker” and Log in / Sign up.

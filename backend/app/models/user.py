@@ -8,8 +8,10 @@ created_at, updated_at, is_active.
 
 from datetime import datetime
 
+from typing import List
+
 from sqlalchemy import Boolean, DateTime, String
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base import Base
 
@@ -30,3 +32,11 @@ class User(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, default=datetime.utcnow)
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, default=datetime.utcnow, onupdate=datetime.utcnow)
     is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
+
+    # Exercises owned by this user
+    exercises: Mapped[List["Exercise"]] = relationship(
+        "Exercise",
+        back_populates="user",
+        cascade="all, delete-orphan",
+        passive_deletes=True,
+    )

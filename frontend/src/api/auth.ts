@@ -1,11 +1,12 @@
 /**
  * Auth API: register, login, logout, getMe.
  * Token is stored in localStorage; client discards on logout (no server invalidation in MVP).
+ * Session expires after 30 minutes (JWT expiry); client clears token on 401 (see api/client.ts).
  */
 import { apiClient } from "./client";
+import { TOKEN_KEY } from "./constants";
 
 const AUTH_PREFIX = "/api/v1/auth";
-const TOKEN_KEY = "access_token";
 
 export interface User {
   id: number;

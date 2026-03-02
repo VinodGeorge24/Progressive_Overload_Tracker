@@ -91,7 +91,7 @@ The UI is inspired by **Stitch (Google)**. Design direction lives in **[frontend
 
 ---
 
-## Slice 2: Exercises CRUD
+## Slice 2: Exercises CRUD — ✅ Complete
 
 **Goal:** Authenticated user can create, read, update, and delete their own exercises.
 

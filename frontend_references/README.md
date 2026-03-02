@@ -1,5 +1,7 @@
 # Frontend references (design inspiration)
 
+**Status:** Slice 1 complete (Login, Sign up, Dashboard implemented). Next: Slice 2 (Exercises).
+
 This folder contains **screen-level design references** for the Progressive Overload Tracker. Each subfolder is named after a screen and contains:
 
 - **code.html** — Static HTML + Tailwind mockup for that screen (layout, components, copy).

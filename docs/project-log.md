@@ -38,6 +38,12 @@ Chronological log of project decisions and documentation updates. For weekly pro
 10. **Frontend — Auth context and routes** — `frontend/src/contexts/AuthContext.tsx`: user, loading, login, register, logout; restore session via getMe on load. `frontend/src/components/ProtectedRoute.tsx`: redirect to /login if not authenticated. Routes: `/`, `/login`, `/signup`, `/dashboard` (protected). Welcome page redirects to /dashboard if logged in.
 11. **Checkpoint** — Verified: register, log in, see Dashboard; GET /api/v1/auth/me without token → 401; with token → 200. Frontend build passes.
 
+### Session timeout (30 minutes)
+
+**Requirement:** After a period of inactivity (or token age), the user should be logged out so that restarting the app doesn’t leave them “still logged in” indefinitely.
+
+**Implementation:** Backend already issues JWTs with a 30-minute expiry (`ACCESS_TOKEN_EXPIRE_MINUTES`, default 30 in `backend/app/core/config.py`). Added frontend behavior: (1) API client response interceptor — on any 401 (e.g. expired or invalid token), clear the stored token and dispatch a custom event `auth:session-expired`. (2) AuthContext listens for that event and sets user to null so the UI shows as logged out and protected routes redirect to login. (3) Shared `TOKEN_KEY` moved to `frontend/src/api/constants.ts` to avoid circular imports between client and auth. Docs: API_CONTRACT (session expiry note), backend `.env.example` (optional `ACCESS_TOKEN_EXPIRE_MINUTES`), slice1-run-and-test (session timeout note), project and backend logs.
+
 ### Fix: pyproject.toml PEP 508 dependency format
 
 **Error:** `pip install -e .` in backend failed with:
@@ -89,6 +95,32 @@ End-to-end auth verified: user (VinodGeorge24) completed sign up and login; Dash
 - **PROJECT_GUIDE.md** — backend/app/db/base.py and backend/app/models/ and alembic/env.py rows updated to describe the no-import-in-base pattern and env.py for discovery.
 - **docs/slice1-run-and-test.md** — New: how to run backend (uvicorn, alembic), frontend (npm run dev), manual Slice 1 checkpoint steps, backend tests, frontend build, troubleshooting (including circular-import note).
 - **docs/README.md** — Added slice1-run-and-test.md to contents.
+
+---
+
+## 2026-03-02
+
+### Slice 2: Exercises CRUD — backend implementation
+
+**Scope:** Slice 2 Exercises CRUD (backend + frontend).
+
+**Done:**
+
+1. **DB — Exercise model and migration** — Added `backend/app/models/exercise.py` (`exercises` table: id, user_id FK to users with `ondelete="CASCADE"`, name, muscle_group, created_at, updated_at). Wired relationships via `User.exercises` and `Exercise.user` without introducing new circular imports. Updated `app/models/__init__.py` and `backend/alembic/env.py` to import `Exercise` for Alembic discovery. Generated and applied Alembic migration `0483435f322d_add_exercises_table.py`.
+2. **Backend — Schemas and service** — Added `backend/app/schemas/exercises.py` (ExerciseCreate, ExerciseUpdate, ExerciseOut). Implemented `backend/app/services/exercises.py` with `list_exercises_for_user`, `create_exercise_for_user`, `get_exercise_for_user`, `update_exercise_for_user`, and `delete_exercise_for_user`, all scoped by `user_id` to enforce ownership.
+3. **Backend — Endpoints and router** — Added `backend/app/api/v1/endpoints/exercises.py` with authenticated routes: `GET /api/v1/exercises/`, `POST /api/v1/exercises/`, `GET /api/v1/exercises/{a_exercise_id}`, `PUT /api/v1/exercises/{a_exercise_id}`, `DELETE /api/v1/exercises/{a_exercise_id}`. Included the router in `backend/app/api/v1/router.py` with prefix `/exercises` and tag `["exercises"]`. All 404s use a shared `"Exercise not found"` detail constant.
+4. **Contract and tests** — Confirmed `API_CONTRACT.md` Exercises section matches the implemented request/response shapes (list returns an array of exercises; individual responses include id, name, muscle_group, created_at/updated_at). Added `backend/app/tests/test_exercises.py` to cover: (a) full CRUD for a single user (create → list → get → update → delete → 404 on get after delete), and (b) ownership rules (second user cannot see or modify first user’s exercises and receives 404). Tests run with the existing in-memory SQLite fixture; `pytest app/tests/test_exercises.py -q` passes.
+
+### Slice 2: Exercises CRUD — frontend implementation
+
+**Done:**
+
+1. **Frontend — API helper** — Added `frontend/src/api/exercises.ts` (list, create, get, update, delete) using the shared axios `apiClient` so the auth header and session-expiry behavior remain consistent.
+2. **Frontend — Exercises page** — Added `frontend/src/pages/ExercisesPage.tsx` with a clean, card-based UI inspired by `frontend_references/` (grouped by muscle group) and inline create/edit/delete actions.
+3. **Frontend — Routing and navigation** — Added protected route `GET /exercises` (client-side) in `frontend/src/App.tsx` behind `ProtectedRoute`. Updated `DashboardPage` to link to Exercises.
+4. **Verification** — `npm run build` completes successfully. Manual sanity-check performed: login → Exercises list → create → edit → delete; backend logs show matching authenticated `/api/v1/exercises` traffic.
+
+**Checkpoint:** Slice 2 is complete end-to-end — authenticated users can manage their exercises from the UI; backend ownership rules are enforced (404 for non-owned resources); `pytest app/tests -q` passes; frontend build succeeds.
 
 ---
 

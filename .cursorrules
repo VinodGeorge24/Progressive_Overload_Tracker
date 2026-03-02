@@ -4,6 +4,8 @@
 
 This is a workout tracking application focused on progressive overload principles. The backend is Python (FastAPI), and the frontend is a modern web framework.
 
+**Slice status:** Slices 0–2 are complete. Next: Slice 3 (Workout sessions and sets). See `plan/coding_plan.md` for the full slice order.
+
 ## Documentation First
 
 When working on features, always check these files first:
