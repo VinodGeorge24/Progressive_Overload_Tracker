@@ -5,7 +5,7 @@ This folder contains longer-form documentation that supports the project, includ
 ## Contents
 
 ### slice1-run-and-test.md
-How to run backend and frontend and manually test Slice 1 (Auth), plus backend tests and troubleshooting (including circular-import note).
+How to run backend and frontend and manually test Slice 1 (Auth), plus backend tests and troubleshooting (including circular-import note). Includes an optional Slice 3 (Sessions) manual check and a note that `npm install` in frontend is required before build.
 
 ### project-log.md
 Chronological log of project decisions and doc updates. Each entry can include a human-readable summary and an agent-friendly (structured) summary. Starts from 2/18/26.

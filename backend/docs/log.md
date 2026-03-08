@@ -38,3 +38,26 @@ Chronological log of backend-specific decisions and implementation notes. For pr
 - **Schemas and service:** Created `backend/app/schemas/exercises.py` (ExerciseCreate, ExerciseUpdate, ExerciseOut). Implemented `backend/app/services/exercises.py` with helpers to list, create, get, update, and delete exercises scoped to the authenticated user (`user_id` filter). Returns Pydantic models via `ExerciseOut.model_validate(...)`.
 - **Endpoints and router:** Added `backend/app/api/v1/endpoints/exercises.py` with authenticated routes: `GET /api/v1/exercises/`, `POST /api/v1/exercises/`, `GET /api/v1/exercises/{a_exercise_id}`, `PUT /api/v1/exercises/{a_exercise_id}`, `DELETE /api/v1/exercises/{a_exercise_id}`. Each endpoint uses `get_current_user` and returns 404 with a shared `"Exercise not found"` message when the exercise does not exist or does not belong to the user. Included the router in `backend/app/api/v1/router.py` with prefix `/exercises` and tag `["exercises"]`.
 - **Tests:** Added `backend/app/tests/test_exercises.py` to verify (1) full CRUD for a single user (create → list → get → update → delete → 404 after delete) and (2) ownership: a second user cannot list, get, update, or delete another user’s exercise (all 404). Tests run with the in-memory SQLite fixture from `conftest.py`; `pytest app/tests/test_exercises.py -q` passes.
+
+---
+
+## 2026-03-08
+
+### Slice 3: Workout sessions and sets — backend
+
+- **Models and migration:** Added `WorkoutSession` (unique (user_id, date)), `WorkoutExercise`, `Set`; User.workout_sessions and Exercise.workout_exercises relationships. Migration `b7e8c4a1f3d2_add_workout_sessions_tables.py` was written manually (autogenerate failed in one environment with “table alembic_version already exists”). `alembic upgrade head` applies it successfully.
+- **Schemas:** `backend/app/schemas/sessions.py` — SetIn/SetOut, WorkoutExerciseIn/Out, SessionCreate, SessionUpdate, SessionOut, SessionListResponse. Used `date_type` alias for `date` to avoid Pydantic field-name shadowing (fix: `date: date | None` raised TypeError when the field name shadowed the type).
+- **Service:** `backend/app/services/sessions.py` — create (409 if date exists, 404 if any exercise_id not owned), get, list (limit/offset/start_date/end_date, total count), update (409 if new date already has session, 404 for exercise; replace exercises/sets in one transaction with `expire(session, ["workout_exercises"])` after delete to avoid “instance has been deleted” on commit), delete.
+- **Endpoints:** `backend/app/api/v1/endpoints/sessions.py` — GET/POST `/api/v1/sessions`, GET/PUT/DELETE `/api/v1/sessions/{id}`; 409 and 404 mapped to service detail messages.
+- **Tests:** `backend/app/tests/test_sessions.py` — CRUD + list (sessions + total), POST same date → 409, PUT to existing date → 409, other user’s session → 404 (get/put/delete), create session with other user’s exercise_id → 404. All 10 tests (auth + exercises + sessions) pass.
+
+### Duplicate sets when loading session (fixed)
+
+- **Problem:** Viewing a workout (Today’s log or History → edit) showed the same set repeated multiple times (e.g. Set #1 and Set #2 each appearing 4 times). Data was correct in the DB; the bug was in how sessions were loaded.
+- **Cause:** In `sessions.py`, session queries used two separate `joinedload(WorkoutSession.workout_exercises).joinedload(...)` calls (one for `WorkoutExercise.exercise`, one for `WorkoutExercise.sets`). Loading the same parent relationship twice with different nested loads can make SQLAlchemy duplicate collection entries, so `session.workout_exercises` and/or each `we.sets` contained repeated items.
+- **Fix:** Use a single load of `workout_exercises` with nested `.options()` to load both sub-relationships: `joinedload(WorkoutSession.workout_exercises).options(joinedload(WorkoutExercise.exercise), joinedload(WorkoutExercise.sets))`. Applied in all four places: after create, in get_session_for_user, in list_sessions_for_user, and after update.
+
+### Last-sets for pre-fill
+
+- **Endpoint:** GET `/api/v1/sessions/last-sets?exercise_id=...` returns the most recent session's sets for that exercise (LastSetsOut: date, sets with set_number, weight, reps). Used by frontend to pre-fill when adding or changing an exercise on Log/Session Edit.
+- **Service:** `get_last_sets_for_exercise(a_db, a_user, a_exercise_id)` — verifies exercise is owned, finds latest WorkoutExercise for that exercise_id in user's sessions, returns that workout's sets. None if never logged or exercise not owned. Schemas: LastSetPoint, LastSetsOut in `schemas/sessions.py`. Route registered before `/{a_session_id}` so `/last-sets` is matched.

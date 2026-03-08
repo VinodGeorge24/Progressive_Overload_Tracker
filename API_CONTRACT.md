@@ -199,7 +199,7 @@ Get all workout sessions for the authenticated user. Returns at most one session
 - `start_date`: Filter sessions after this date (ISO format)
 - `end_date`: Filter sessions before this date (ISO format)
 
-**Response (200):**
+**Response (200):** Each exercise in `exercises` includes optional `notes` (per-exercise notes for that session).
 ```json
 {
   "sessions": [
@@ -212,6 +212,7 @@ Get all workout sessions for the authenticated user. Returns at most one session
         {
           "exercise_id": 1,
           "exercise_name": "Bench Press",
+          "notes": "Elbows tucked",
           "sets": [
             {
               "id": 1,
@@ -233,7 +234,7 @@ Create a new workout session.
 
 **Response (409 Conflict):** When the user already has a session for the given date. Body should include a clear message (e.g. "A workout already exists for this date; edit it instead.").
 
-**Request:**
+**Request:** Each item in `exercises` may include optional `notes` (per-exercise notes for this session).
 ```json
 {
   "date": "2024-01-01",
@@ -241,13 +242,8 @@ Create a new workout session.
   "exercises": [
     {
       "exercise_id": 1,
-      "sets": [
-        {
-          "reps": 10,
-          "weight": 135,
-          "set_number": 1
-        }
-      ]
+      "sets": [...],
+      "notes": "Elbows tucked"
     }
   ]
 }
@@ -262,6 +258,25 @@ Create a new workout session.
   "created_at": "2024-01-01T10:00:00Z"
 }
 ```
+
+#### GET /api/v1/sessions/last-sets
+Get the most recent session's sets for an exercise (for pre-fill when logging). 404 if exercise not owned or never logged.
+
+**Query Parameters:**
+- `exercise_id`: Exercise ID (must belong to the authenticated user).
+
+**Response (200):**
+```json
+{
+  "date": "2024-01-01",
+  "sets": [
+    { "set_number": 1, "weight": 135, "reps": 10 },
+    { "set_number": 2, "weight": 135, "reps": 8 }
+  ]
+}
+```
+
+**Response (404):** Exercise not found, not owned, or never logged.
 
 #### GET /api/v1/sessions/{session_id}
 Get a specific workout session.
@@ -278,6 +293,8 @@ Get a specific workout session.
 
 #### PUT /api/v1/sessions/{session_id}
 Update a workout session.
+
+**Response (409 Conflict):** When the request changes the session date to a date that already has a session for this user. Body should include a clear message (e.g. "A workout already exists for that date.").
 
 **Request:**
 ```json
@@ -305,7 +322,7 @@ Delete a workout session.
 
 ### Analytics
 
-Charts are generated in the backend with Python (e.g. matplotlib, Plotly). The backend may expose progress data and/or serve chart images (PNG/SVG) or URLs.
+Charts are generated in the backend with **matplotlib**. The backend may expose progress data and/or serve chart images (PNG/SVG) or URLs.
 
 #### GET /api/v1/analytics/progress/{exercise_id}
 Get progress data for a specific exercise (for chart generation or display). Scoped to the authenticated user.
@@ -417,7 +434,7 @@ All errors follow this format:
 ### Resource ownership and edge cases
 
 - **404 Not Found**: Return when the resource does not exist **or** does not belong to the authenticated user (e.g. `exercise_id`, `session_id` for another user). Do not leak existence of other users' resources.
-- **409 Conflict**: When creating a session (POST /api/v1/sessions) for a date that already has a session for this user (one session per day).
+- **409 Conflict**: When creating a session (POST /api/v1/sessions) for a date that already has a session for this user, or when updating a session (PUT /api/v1/sessions/{id}) to a date that already has a session (one session per day).
 - **400 Bad Request**: Invalid date (e.g. future date if disallowed), invalid `set_number` or weight/reps (e.g. negative, zero where not allowed).
 - **422 Unprocessable Entity**: Validation errors (e.g. required fields missing, wrong types).
 - All session, exercise, and template list/get endpoints must scope to the current user only.

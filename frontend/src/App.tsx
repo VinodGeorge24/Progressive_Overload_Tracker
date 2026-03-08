@@ -8,7 +8,10 @@ import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import DashboardPage from "@/pages/DashboardPage";
 import ExercisesPage from "@/pages/ExercisesPage";
+import HistoryPage from "@/pages/HistoryPage";
+import LogPage from "@/pages/LogPage";
 import LoginPage from "@/pages/LoginPage";
+import SessionEditPage from "@/pages/SessionEditPage";
 import SignupPage from "@/pages/SignupPage";
 
 /** Placeholder home: welcome + links. If authenticated, redirect to dashboard. */
@@ -51,6 +54,30 @@ function AppRoutes() {
         element={
           <ProtectedRoute>
             <ExercisesPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/log"
+        element={
+          <ProtectedRoute>
+            <LogPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/history"
+        element={
+          <ProtectedRoute>
+            <HistoryPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/history/:id"
+        element={
+          <ProtectedRoute>
+            <SessionEditPage />
           </ProtectedRoute>
         }
       />

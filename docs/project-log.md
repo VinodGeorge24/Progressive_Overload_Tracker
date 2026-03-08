@@ -124,6 +124,47 @@ End-to-end auth verified: user (VinodGeorge24) completed sign up and login; Dash
 
 ---
 
+## 2026-03-08
+
+### Slice 3: Workout sessions and sets — ✅ **COMPLETE**
+
+**Scope:** One workout session per user per day; create/edit sessions with exercises and sets (set_number, weight, reps). 409 on duplicate date (POST and PUT); 404 for other user’s session or non-owned exercise_id.
+
+**Done:**
+
+1. **Doc/plan adjustments (pre-Slice 3)** — API_CONTRACT: PUT 409 for session date conflict, Analytics matplotlib-only; ARCHITECTURE: feature flow order (Schemas → Service → Endpoints), matplotlib; plan: exercise order (array index), set validation (reps > 0, weight ≥ 0, set_number > 0), Slice 6 profile PATCH under `/auth/me`, apply-template clarification, Dashboard step.
+2. **DB — Models and migration** — Added `WorkoutSession` (unique (user_id, date)), `WorkoutExercise`, `Set` in `backend/app/models/`; User.workout_sessions, Exercise.workout_exercises relationships. Migration `b7e8c4a1f3d2_add_workout_sessions_tables.py` created manually (autogenerate in some environments hit “table alembic_version already exists” with SQLite; manual migration is reliable). Applied with `alembic upgrade head`.
+3. **Backend — Schemas** — `backend/app/schemas/sessions.py`: SetIn/SetOut, WorkoutExerciseIn/Out, SessionCreate, SessionUpdate, SessionOut, SessionListResponse. Used `date_type` alias for session date to avoid Pydantic field-name shadowing.
+4. **Backend — Service** — `backend/app/services/sessions.py`: create (409 if date exists, 404 if exercise not owned), get, list (limit/offset/date range, total count), update (409 if new date exists, 404 for exercise), delete. On update, expire session.workout_exercises after deleting children to avoid SQLAlchemy “instance has been deleted” when saving.
+5. **Backend — Endpoints and router** — `backend/app/api/v1/endpoints/sessions.py`: GET/POST `/api/v1/sessions`, GET/PUT/DELETE `/api/v1/sessions/{id}`; 409 and 404 handled. Router included with prefix `/sessions`.
+6. **Backend — Contract and tests** — API_CONTRACT already described sessions; added PUT 409. `backend/app/tests/test_sessions.py`: CRUD + list with total, POST same date → 409, PUT to existing date → 409, other user GET/PUT/DELETE → 404, session with other user’s exercise_id → 404. All 10 backend tests pass.
+7. **Frontend — API** — `frontend/src/api/sessions.ts`: listSessions, getSession, createSession, updateSession, deleteSession, list params, date helpers.
+8. **Frontend — Pages** — LogPage (today’s log: create/edit today’s session), HistoryPage (list sessions, link to edit), SessionEditPage (edit by id), DashboardPage (Log Today’s Workout CTA, recent sessions, History link).
+9. **Frontend — Routing** — `/log`, `/history`, `/history/:id` (protected).
+10. **Dependencies and build** — Backend: `pip install -e ".[dev]"`; frontend: `npm install` (required for Vite; without it `npm run build` failed with “vite is not recognized”). Frontend build succeeds after `npm install`.
+
+**Errors / fixes documented:**
+
+- **Schema date shadowing:** `SessionUpdate.date: date | None` caused `TypeError: unsupported operand type(s) for |: 'NoneType' and 'NoneType'` because the field name `date` shadowed the imported type. Fixed by using `from datetime import date as date_type` and `date_type` in session schemas.
+- **Session update SQLAlchemy:** Replacing session exercises (delete old workout_exercises, add new) left the session object holding references to deleted instances; `a_db.add(session)` then raised “Instance has been deleted.” Fixed by calling `a_db.expire(session, ["workout_exercises"])` after the delete loop and removing the redundant `a_db.add(session)` before commit.
+- **Alembic autogenerate:** In one environment, `alembic revision --autogenerate` failed with “table alembic_version already exists” during env run. Migration was written manually; `alembic upgrade head` applies it successfully on a fresh or existing DB.
+- **Frontend build:** `npm run build` failed with “vite is not recognized” until `npm install` was run in `frontend/` to install dependencies (including Vite).
+
+**Checkpoint:** Create today’s workout with 2+ exercises and sets; view and edit; duplicate date → 409 with clear message. Backend: `pytest app/tests -v` (10 passed); `alembic upgrade head` applies session tables; frontend: `npm run build` succeeds.
+
+### Post–Slice 3: UX, delete workout, and last-sets preset
+
+- **Duplicate sets (fixed):** Session queries used two `joinedload(workout_exercises)` chains, causing duplicated collection entries. Fixed by single `joinedload(workout_exercises).options(joinedload(exercise), joinedload(sets))` in all four load paths. See backend/docs/log.md.
+- **Notes per exercise:** Session-level "Workout notes" removed from UI; notes are per exercise (WorkoutExercise.notes). Frontend shows exercise notes textarea per card and sends/loads notes per exercise.
+- **Home button:** "Home" link (→ dashboard) added to Log, Session Edit, History, and Exercises headers.
+- **Delete workout:** Delete session from Session Edit page and from History list (with confirm). Uses existing DELETE /api/v1/sessions/{id}.
+- **White input boxes:** Weight and reps inputs use white background so entry areas are visible on dark theme. Guideline in frontend_references/README.md.
+- **Notes per set:** Set table column "Action" → "Notes" with text input per set (Set.notes); delete (×) kept in separate column.
+- **Sticky Save:** Sticky footer on Log and Session Edit with hint and Cancel + Save buttons so save is always visible.
+- **Last-sets preset:** GET /api/v1/sessions/last-sets?exercise_id=... for pre-fill when adding or changing exercise. Backend: get_last_sets_for_exercise; frontend pre-fills weight/reps from last time. API_CONTRACT updated.
+
+---
+
 ## 2026-02-22
 
 ### Security and environment variable protection

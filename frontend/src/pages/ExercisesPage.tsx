@@ -11,7 +11,7 @@
  */
 
 import { useEffect, useMemo, useState } from "react";
-
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import * as exercisesApi from "@/api/exercises";
 
@@ -154,9 +154,14 @@ export default function ExercisesPage() {
             Your personal library of movements used for logging workouts.
           </p>
         </div>
-        <Button size="sm" onClick={startCreate}>
-          Add exercise
-        </Button>
+        <div className="flex gap-2">
+          <Button variant="ghost" size="sm" className="text-slate-400" asChild>
+            <Link to="/dashboard">Home</Link>
+          </Button>
+          <Button size="sm" onClick={startCreate}>
+            Add exercise
+          </Button>
+        </div>
       </header>
 
       <main className="flex-1 px-4 sm:px-8 py-6 flex flex-col gap-6">

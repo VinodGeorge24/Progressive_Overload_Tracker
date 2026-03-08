@@ -1,8 +1,8 @@
 # Coding plan
 
-This plan implements the Progressive Overload Tracker in feature slices. Each slice follows the order in [ARCHITECTURE.md](../ARCHITECTURE.md): DB layer → API layer (endpoints + schemas) → Service layer → Update API_CONTRACT.md → At least one test → Frontend (pages + api helpers). No skipping layers.
+This plan implements the Progressive Overload Tracker in feature slices. Each slice follows the order in [ARCHITECTURE.md](../ARCHITECTURE.md): DB layer → Schemas → Service → Endpoints → Update API_CONTRACT.md → At least one test → Frontend (pages + api helpers). No skipping layers.
 
-**Stack reminder:** Backend: FastAPI, SQLAlchemy, Alembic, JWT (core/security.py), PostgreSQL. Frontend: Vite + React + React Router, Tailwind, shadcn/ui. Charts: generated in backend (Python, e.g. matplotlib or Plotly); frontend displays images or embedded URLs. One session per user per calendar day (enforce in DB and API; 409 on duplicate date).
+**Stack reminder:** Backend: FastAPI, SQLAlchemy, Alembic, JWT (core/security.py), PostgreSQL. Frontend: Vite + React + React Router, Tailwind, shadcn/ui. Charts: generated in backend with **matplotlib**; frontend displays images or embedded URLs. One session per user per calendar day (enforce in DB and API; 409 on duplicate date).
 
 ---
 
@@ -43,13 +43,13 @@ The UI is inspired by **Stitch (Google)**. Design direction lives in **[frontend
 
 | Where | Package | Purpose | When to install |
 |-------|---------|---------|-----------------|
-| **Backend** | `matplotlib` or `plotly` | Chart generation (Slice 4) | Before or at start of Slice 4. Add to `backend/pyproject.toml`, e.g. `matplotlib>=3.7.0` or `plotly>=5.18.0`. |
+| **Backend** | `matplotlib` | Chart generation (Slice 4) | Before or at start of Slice 4. Add `matplotlib>=3.7.0` to `backend/pyproject.toml`. |
 | **Backend** | (optional) `pillow` | If serving chart as PNG bytes | Only if returning raw image bytes. |
 | **Frontend** | Tailwind CSS | Styling | Already installed. |
 | **Frontend** | shadcn/ui components | Buttons, inputs, cards | Add via `npx shadcn@latest add button input card dialog ...` as needed. |
 | **Frontend** | axios, react-router-dom | API, routing | Already in package.json. |
 
-**Backend chart library:** Add one of matplotlib or Plotly to `backend/pyproject.toml` and run `pip install -e .` before Slice 4. Do not add chart rendering in the frontend for MVP.
+**Backend chart library:** Use **matplotlib** only. Add to `backend/pyproject.toml` and run `pip install -e .` before Slice 4. Do not add chart rendering in the frontend for MVP.
 
 ---
 
@@ -112,7 +112,7 @@ The UI is inspired by **Stitch (Google)**. Design direction lives in **[frontend
 
 ---
 
-## Slice 3: Workout sessions and sets (core logging)
+## Slice 3: Workout sessions and sets (core logging) — ✅ Complete
 
 **Goal:** User can create one workout session per day with exercises and sets; view and edit sessions.
 
@@ -122,15 +122,16 @@ The UI is inspired by **Stitch (Google)**. Design direction lives in **[frontend
 
 1. **DB — Models:** Add `WorkoutSession` (unique (user_id, date)), `WorkoutExercise`, `Set` per [DATA_MODEL.md](../DATA_MODEL.md). Cascade deletes. Export; Alembic discovery.
 2. **DB — Migration:** Run autogenerate and upgrade. Confirm unique on (user_id, date).
-3. **Backend — Schemas:** Set, WorkoutExercise, SessionCreate, SessionUpdate, SessionOut with nested exercises and sets.
-4. **Backend — Service:** Session service: create (409 if session for date exists), get, list (user, limit/offset, date range), update, delete. One transaction for create/update.
-5. **Backend — Endpoints:** Create `backend/app/api/v1/endpoints/sessions.py`: GET/POST `/api/v1/sessions`, GET/PUT/DELETE `/api/v1/sessions/{session_id}`. Return 409 on POST when date already has session. Include router with prefix `/sessions`.
-6. **Backend — Contract and test:** Update API_CONTRACT.md; test create session with sets, get, POST same date → 409. Run tests.
+3. **Backend — Schemas:** Set, WorkoutExercise, SessionCreate, SessionUpdate, SessionOut with nested exercises and sets. Exercise order within a session: use **array index** as display order (no separate `order` field in request). Validate set fields per DATA_MODEL: reps > 0, weight >= 0, set_number > 0 (return 400/422 if invalid).
+4. **Backend — Service:** Session service: create (409 if session for date exists), get, list (user, limit/offset, date range, **return total count**), update, delete. On create/update, **validate that every exercise_id belongs to the current user** (404 otherwise). On update, return **409 if changing date to a date that already has a session** for this user. One transaction for create/update.
+5. **Backend — Endpoints:** Create `backend/app/api/v1/endpoints/sessions.py`: GET/POST `/api/v1/sessions`, GET/PUT/DELETE `/api/v1/sessions/{session_id}`. Return 409 on POST when date already has session; return 409 on PUT when the new date already has a session. Include router with prefix `/sessions`.
+6. **Backend — Contract and test:** Update API_CONTRACT.md; test create session with sets, get, POST same date → 409, **GET/PUT/DELETE other user's session_id → 404**. Run tests.
 7. **Frontend — API:** Create `frontend/src/api/sessions.ts`: list, get, create, update, delete; handle 409.
 8. **Frontend — Design reference:** Use [frontend_references/today's_log_-_lift_tracker/](../frontend_references/today's_log_-_lift_tracker/) for Today's log page and [frontend_references/workout_history_-_lift_tracker/](../frontend_references/workout_history_-_lift_tracker/) for History page (see [frontend_references/README.md](../frontend_references/README.md)).
 9. **Frontend — Pages:** "Today's log" page (create/edit today's session); History page (list, view/edit). Session form: date, notes, add exercises, add sets (set_number, weight, reps).
-10. **Frontend — Routing:** `/log` or `/workout`, `/history`, `/history/:id`. Auth required.
-11. **Checkpoint:** Create today's workout with 2+ exercises and sets; view and edit; duplicate date → 409 with clear message. Do not proceed to Slice 4 until this passes.
+10. **Frontend — Dashboard:** Update Dashboard with link to Today's log and optionally recent sessions (see [frontend_references/main_dashboard_-_lift_tracker/](../frontend_references/main_dashboard_-_lift_tracker/)).
+11. **Frontend — Routing:** `/log` or `/workout`, `/history`, `/history/:id`. Auth required.
+12. **Checkpoint:** Create today's workout with 2+ exercises and sets; view and edit; duplicate date → 409 with clear message. Do not proceed to Slice 4 until this passes.
 
 ---
 
@@ -140,13 +141,13 @@ The UI is inspired by **Stitch (Google)**. Design direction lives in **[frontend
 
 **Scope:** Only Slice 4. Do not implement templates, profile, or export.
 
-**Prerequisite:** Add `matplotlib>=3.7.0` or `plotly>=5.18.0` to `backend/pyproject.toml`; run `pip install -e .` from backend.
+**Prerequisite:** Add `matplotlib>=3.7.0` to `backend/pyproject.toml`; run `pip install -e .` from backend.
 
 **Substeps (in order):**
 
 1. **Backend — Analytics service:** Compute progress for exercise (user-scoped): by date and set_number; weight, reps, volume. Return `series` per set_number with `points` (date, weight, reps, volume). Support start_date, end_date, set_number filter.
 2. **Backend — Progress endpoint:** GET `/api/v1/analytics/progress/{exercise_id}` with query params. Verify exercise belongs to user (404 otherwise). Include router with prefix `/analytics`.
-3. **Backend — Chart endpoint:** GET `/api/v1/analytics/progress/{exercise_id}/chart` with params metric, set_number, start_date, end_date. Generate line chart (matplotlib or Plotly); return PNG. Document in API_CONTRACT.md.
+3. **Backend — Chart endpoint:** GET `/api/v1/analytics/progress/{exercise_id}/chart` with params metric, set_number, start_date, end_date. Generate line chart with **matplotlib**; return PNG. Document in API_CONTRACT.md.
 4. **Backend — Contract and test:** Update API_CONTRACT.md; test progress JSON and chart for an exercise. Run tests.
 5. **Frontend — API:** Create `frontend/src/api/analytics.ts`: getProgress, getChartImageUrl or image URL.
 6. **Frontend — Design reference:** Use [frontend_references/progress_analytics_-_lift_tracker/](../frontend_references/progress_analytics_-_lift_tracker/) for inspiration.
@@ -167,11 +168,11 @@ The UI is inspired by **Stitch (Google)**. Design direction lives in **[frontend
 1. **DB — Models:** Add `WorkoutTemplate`, `TemplateExercise` per DATA_MODEL. Cascade deletes. Migration.
 2. **Backend — Schemas:** TemplateCreate, TemplateUpdate, TemplateOut with nested exercises.
 3. **Backend — Service:** Template CRUD; scope by user; 404 if not owner.
-4. **Backend — Endpoints:** Create `backend/app/api/v1/endpoints/templates.py`: GET/POST `/api/v1/templates`, GET/PUT/DELETE `/api/v1/templates/{template_id}`. Optional: apply template. Include router. Update API_CONTRACT.md.
+4. **Backend — Endpoints:** Create `backend/app/api/v1/endpoints/templates.py`: GET/POST `/api/v1/templates`, GET/PUT/DELETE `/api/v1/templates/{template_id}`. Optional: **apply template** — returns a session payload (or creates session) with exercises from the template and empty/placeholder sets; frontend uses it to pre-fill the Log form. Include router. Update API_CONTRACT.md.
 5. **Backend — Test:** Create template, list, get. Run tests.
 6. **Frontend — API:** Create `frontend/src/api/templates.ts`: list, get, create, update, delete; optional apply.
 7. **Frontend — Design reference:** Use [frontend_references/workout_templates_-_lift_tracker/](../frontend_references/workout_templates_-_lift_tracker/) for inspiration (see [frontend_references/README.md](../frontend_references/README.md)).
-8. **Frontend — Pages:** Templates list; create/edit template. Optionally "Start from template" on Log page.
+8. **Frontend — Pages:** Templates list; create/edit template. Optionally "Start from template" on Log page (pre-fill from apply payload).
 9. **Frontend — Routing:** `/templates`, `/templates/new`, `/templates/:id/edit`. Auth required.
 10. **Checkpoint:** Create template with 2+ exercises; optionally start session from template. Do not proceed to Slice 6 until this passes.
 
@@ -185,7 +186,7 @@ The UI is inspired by **Stitch (Google)**. Design direction lives in **[frontend
 
 **Substeps (in order):**
 
-1. **Backend — Profile endpoints:** GET and PATCH `/api/v1/users/me` (id, email, username, etc.; optional password change). Document in API_CONTRACT.md.
+1. **Backend — Profile:** Add **PATCH `/api/v1/auth/me`** for profile update (username, optional password change). **GET `/api/v1/auth/me`** remains from Slice 1; do not add a second GET under `/users/me`. Document in API_CONTRACT.md.
 2. **Backend — Test:** Get me, update me. Run tests.
 3. **Frontend — API:** getProfile, updateProfile (auth header).
 4. **Frontend — Profile page:** Display user; form to edit username (and optionally password). Use [frontend_references/app_settings_-_lift_tracker/](../frontend_references/app_settings_-_lift_tracker/) for Settings/Profile inspiration.
@@ -218,7 +219,7 @@ The UI is inspired by **Stitch (Google)**. Design direction lives in **[frontend
 - **Order:** Slices 0 → 1 → 2 → 3 → 4 → 5 → 6 → 7. Within each slice: DB → Schemas → Service → Endpoints → Router → Contract + test → Frontend API → Frontend pages → Checkpoint.
 - **Naming:** Follow [CODING_STANDARDS.md](../CODING_STANDARDS.md) (e.g. function names UpperCase, parameters a_ prefix in Python).
 - **Errors:** Consistent `{"detail": "..."}` and status codes per [API_CONTRACT.md](../API_CONTRACT.md); 404 for "not found or not owner".
-- **Charts:** Backend only (matplotlib or Plotly); frontend displays image. One chart per metric (weight, reps, volume), filter by set_number.
+- **Charts:** Backend only (**matplotlib**); frontend displays image. One chart per metric (weight, reps, volume), filter by set_number.
 - **One session per day:** DB unique (user_id, date); session create returns 409 if duplicate date.
 - **Tests:** At least one test per slice (happy path); add 401, 404, 409 as needed.
 - **Design:** For every frontend slice, use [frontend_references/](../frontend_references/) (see [README.md](../frontend_references/README.md) for folder map and intent). References are for inspiration; implement in React with consistent design tokens (primary #137fec, background-dark #101922, Inter).

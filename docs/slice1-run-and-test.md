@@ -103,8 +103,23 @@ If you ran backend + frontend and completed sign up and login and saw the Dashbo
 
 ---
 
+---
+
+## Slice 3 (Sessions) — optional manual check
+
+After Slice 1 and 2, with backend and frontend running:
+
+1. **Dashboard** — “Log Today’s Workout” button → `/log`. “History” → `/history`. Recent sessions (if any) link to `/history/:id`.
+2. **Today’s log** — Add exercise (from your library), add sets (set #, weight, reps), Save. Creating again for the same date → 409 with message “A workout already exists for this date…”
+3. **History** — List shows date and exercise names; “View / Edit” opens session form. Editing and changing date to a date that already has a session → 409.
+
+Backend tests for sessions: `pytest app/tests/test_sessions.py -v`. Frontend: ensure `npm install` has been run in `frontend/` before `npm run build` (Vite is a dev dependency).
+
+---
+
 ## Troubleshooting
 
 - **Backend: "circular import" / "partially initialized module"** — Do not add model imports in `app/db/base.py`. Models are imported only in `alembic/env.py` for migrations and elsewhere (deps, services, endpoints) as needed. See `.cursor/rules/avoid-circular-imports.mdc`.
 - **Frontend: 404 or CORS** — Ensure `VITE_API_URL` points at the backend (e.g. http://localhost:8000) and backend is running.
 - **401 on /auth/me** — Token may be missing or expired; log in again to get a new token.
+- **Frontend: "vite is not recognized"** — Run `npm install` in `frontend/` so Vite and other dependencies are installed; then `npm run build` or `npm run dev`.

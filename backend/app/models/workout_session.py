@@ -1,31 +1,30 @@
 """
-exercise.py
+workout_session.py
 
-Defines the Exercise SQLAlchemy model.
+Defines the WorkoutSession SQLAlchemy model.
 
-Per DATA_MODEL.md: id, user_id (FK), name, muscle_group, created_at, updated_at.
+Per DATA_MODEL.md: id, user_id (FK), date, notes (optional), created_at, updated_at.
+Unique (user_id, date). One session per user per calendar day.
 """
 
-from datetime import datetime
-from typing import TYPE_CHECKING, List
+from datetime import date, datetime
+from typing import List
 
-from sqlalchemy import DateTime, ForeignKey, Integer, String
+from sqlalchemy import Date, DateTime, ForeignKey, Integer, Text, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base import Base
 
-if TYPE_CHECKING:
-    from app.models.workout_exercise import WorkoutExercise
 
-
-class Exercise(Base):
+class WorkoutSession(Base):
     """
-    User-owned exercise that can appear in workout sessions and templates.
+    One workout session per user per calendar day.
 
-    Table: exercises.
+    Table: workout_sessions. Unique on (user_id, date).
     """
 
-    __tablename__ = "exercises"
+    __tablename__ = "workout_sessions"
+    __table_args__ = (UniqueConstraint("user_id", "date", name="uq_workout_sessions_user_date"),)
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     user_id: Mapped[int] = mapped_column(
@@ -34,8 +33,8 @@ class Exercise(Base):
         nullable=False,
         index=True,
     )
-    name: Mapped[str] = mapped_column(String(255), nullable=False)
-    muscle_group: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    date: Mapped[date] = mapped_column(Date, nullable=False)
+    notes: Mapped[str | None] = mapped_column(Text, nullable=True)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=False, default=datetime.utcnow
     )
@@ -46,16 +45,14 @@ class Exercise(Base):
         onupdate=datetime.utcnow,
     )
 
-    # Relationship to User
     user: Mapped["User"] = relationship(
         "User",
-        back_populates="exercises",
+        back_populates="workout_sessions",
         passive_deletes=True,
     )
-    # Sessions/templates that include this exercise (optional reverse ref)
     workout_exercises: Mapped[List["WorkoutExercise"]] = relationship(
         "WorkoutExercise",
-        back_populates="exercise",
+        back_populates="session",
+        cascade="all, delete-orphan",
         passive_deletes=True,
     )
-

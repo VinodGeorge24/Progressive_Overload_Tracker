@@ -1,0 +1,35 @@
+---
+description: End-of-session sequence for this repo — verify, log to repo, push if applicable, then sync to Obsidian (Projects vault)
+alwaysApply: false
+---
+
+# Obsidian sync after logging and push (Progressive_Overload_Tracker)
+
+At **end of session** (when wrapping up, after a task, or when the user is done for now), follow this order of operations. Do not skip repo document logging.
+
+## Order of operations
+
+1. **Run verification** — tests, build, linter as applicable. Do not claim work complete without running the relevant command and confirming output.
+2. **Update repo docs** — `docs/project-log.md`, `backend/docs/log.md`, `plan/` (and any other project docs) as per current practice. This is required; never replace or skip repo logging.
+3. **Push to GitHub** — If commits were made this session and the user intends to push, push to GitHub.
+4. **Sync to Obsidian** — Using obsidian-cli (obsidian-cli skill), create or append to the Session state note in the Projects vault. Target: `Progressive_Overload_Tracker/Session state.md` (vault name from global-memory: `Projects`).
+
+If there is no push this session, still perform step 4 after step 2.
+
+## Minimum Session state content
+
+When syncing to Obsidian, write or append at least:
+
+- **Date** (e.g. YYYY-MM-DD)
+- **Current slice/feature**
+- **Last session summary** (1–3 sentences of what was done)
+- **Next steps** (bullets)
+- **Open decisions** (if any)
+
+Use a consistent heading format, e.g. `## YYYY-MM-DD` then bullets, so the note stays readable. Append to the existing note if it already exists.
+
+Optional: a separate dated note (e.g. `Progressive_Overload_Tracker/YYYY-MM-DD-session.md`) with key changes and links to repo docs.
+
+## Fallback
+
+If Obsidian is not open or the obsidian CLI fails when running sync: complete all repo document logging (steps 1–2, and 3 if applicable), then report clearly: "Obsidian sync was skipped (Obsidian not open or CLI unavailable)." Do not claim success for Obsidian sync in that case.

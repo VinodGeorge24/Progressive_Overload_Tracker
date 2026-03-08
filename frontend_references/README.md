@@ -38,6 +38,8 @@ This folder contains **screen-level design references** for the Progressive Over
 - **Layout:** Sidebar nav (fixed, ~w-64) for app screens; centered card for auth. Sticky headers and fixed footers where needed (e.g. Today’s Log save bar).
 
 We may and probably will use shadcn and other libraries as well, so we are not limited to these references.
+
+**Form inputs (weight/reps and numeric entry):** On dark screens, **use a light (e.g. white) background for number inputs** so the entry area is clearly visible (e.g. `bg-white text-slate-900 border border-slate-300`). Avoid transparent or dark-only inputs for weight/reps; users need to see where to type at a glance. See Log and Session Edit set tables.
 ---
 
 ## Per-screen analysis (for the agent)

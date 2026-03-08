@@ -119,6 +119,12 @@ This document describes what every folder and file in the project does. Use it a
 
 ---
 
+## Obsidian session state
+
+Session state for this project (current slice/feature, last session summary, next steps, open decisions) is stored in the **Obsidian Projects vault** (vault name as in global-memory, e.g. `Projects`) at **`Progressive_Overload_Tracker/Session state.md`**. The agent reads this at start of session and appends to it at end of session (see global rule obsidian-session-state and project rule .cursor/rules/obsidian-end-of-session.mdc). Repo docs (docs/, plan/, backend/docs/) remain the primary in-repo logs; Obsidian is the cross-project state in addition.
+
+---
+
 ## Quick Reference: Where to Put New Work
 
 - **New feature** → complete all 6 layers (DB, API, Service, Contract, Test, Frontend) in order; no skipping. See .cursorrules and ARCHITECTURE.md.

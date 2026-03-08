@@ -8,7 +8,10 @@ created_at, updated_at, is_active.
 
 from datetime import datetime
 
-from typing import List
+from typing import TYPE_CHECKING, List
+
+if TYPE_CHECKING:
+    from app.models.workout_session import WorkoutSession
 
 from sqlalchemy import Boolean, DateTime, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -36,6 +39,13 @@ class User(Base):
     # Exercises owned by this user
     exercises: Mapped[List["Exercise"]] = relationship(
         "Exercise",
+        back_populates="user",
+        cascade="all, delete-orphan",
+        passive_deletes=True,
+    )
+    # Workout sessions (one per user per day)
+    workout_sessions: Mapped[List["WorkoutSession"]] = relationship(
+        "WorkoutSession",
         back_populates="user",
         cascade="all, delete-orphan",
         passive_deletes=True,

@@ -89,6 +89,8 @@ npm run dev
 - [Plan (plan/)](./plan/README.md) - Slice order and how to use the coding plan
 - [Frontend design references](./frontend_references/README.md) - Screen-to-folder map and design tokens for implementers
 
+**Obsidian session state:** Session state for this project is in the Obsidian Projects vault (vault name as in global-memory) at `Progressive_Overload_Tracker/Session state.md`. The agent reads it at start and appends at end of session; repo docs (docs/, plan/) remain unchanged (dual logging).
+
 ## Contributing
 
 This is a senior project. See the documentation in `docs/` for more details about the project scope and requirements.

@@ -125,7 +125,7 @@ No extra packages are imported that are not already in pyproject.toml.
 | **Tailwind CSS** | PRD, frontend | **Installed.** Primary styling. Use with shadcn/ui for select components. |
 | **shadcn/ui** | PRD, frontend | **Installed.** Used for some UI components (buttons, inputs, cards, etc.); add via `npx shadcn@latest add <component>`. Custom components may use Tailwind directly. |
 | **CSS Modules** | Alternative for custom components | No extra package; use `*.module.css` with Vite if needed. |
-| **Charts (Python)** | PRD, ARCHITECTURE | Charts generated in backend with Python (matplotlib, Plotly). Frontend displays chart images. No Chart.js/Recharts for MVP. |
+| **Charts (Python)** | PRD, ARCHITECTURE, plan | Charts generated in backend with **matplotlib**. Frontend displays chart images. No Chart.js/Recharts for MVP. |
 
 ---
 
@@ -152,9 +152,9 @@ Not required for the project; only “you may use them” in coding standards.
 ## 9. Summary: “Could install” (not yet declared)
 
 - **Backend**: `python-dotenv` (optional; pydantic-settings already loads `.env`).
-- **Backend charts (required for Slice 4)**: Add **matplotlib** or **Plotly** to `backend/pyproject.toml` before implementing analytics/charts. Not currently in pyproject.toml. Example: `matplotlib>=3.7.0` or `plotly>=5.18.0`. See `plan/coding_plan.md` (Libraries and install checklist).
+- **Backend charts (required for Slice 4)**: Add **matplotlib** to `backend/pyproject.toml` before implementing analytics/charts. Not currently in pyproject.toml. Use `matplotlib>=3.7.0`. See `plan/coding_plan.md` (Libraries and install checklist).
 - **Frontend styling**: Tailwind CSS and shadcn/ui are installed. Add shadcn components via `npx shadcn@latest add <component>`.
-- **Charts**: Python-generated in backend (matplotlib/Plotly); frontend displays chart images. See PRD and ARCHITECTURE.
+- **Charts**: Python-generated in backend with **matplotlib**; frontend displays chart images. See PRD, ARCHITECTURE, and plan/coding_plan.md.
 - **Backend (if you add backend Docker image)**: Dockerfile and any base image (e.g. `python:3.11-slim`).
 
 ---

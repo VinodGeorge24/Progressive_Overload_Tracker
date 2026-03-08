@@ -37,7 +37,7 @@ Frontend (pages/components)
 
 No business logic in routes. Endpoints are thin; they delegate to services.
 
-Charts are generated in the backend with Python (e.g. matplotlib/Plotly); the frontend displays the chart images.
+Charts are generated in the backend with matplotlib; the frontend displays the chart images.
 
 ## Key Rules
 
@@ -54,10 +54,11 @@ Charts are generated in the backend with Python (e.g. matplotlib/Plotly); the fr
 Each feature must complete these layers in order:
 
 1. DB layer — models, migration, apply
-2. API layer — endpoints, schemas
+2. Schemas — Pydantic request/response models
 3. Service layer — business logic
-4. Contract update — API_CONTRACT.md
-5. Minimal test — at least one test
-6. Frontend integration — page/component + API helper
+4. Endpoints — route handlers (thin; delegate to services)
+5. Contract update — API_CONTRACT.md
+6. Minimal test — at least one test
+7. Frontend integration — API helper + page/component
 
 No skipping layers. No "we'll fix that later."
