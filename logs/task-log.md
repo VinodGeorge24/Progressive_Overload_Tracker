@@ -53,3 +53,10 @@ Chronological log of completed and in-progress tasks.
 - [x] Added a SQLite-specific monotonic exercise id allocation guard so recreated exercises get a fresh `exercise.id` instead of reusing the deleted row's id.
 - [x] Added regression coverage proving that deleting an exercise removes its logged data and recreating the same exercise name starts clean.
 
+## 2026-03-09 — Slice 4: Analytics and progress charts ✅
+- [x] Added `matplotlib>=3.7.0` to backend dependencies and implemented per-exercise analytics aggregation grouped by `set_number`.
+- [x] Added `GET /api/v1/analytics/progress/{exercise_id}` and `GET /api/v1/analytics/progress/{exercise_id}/chart` with authenticated ownership checks and backend PNG rendering.
+- [x] Added backend analytics tests for grouped JSON output, filter handling, chart PNG responses, and 404 behavior for non-owned exercises.
+- [x] Added frontend analytics API helpers, a new Progress page, and protected routes for `/progress` and `/progress/:exerciseId`.
+- [x] Updated `API_CONTRACT.md`, advanced plan status to Slice 5 next, and marked the stale CORS project-log entry complete.
+

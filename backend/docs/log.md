@@ -90,3 +90,10 @@ Chronological log of backend-specific decisions and implementation notes. For pr
 - **Fix:** Added `backend/scripts/cleanup_orphan_workout_data.py` to delete orphaned `sets`, orphaned `workout_exercises`, and empty `workout_sessions` in existing databases. Updated exercise deletion service logic to remove now-empty sessions after the exercise and its cascaded workout rows are deleted. Added a SQLite-specific monotonic id allocation guard for exercise creation so deleting and recreating `Squat` cannot reuse the same `exercise.id` in the existing dev database.
 - **How to run:** From `backend/`, run `python scripts/cleanup_orphan_workout_data.py` or `python scripts/cleanup_orphan_workout_data.py --dry-run`.
 - **Verification:** Added an API regression test covering create exercise -> log session -> delete exercise -> recreate same-name exercise -> log again. The new exercise now starts clean and `last-sets` only returns the new data.
+
+### Slice 4: Analytics and progress charts
+
+- **Backend service:** Added `app/services/analytics.py` to verify exercise ownership, aggregate per-date progress grouped by `set_number`, compute `weight`, `reps`, and `volume`, and render matplotlib PNG charts for the selected metric.
+- **Endpoints:** Added `app/api/v1/endpoints/analytics.py` and wired `/api/v1/analytics/progress/{exercise_id}` plus `/api/v1/analytics/progress/{exercise_id}/chart` into the v1 router.
+- **Dependency:** Added `matplotlib>=3.7.0` to `backend/pyproject.toml`; verified editable install still succeeds with dev extras.
+- **Tests:** Added `app/tests/test_analytics.py` to cover grouped progress JSON, date/set filters, PNG chart responses, and 404 behavior for exercises owned by another user.

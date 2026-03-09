@@ -181,7 +181,7 @@ End-to-end auth verified: user (VinodGeorge24) completed sign up and login; Dash
 4. **SQLite DB reset for clean run:** Stopped the running `uvicorn` dev server, deleted `backend/workout_tracker.db`, and re‑applied all Alembic migrations via `alembic upgrade head` to recreate an empty schema (users, exercises, workout_sessions/workout_exercises/sets) ready for a fresh end‑to‑end manual test.
 5. **Next steps:** Restart backend (`uvicorn app.main:app --reload`) and frontend (`npm run dev` from `frontend/`) and perform a clean run: new signup → login → create/edit sessions (including re‑open/edit of a saved workout) to visually confirm no duplicated sets and correct auth behavior.
 
-### CORS blocking login/signup from frontend (2026-03-09) — IN PROGRESS
+### CORS blocking login/signup from frontend (2026-03-09) — COMPLETE
 
 **Observed:** Frontend at `http://localhost:5174` (Vite fallback when 5173 in use) cannot log in or sign up. Browser DevTools shows:
 - `Access to XMLHttpRequest at 'http://localhost:8000/api/v1/auth/login' from origin 'http://localhost:5174' has been blocked by CORS policy: Response to preflight request doesn't pass access control check: No 'Access-Control-Allow-Origin' header is present on the requested resource.`
@@ -213,6 +213,21 @@ End-to-end auth verified: user (VinodGeorge24) completed sign up and login; Dash
 - **Root cause:** With `PRAGMA foreign_keys` previously off, deleting an exercise did not cascade-remove dependent `workout_exercises`/`sets`. SQLite can reuse integer primary keys, so recreating the exercise could make those orphan rows appear attached to the new record. Deleting an exercise could also leave an empty `workout_session` if that session only contained the deleted movement.
 - **Fix:** Added a cleanup script at `backend/scripts/cleanup_orphan_workout_data.py` for one-time DB repair, updated exercise deletion so any now-empty sessions are removed after the exercise cascade completes, and added a SQLite-specific monotonic exercise id allocation guard so a recreated exercise does not inherit the deleted exercise's id.
 - **Verification:** Added backend regression coverage to prove that deleting an exercise removes its logged data, `GET /api/v1/sessions/last-sets?exercise_id=<deleted_id>` returns 404, and recreating the same exercise name starts with clean history/prefill data.
+
+### Slice 4: Analytics and progress charts — COMPLETE
+
+**Scope:** Per-exercise progress analytics and authenticated chart rendering for the frontend.
+
+**Done:**
+
+1. **Backend analytics service** — Added `backend/app/services/analytics.py` to group workout history by `set_number`, compute `weight`, `reps`, and `volume`, and render PNG charts with matplotlib.
+2. **Schemas and endpoints** — Added `backend/app/schemas/analytics.py` and `backend/app/api/v1/endpoints/analytics.py` with `GET /api/v1/analytics/progress/{exercise_id}` and `GET /api/v1/analytics/progress/{exercise_id}/chart`.
+3. **Dependency and tests** — Added `matplotlib>=3.7.0` to `backend/pyproject.toml` and added analytics test coverage for grouped JSON output, filtered queries, PNG responses, and ownership 404 behavior.
+4. **Frontend analytics view** — Added `frontend/src/api/analytics.ts` and `frontend/src/pages/ProgressPage.tsx` with exercise selection, metric/date/set filters, authenticated chart loading, and a raw data panel.
+5. **Routing and navigation** — Added protected routes for `/progress` and `/progress/:exerciseId`, plus dashboard entry points to the analytics screen.
+6. **Docs and status** — Updated `API_CONTRACT.md` with exact chart endpoint behavior and advanced the plan status to Slice 5 next.
+
+**Checkpoint:** Analytics JSON and chart endpoints are implemented, the frontend route is wired, and the project verifies with fresh backend tests plus a frontend production build.
 
 ---
 

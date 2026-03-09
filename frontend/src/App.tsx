@@ -11,6 +11,7 @@ import ExercisesPage from "@/pages/ExercisesPage";
 import HistoryPage from "@/pages/HistoryPage";
 import LogPage from "@/pages/LogPage";
 import LoginPage from "@/pages/LoginPage";
+import ProgressPage from "@/pages/ProgressPage";
 import SessionEditPage from "@/pages/SessionEditPage";
 import SignupPage from "@/pages/SignupPage";
 
@@ -78,6 +79,22 @@ function AppRoutes() {
         element={
           <ProtectedRoute>
             <SessionEditPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/progress"
+        element={
+          <ProtectedRoute>
+            <ProgressPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/progress/:exerciseId"
+        element={
+          <ProtectedRoute>
+            <ProgressPage />
           </ProtectedRoute>
         }
       />

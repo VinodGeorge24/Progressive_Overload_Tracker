@@ -29,8 +29,9 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-slate-950 text-slate-50">
-      <header className="px-4 sm:px-8 py-4 border-b border-slate-800 flex items-center justify-between">
-        <div className="flex flex-col gap-1">
+      <header className="border-b border-slate-800 px-4 py-4 sm:px-8">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="min-w-0 flex flex-col gap-1">
           <h1 className="text-xl sm:text-2xl font-semibold tracking-tight">
             Dashboard
           </h1>
@@ -38,29 +39,25 @@ export default function DashboardPage() {
             Hello, {user?.username ?? user?.email}.
           </p>
         </div>
-        <div className="flex gap-2">
-          <Button
-            variant="outline"
-            className="border-slate-700 text-slate-200"
-            asChild
-          >
+        <div className="flex flex-wrap justify-end gap-2">
+          <Button variant="secondary" size="sm" asChild>
+            <Link to="/progress">Progress</Link>
+          </Button>
+          <Button variant="secondary" size="sm" asChild>
             <Link to="/exercises">Exercises</Link>
           </Button>
-          <Button
-            variant="outline"
-            className="border-slate-700 text-slate-200"
-            asChild
-          >
+          <Button variant="secondary" size="sm" asChild>
             <Link to="/history">History</Link>
           </Button>
-          <Button variant="secondary" onClick={() => logout()}>
+          <Button variant="secondary" size="sm" onClick={() => logout()}>
             Log out
           </Button>
+        </div>
         </div>
       </header>
       <main className="flex-1 p-4 sm:px-8 max-w-2xl mx-auto w-full space-y-6">
         <section className="flex flex-col items-center gap-4 py-6">
-          <Button asChild className="bg-sky-600 hover:bg-sky-700">
+          <Button asChild size="lg" className="bg-sky-600 shadow-sm shadow-sky-950/40 hover:bg-sky-700">
             <Link to="/log">Log Today&apos;s Workout</Link>
           </Button>
           <p className="text-sm text-slate-400 text-center">

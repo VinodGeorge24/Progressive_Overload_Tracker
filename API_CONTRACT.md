@@ -322,7 +322,7 @@ Delete a workout session.
 
 ### Analytics
 
-Charts are generated in the backend with **matplotlib**. The backend may expose progress data and/or serve chart images (PNG/SVG) or URLs.
+Charts are generated in the backend with **matplotlib** and served as PNG images. Analytics endpoints are scoped to the authenticated user and return 404 when the exercise does not exist or does not belong to that user.
 
 #### GET /api/v1/analytics/progress/{exercise_id}
 Get progress data for a specific exercise (for chart generation or display). Scoped to the authenticated user.
@@ -353,7 +353,27 @@ Get progress data for a specific exercise (for chart generation or display). Sco
 }
 ```
 
-*(Optional)* **Chart image endpoint:** If the backend serves pre-rendered chart images, document the endpoint(s) here (e.g. GET returns image PNG/SVG or URL). Query params may include `exercise_id`, `start_date`, `end_date`, `set_number`, `metric` (weight | reps | volume).
+Notes:
+- `series` is grouped by `set_number`.
+- `points` are sorted by date ascending.
+- If the exercise exists but no workout data matches the filters, the response is still `200` with an empty `series` array.
+
+#### GET /api/v1/analytics/progress/{exercise_id}/chart
+Get a pre-rendered PNG chart for a specific exercise and metric.
+
+**Query Parameters:**
+- `metric`: Required metric to render. Allowed values: `weight`, `reps`, `volume`
+- `start_date`: Start date for analysis (ISO format)
+- `end_date`: End date for analysis (ISO format)
+- `set_number`: (Optional) Filter to a specific set number. If omitted, chart includes all set numbers as separate lines.
+
+**Response (200):**
+- Content-Type: `image/png`
+- Cache-Control: `no-store`
+
+Notes:
+- One line is rendered per `set_number`.
+- If no workout data matches the filters, the PNG still returns `200` and renders a "No data" message.
 
 #### GET /api/v1/analytics/plateaus
 *Future.* Not in MVP. Remove or mark as deprecated until plateau detection is in scope.
