@@ -22,6 +22,7 @@ class WorkoutExercise(Base):
     """
 
     __tablename__ = "workout_exercises"
+    __table_args__ = {"sqlite_autoincrement": True}
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     session_id: Mapped[int] = mapped_column(

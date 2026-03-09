@@ -61,3 +61,32 @@ Chronological log of backend-specific decisions and implementation notes. For pr
 
 - **Endpoint:** GET `/api/v1/sessions/last-sets?exercise_id=...` returns the most recent session's sets for that exercise (LastSetsOut: date, sets with set_number, weight, reps). Used by frontend to pre-fill when adding or changing an exercise on Log/Session Edit.
 - **Service:** `get_last_sets_for_exercise(a_db, a_user, a_exercise_id)` — verifies exercise is owned, finds latest WorkoutExercise for that exercise_id in user's sessions, returns that workout's sets. None if never logged or exercise not owned. Schemas: LastSetPoint, LastSetsOut in `schemas/sessions.py`. Route registered before `/{a_session_id}` so `/last-sets` is matched.
+
+---
+
+## 2026-03-09
+
+### CORS blocking frontend auth (login/signup)
+
+- **Symptom:** Frontend at `http://localhost:5174` cannot call `POST /api/v1/auth/login` or `POST /api/v1/auth/register`. Browser blocks with "No 'Access-Control-Allow-Origin' header is present." Preflight `OPTIONS` returns 400.
+- **Cause:** CORS_ORIGINS originally allowed only `localhost:3000` and `localhost:5173`. Vite often uses 5174 when 5173 is in use.
+- **Attempted fix:** `backend/app/core/config.py` — expanded default CORS_ORIGINS to include 5174 and 127.0.0.1 variants. `backend/app/main.py` — in development, use `allow_origins=["*"]` and `allow_credentials=False` (auth uses Bearer token, not cookies).
+- **Resolution:** In `main.py`, the development override was conditional on `"*" not in _origins`. When the app runs under uvicorn that condition could leave the explicit list in place, so preflight from `http://localhost:5174` was still rejected with "Disallowed CORS origin". **Fix:** In development, always set `_origins = ["*"]` (no condition on existing list). Set `allow_credentials=False` when using `["*"]`. Verified: OPTIONS to `/api/v1/auth/login` and `/api/v1/auth/register` with `Origin: http://localhost:5174` now return 200 and `Access-Control-Allow-Origin: *`.
+
+### Duplicate sets when viewing/editing session (again)
+
+- **Symptom:** After logging a workout and opening view/edit, set rows appear duplicated (Set #1 twice, Set #2 twice; or 4× each). Duplication can multiply on repeated open/save.
+- **Fix:** Defensive deduplication so duplicates never reach the UI or persist. **Backend** (`services/sessions.py`): In `_session_to_out`, dedupe each exercise’s sets by `id` before building `SetOut` list (`unique_sets = {s.id: s for s in we.sets}.values()` then sort by set_number). This neutralizes any joinedload row multiplication. **Frontend** (`SessionEditPage.tsx`): When mapping `sess.exercises` to `localExercises`, dedupe sets by `id` and sort by `set_number` so duplicate API responses never produce duplicate rows. Session tests pass.
+
+### Root cause of persistent session set duplication
+
+- **Root cause:** The remaining duplication was not a `joinedload` rendering issue. On session update, the service deletes existing `workout_exercises` rows and recreates them. In SQLite, foreign key enforcement was not enabled, so `ON DELETE CASCADE` never removed the old `sets` rows. SQLite then reused the deleted `workout_exercise` primary key, causing the orphaned sets to attach to the newly inserted row and grow on every edit/save cycle.
+- **Fix:** Enable `PRAGMA foreign_keys=ON` for every SQLite connection in `app/db/session.py`, and enable the same pragma in the pytest in-memory SQLite engine used by `app/tests/conftest.py`.
+- **Verification:** Added a regression test that updates the same session multiple times and asserts that `GET /api/v1/sessions/{id}` and `GET /api/v1/sessions/last-sets` still return exactly two unique sets with stable values.
+
+### Exercise delete/recreate stale history issue
+
+- **Root cause:** Older SQLite data was created before foreign keys were enforced, leaving orphaned `workout_exercises` and `sets`. When an exercise like `Squat` was deleted and later recreated, SQLite could reuse the same integer primary key, and those orphaned rows would appear to belong to the new exercise record. Separately, deleting an exercise could leave behind empty `workout_sessions` once its last `workout_exercise` was removed.
+- **Fix:** Added `backend/scripts/cleanup_orphan_workout_data.py` to delete orphaned `sets`, orphaned `workout_exercises`, and empty `workout_sessions` in existing databases. Updated exercise deletion service logic to remove now-empty sessions after the exercise and its cascaded workout rows are deleted. Added a SQLite-specific monotonic id allocation guard for exercise creation so deleting and recreating `Squat` cannot reuse the same `exercise.id` in the existing dev database.
+- **How to run:** From `backend/`, run `python scripts/cleanup_orphan_workout_data.py` or `python scripts/cleanup_orphan_workout_data.py --dry-run`.
+- **Verification:** Added an API regression test covering create exercise -> log session -> delete exercise -> recreate same-name exercise -> log again. The new exercise now starts clean and `last-sets` only returns the new data.

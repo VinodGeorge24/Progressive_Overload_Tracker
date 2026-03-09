@@ -23,8 +23,16 @@ class Settings(BaseSettings):
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
 
-    # CORS — allow frontend dev server origins (Vite default 5173). Env: comma-separated or JSON array.
-    CORS_ORIGINS: list[str] = ["http://localhost:3000", "http://localhost:5173"]
+    # CORS — allow frontend dev server origins (Vite default 5173, fallback 5174; 127.0.0.1 variants).
+    # Env: comma-separated or JSON array to override. In development, "*" allows any origin (no credentials).
+    CORS_ORIGINS: list[str] = [
+        "http://localhost:3000",
+        "http://localhost:5173",
+        "http://localhost:5174",
+        "http://127.0.0.1:3000",
+        "http://127.0.0.1:5173",
+        "http://127.0.0.1:5174",
+    ]
 
     @field_validator("CORS_ORIGINS", mode="before")
     @classmethod

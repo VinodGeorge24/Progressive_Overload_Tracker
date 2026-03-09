@@ -5,6 +5,9 @@ Slice 3: Workout sessions CRUD, 409 on duplicate date, 404 for other user.
 """
 
 from fastapi.testclient import TestClient
+from sqlalchemy import text
+
+from app.tests.conftest import TestingSessionLocal
 
 
 def _register_and_login(a_client: TestClient, a_email: str, a_username: str) -> str:
@@ -101,6 +104,57 @@ def test_sessions_crud_and_list(client: TestClient):
     # Get after delete → 404
     get_after = client.get(f"/api/v1/sessions/{session_id}", headers=headers)
     assert get_after.status_code == 404
+
+
+def test_repeated_session_updates_do_not_accumulate_duplicate_sets(client: TestClient):
+    """Repeated PUT should replace prior sets, not accumulate orphaned rows."""
+    token = _register_and_login(client, "user-dup@example.com", "user-dup")
+    headers = {"Authorization": f"Bearer {token}"}
+    exercise = client.post(
+        "/api/v1/exercises/",
+        headers=headers,
+        json={"name": "JM Press", "muscle_group": "triceps"},
+    ).json()
+
+    payload = {
+        "date": "2024-06-01",
+        "exercises": [
+            {
+                "exercise_id": exercise["id"],
+                "sets": [
+                    {"set_number": 1, "reps": 10, "weight": 65},
+                    {"set_number": 2, "reps": 8, "weight": 70},
+                ],
+            }
+        ],
+    }
+    create_resp = client.post("/api/v1/sessions/", headers=headers, json=payload)
+    assert create_resp.status_code == 201
+    session_id = create_resp.json()["id"]
+
+    for _ in range(3):
+        update_resp = client.put(f"/api/v1/sessions/{session_id}", headers=headers, json=payload)
+        assert update_resp.status_code == 200
+
+    get_resp = client.get(f"/api/v1/sessions/{session_id}", headers=headers)
+    assert get_resp.status_code == 200
+    sets = get_resp.json()["exercises"][0]["sets"]
+    assert [(s["set_number"], s["weight"], s["reps"]) for s in sets] == [
+        (1, "65.00", 10),
+        (2, "70.00", 8),
+    ]
+    assert len({s["id"] for s in sets}) == 2
+
+    last_sets_resp = client.get(
+        "/api/v1/sessions/last-sets",
+        headers=headers,
+        params={"exercise_id": exercise["id"]},
+    )
+    assert last_sets_resp.status_code == 200
+    assert last_sets_resp.json()["sets"] == [
+        {"set_number": 1, "weight": "65.00", "reps": 10},
+        {"set_number": 2, "weight": "70.00", "reps": 8},
+    ]
 
 
 def test_session_post_same_date_returns_409(client: TestClient):
@@ -227,3 +281,116 @@ def test_session_exercise_not_owned_404(client: TestClient):
     )
     assert create_resp.status_code == 404
     assert "exercise" in create_resp.json().get("detail", "").lower() or "not found" in create_resp.json().get("detail", "").lower()
+
+
+def test_delete_exercise_cascades_logged_data_and_recreated_name_starts_clean(client: TestClient):
+    """Deleting an exercise removes its workout data; recreating the name starts clean."""
+    token = _register_and_login(client, "exercise-cleanup@example.com", "exercise-cleanup")
+    headers = {"Authorization": f"Bearer {token}"}
+
+    original = client.post(
+        "/api/v1/exercises/",
+        headers=headers,
+        json={"name": "Squat", "muscle_group": "legs"},
+    ).json()
+    create_session = client.post(
+        "/api/v1/sessions/",
+        headers=headers,
+        json={
+            "date": "2024-07-01",
+            "exercises": [
+                {
+                    "exercise_id": original["id"],
+                    "sets": [
+                        {"set_number": 1, "reps": 5, "weight": 225},
+                        {"set_number": 2, "reps": 5, "weight": 235},
+                    ],
+                }
+            ],
+        },
+    )
+    assert create_session.status_code == 201
+
+    delete_resp = client.delete(f"/api/v1/exercises/{original['id']}", headers=headers)
+    assert delete_resp.status_code == 204
+
+    last_deleted = client.get(
+        "/api/v1/sessions/last-sets",
+        headers=headers,
+        params={"exercise_id": original["id"]},
+    )
+    assert last_deleted.status_code == 404
+
+    sessions_after_delete = client.get("/api/v1/sessions/", headers=headers)
+    assert sessions_after_delete.status_code == 200
+    assert sessions_after_delete.json()["sessions"] == []
+
+    with TestingSessionLocal() as db:
+        workout_exercise_count = db.execute(
+            text("select count(*) from workout_exercises where exercise_id = :exercise_id"),
+            {"exercise_id": original["id"]},
+        ).scalar_one()
+        set_count = db.execute(
+            text(
+                """
+                select count(*)
+                from sets s
+                join workout_exercises we on we.id = s.workout_exercise_id
+                where we.exercise_id = :exercise_id
+                """
+            ),
+            {"exercise_id": original["id"]},
+        ).scalar_one()
+    assert workout_exercise_count == 0
+    assert set_count == 0
+
+    recreated = client.post(
+        "/api/v1/exercises/",
+        headers=headers,
+        json={"name": "Squat", "muscle_group": "legs"},
+    ).json()
+    assert recreated["id"] != original["id"]
+
+    new_session = client.post(
+        "/api/v1/sessions/",
+        headers=headers,
+        json={
+            "date": "2024-07-02",
+            "exercises": [
+                {
+                    "exercise_id": recreated["id"],
+                    "sets": [{"set_number": 1, "reps": 3, "weight": 315}],
+                }
+            ],
+        },
+    )
+    assert new_session.status_code == 201
+
+    last_recreated = client.get(
+        "/api/v1/sessions/last-sets",
+        headers=headers,
+        params={"exercise_id": recreated["id"]},
+    )
+    assert client.get(
+        "/api/v1/sessions/last-sets",
+        headers=headers,
+        params={"exercise_id": original["id"]},
+    ).status_code == 404
+    assert last_recreated.status_code == 200
+    assert last_recreated.json()["sets"] == [
+        {"set_number": 1, "weight": "315.00", "reps": 3}
+    ]
+
+    sessions_after_recreate = client.get("/api/v1/sessions/", headers=headers)
+    assert sessions_after_recreate.status_code == 200
+    assert sessions_after_recreate.json()["total"] == 1
+    assert sessions_after_recreate.json()["sessions"][0]["exercises"][0]["sets"] == [
+        {
+            "id": sessions_after_recreate.json()["sessions"][0]["exercises"][0]["sets"][0]["id"],
+            "set_number": 1,
+            "reps": 3,
+            "weight": "315.00",
+            "rest_seconds": None,
+            "notes": None,
+        }
+    ]

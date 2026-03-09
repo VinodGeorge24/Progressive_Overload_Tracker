@@ -4,8 +4,12 @@ exercises.py
 Business logic for Exercise CRUD scoped to the current user.
 """
 
+from sqlalchemy import func
+
 from app.models.exercise import Exercise
 from app.models.user import User
+from app.models.workout_exercise import WorkoutExercise
+from app.models.workout_session import WorkoutSession
 from app.schemas.exercises import ExerciseCreate, ExerciseOut, ExerciseUpdate
 
 
@@ -90,7 +94,32 @@ def delete_exercise_for_user(a_db, a_user: User, a_exercise_id: int) -> bool:
     if exercise is None:
         return False
 
+    affected_session_ids = {
+        row[0]
+        for row in (
+            a_db.query(WorkoutExercise.session_id)
+            .filter(WorkoutExercise.exercise_id == exercise.id)
+            .all()
+        )
+    }
     a_db.delete(exercise)
+    a_db.flush()
+
+    if affected_session_ids:
+        empty_sessions = (
+            a_db.query(WorkoutSession)
+            .outerjoin(WorkoutExercise, WorkoutExercise.session_id == WorkoutSession.id)
+            .filter(
+                WorkoutSession.user_id == a_user.id,
+                WorkoutSession.id.in_(affected_session_ids),
+            )
+            .group_by(WorkoutSession.id)
+            .having(func.count(WorkoutExercise.id) == 0)
+            .all()
+        )
+        for session in empty_sessions:
+            a_db.delete(session)
+
     a_db.commit()
     return True
 

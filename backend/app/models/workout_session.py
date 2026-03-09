@@ -24,7 +24,10 @@ class WorkoutSession(Base):
     """
 
     __tablename__ = "workout_sessions"
-    __table_args__ = (UniqueConstraint("user_id", "date", name="uq_workout_sessions_user_date"),)
+    __table_args__ = (
+        UniqueConstraint("user_id", "date", name="uq_workout_sessions_user_date"),
+        {"sqlite_autoincrement": True},
+    )
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     user_id: Mapped[int] = mapped_column(

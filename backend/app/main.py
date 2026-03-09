@@ -27,10 +27,17 @@ app = FastAPI(
 )
 
 # Configure CORS
+# In development, allow any origin to avoid port mismatch (e.g. Vite on 5174).
+# allow_credentials=False is fine: we use Bearer token in the Authorization header, not cookies.
+_origins: list[str] = list(settings.CORS_ORIGINS)
+if settings.ENVIRONMENT.lower() == "development":
+    _origins = ["*"]  # Always allow any origin in dev so CORS never blocks localhost:5174, etc.
+_credentials = "*" not in _origins
+logger.debug("CORS: env=%s allow_origins=%s allow_credentials=%s", settings.ENVIRONMENT, _origins, _credentials)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.CORS_ORIGINS,
-    allow_credentials=True,
+    allow_origins=_origins,
+    allow_credentials=_credentials,  # Must be False when using "*"
     allow_methods=["*"],
     allow_headers=["*"],
 )

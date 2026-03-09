@@ -34,10 +34,14 @@ EXERCISE_NOT_FOUND_DETAIL = "Exercise not found"
 
 
 def _session_to_out(a_session: WorkoutSession) -> SessionOut:
-    """Build SessionOut from ORM with exercises (by order) and sets (by set_number)."""
+    """Build SessionOut from ORM with exercises (by order) and sets (by set_number).
+    Dedupe sets by id so joinedload row multiplication never produces duplicate set entries.
+    """
     exercises_out: list[WorkoutExerciseOut] = []
     for we in sorted(a_session.workout_exercises, key=lambda x: x.order):
-        sets_out = [SetOut.model_validate(s) for s in sorted(we.sets, key=lambda x: x.set_number)]
+        # Dedupe by id (joinedload can duplicate rows; keep one per set)
+        unique_sets = {s.id: s for s in we.sets}.values()
+        sets_out = [SetOut.model_validate(s) for s in sorted(unique_sets, key=lambda x: x.set_number)]
         exercises_out.append(
             WorkoutExerciseOut(
                 exercise_id=we.exercise_id,

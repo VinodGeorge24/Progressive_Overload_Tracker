@@ -163,6 +163,57 @@ End-to-end auth verified: user (VinodGeorge24) completed sign up and login; Dash
 - **Sticky Save:** Sticky footer on Log and Session Edit with hint and Cancel + Save buttons so save is always visible.
 - **Last-sets preset:** GET /api/v1/sessions/last-sets?exercise_id=... for pre-fill when adding or changing exercise. Backend: get_last_sets_for_exercise; frontend pre-fills weight/reps from last time. API_CONTRACT updated.
 
+**End of session (2026-03-08):** Changes committed (391077f), pushed to GitHub (origin main). Obsidian sync was skipped (Obsidian CLI unavailable in environment).
+
+---
+
+## 2026-03-09
+
+### Slice 3 verification, signup behavior, and DB reset (prep for fresh tests)
+
+**Scope:** Verify that the workout session duplication bug is fixed on main, confirm signup behavior, and reset the local SQLite database for a clean end‑to‑end run.
+
+**Done:**
+
+1. **Duplicate sets bug — verification only:** Re‑read `backend/app/services/sessions.py` and `backend/docs/log.md` and confirmed that the prior fix for duplicated sets is present: all session load paths now use a single `joinedload(WorkoutSession.workout_exercises).options(joinedload(WorkoutExercise.exercise), joinedload(WorkoutExercise.sets))`, avoiding the earlier pattern that loaded `workout_exercises` twice and produced duplicate rows.
+2. **Signup endpoint behavior:** Used FastAPI `TestClient` to call `POST /api/v1/auth/register` with (a) an already‑registered email/username and (b) a fresh email/username. Observed expected behavior: existing email → `400 {"detail": "Email already registered"}`; new email → `201` with user object. Frontend failures seen earlier were due to reusing an existing test email, not a broken register endpoint.
+3. **Backend test pass:** Re‑ran backend tests for auth, exercises, and sessions (`pytest app/tests/test_auth.py`, `test_exercises.py`, `test_sessions.py`), all of which passed, confirming the API surface remains green after the Slice 3 work and fixes.
+4. **SQLite DB reset for clean run:** Stopped the running `uvicorn` dev server, deleted `backend/workout_tracker.db`, and re‑applied all Alembic migrations via `alembic upgrade head` to recreate an empty schema (users, exercises, workout_sessions/workout_exercises/sets) ready for a fresh end‑to‑end manual test.
+5. **Next steps:** Restart backend (`uvicorn app.main:app --reload`) and frontend (`npm run dev` from `frontend/`) and perform a clean run: new signup → login → create/edit sessions (including re‑open/edit of a saved workout) to visually confirm no duplicated sets and correct auth behavior.
+
+### CORS blocking login/signup from frontend (2026-03-09) — IN PROGRESS
+
+**Observed:** Frontend at `http://localhost:5174` (Vite fallback when 5173 in use) cannot log in or sign up. Browser DevTools shows:
+- `Access to XMLHttpRequest at 'http://localhost:8000/api/v1/auth/login' from origin 'http://localhost:5174' has been blocked by CORS policy: Response to preflight request doesn't pass access control check: No 'Access-Control-Allow-Origin' header is present on the requested resource.`
+- Same for `/api/v1/auth/register`.
+- Preflight `OPTIONS` requests return **400 Bad Request** and response is missing `Access-Control-Allow-Origin`.
+
+**Root cause:** Backend CORS config originally allowed only `http://localhost:3000` and `http://localhost:5173`. When Vite uses port 5174 (because 5173 is in use), the origin `http://localhost:5174` was not allowed, so the browser blocked the request.
+
+**Attempted fixes (uncommitted):**
+1. **config.py:** Expanded `CORS_ORIGINS` default to include `http://localhost:5174`, `http://127.0.0.1:5173`, `http://127.0.0.1:5174`, etc.
+2. **main.py:** In development, override to `allow_origins=["*"]` and `allow_credentials=False` so any localhost origin is allowed (auth uses Bearer token, not cookies).
+
+**Resolution (2026-03-09):** The development override in `main.py` was conditional: `if settings.ENVIRONMENT.lower() == "development" and "*" not in _origins`. Under uvicorn the effective config could still be the explicit list (so `http://localhost:5174` was rejected with "Disallowed CORS origin"). **Fix:** In development, always set `_origins = ["*"]` (unconditional). `allow_credentials=False` when using `["*"]` (auth uses Bearer token, not cookies). Verified: OPTIONS preflight for `/api/v1/auth/login` and `/api/v1/auth/register` with `Origin: http://localhost:5174` now return **200** and `Access-Control-Allow-Origin: *`. **Next:** With backend running (`cd backend && uvicorn app.main:app --reload`), test login/signup from frontend at `http://localhost:5174`.
+
+### Duplicate sets on view/edit (2026-03-09)
+
+- **Observed:** After logging a workout and opening view/edit, sets appear duplicated (e.g. Set #1 and #2 each shown 2× or 4×); can multiply on repeated open/save.
+- **Fix:** Defensive deduplication. **Backend:** In `_session_to_out` (`backend/app/services/sessions.py`), dedupe each exercise’s sets by `id` before building the output so joinedload row multiplication never produces duplicate set entries. **Frontend:** In `SessionEditPage.tsx`, when loading session into `localExercises`, dedupe sets by `id` and sort by `set_number` so duplicate API data never produces duplicate rows. Backend session tests pass.
+
+### Duplicate sets persisted after edit/save cycles (2026-03-09)
+
+- **Root cause found:** The persistent duplication came from the backend data layer, not just the UI. `PUT /api/v1/sessions/{id}` replaces `workout_exercises`; under SQLite, foreign keys were not enforced, so deleting the old parent row did not cascade-delete its `sets`. Because SQLite reused the deleted parent id, those orphaned set rows reattached to the new `workout_exercise`, and the API returned 2, then 4, then 6 sets on repeated saves.
+- **Final fix:** Enabled SQLite foreign keys for every application DB connection and for the pytest in-memory engine. The frontend keeps its defensive dedupe in `SessionEditPage.tsx`, but the API is now the source of truth and returns unique, correctly ordered sets.
+- **Verification:** Added a regression test covering repeated updates plus `last-sets`, and re-ran the session test suite after the fix.
+
+### Exercise delete/recreate integrity cleanup (2026-03-09)
+
+- **Observed:** Deleting an exercise and recreating a new exercise with the same name could surface old data in history or `last-sets`. Investigation showed the stale data was not name-based in the frontend; it came from legacy orphan rows in SQLite created before foreign keys were enabled.
+- **Root cause:** With `PRAGMA foreign_keys` previously off, deleting an exercise did not cascade-remove dependent `workout_exercises`/`sets`. SQLite can reuse integer primary keys, so recreating the exercise could make those orphan rows appear attached to the new record. Deleting an exercise could also leave an empty `workout_session` if that session only contained the deleted movement.
+- **Fix:** Added a cleanup script at `backend/scripts/cleanup_orphan_workout_data.py` for one-time DB repair, updated exercise deletion so any now-empty sessions are removed after the exercise cascade completes, and added a SQLite-specific monotonic exercise id allocation guard so a recreated exercise does not inherit the deleted exercise's id.
+- **Verification:** Added backend regression coverage to prove that deleting an exercise removes its logged data, `GET /api/v1/sessions/last-sets?exercise_id=<deleted_id>` returns 404, and recreating the same exercise name starts with clean history/prefill data.
+
 ---
 
 ## 2026-02-22

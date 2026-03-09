@@ -64,18 +64,27 @@ export default function SessionEditPage() {
         setLocalExercises(
           sess.exercises.map((e) => {
             const ex = exList.find((x) => x.id === e.exercise_id);
+            // Dedupe sets by id so we never show duplicate rows (backend/ORM can occasionally duplicate)
+            const seenSetIds = new Set<number>();
+            const uniqueSets = e.sets.filter((s) => {
+              if (seenSetIds.has(s.id)) return false;
+              seenSetIds.add(s.id);
+              return true;
+            });
             return {
               exercise_id: e.exercise_id,
               exercise_name: e.exercise_name,
               muscle_group: ex?.muscle_group,
-              sets: e.sets.map((s) => ({
-                localId: crypto.randomUUID(),
-                set_number: s.set_number,
-                reps: s.reps,
-                weight: s.weight,
-                rest_seconds: s.rest_seconds ?? undefined,
-                notes: s.notes ?? undefined,
-              })),
+              sets: uniqueSets
+                .sort((a, b) => a.set_number - b.set_number)
+                .map((s) => ({
+                  localId: crypto.randomUUID(),
+                  set_number: s.set_number,
+                  reps: s.reps,
+                  weight: s.weight,
+                  rest_seconds: s.rest_seconds ?? undefined,
+                  notes: s.notes ?? undefined,
+                })),
               notes: e.notes ?? "",
             };
           })
