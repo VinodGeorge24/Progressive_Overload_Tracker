@@ -107,6 +107,36 @@ Return the currently authenticated user. Requires `Authorization: Bearer <token>
 
 **Errors:** 401 if missing or invalid token.
 
+#### PATCH /api/v1/auth/me
+Update the currently authenticated user's profile. Requires `Authorization: Bearer <token>`.
+
+**Request:** At least one profile field must be provided. To change the password, send both
+`current_password` and `new_password`.
+```json
+{
+  "username": "new-display-name",
+  "current_password": "oldpassword123",
+  "new_password": "newpassword456"
+}
+```
+
+**Response (200):**
+```json
+{
+  "id": 1,
+  "email": "user@example.com",
+  "username": "new-display-name",
+  "is_active": true,
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-02T00:00:00Z"
+}
+```
+
+**Errors:**
+- `400` if the username is already taken or the current password is incorrect.
+- `401` if the token is missing or invalid.
+- `422` if the request omits required password-pair fields or sends no changes.
+
 ### Exercises
 
 #### GET /api/v1/exercises

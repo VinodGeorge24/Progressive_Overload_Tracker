@@ -12,6 +12,7 @@ import HistoryPage from "@/pages/HistoryPage";
 import LogPage from "@/pages/LogPage";
 import LoginPage from "@/pages/LoginPage";
 import ProgressPage from "@/pages/ProgressPage";
+import ProfilePage from "@/pages/ProfilePage";
 import SessionEditPage from "@/pages/SessionEditPage";
 import SignupPage from "@/pages/SignupPage";
 import TemplatesPage from "@/pages/TemplatesPage";
@@ -19,10 +20,16 @@ import TemplatesPage from "@/pages/TemplatesPage";
 /** Placeholder home: welcome + links. If authenticated, redirect to dashboard. */
 function WelcomePage() {
   const { isAuthenticated, loading } = useAuth();
-  if (loading) return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center" role="status" aria-live="polite">
+        Loading...
+      </div>
+    );
+  }
   if (isAuthenticated) return <Navigate to="/dashboard" replace />;
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center gap-4">
+    <main className="min-h-screen flex flex-col items-center justify-center gap-4">
       <h1 className="text-2xl font-bold">Progressive Overload Tracker</h1>
       <p className="text-muted-foreground">Welcome</p>
       <div className="flex gap-3">
@@ -33,7 +40,7 @@ function WelcomePage() {
           <Link to="/signup">Sign up</Link>
         </Button>
       </div>
-    </div>
+    </main>
   );
 }
 
@@ -104,6 +111,22 @@ function AppRoutes() {
         element={
           <ProtectedRoute>
             <TemplatesPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/settings"
+        element={
+          <ProtectedRoute>
+            <ProfilePage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/profile"
+        element={
+          <ProtectedRoute>
+            <ProfilePage />
           </ProtectedRoute>
         }
       />

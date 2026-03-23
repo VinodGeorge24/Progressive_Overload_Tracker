@@ -1,7 +1,7 @@
 """
 auth.py
 
-Endpoints: POST /register, POST /login, POST /logout, GET /me.
+Endpoints: POST /register, POST /login, POST /logout, GET /me, PATCH /me.
 Slice 1 Auth. Logout returns 200; client discards token (no server-side invalidation).
 """
 
@@ -14,7 +14,7 @@ from app.api.deps import get_current_user
 from app.core import security
 from app.db.session import get_db
 from app.models.user import User
-from app.schemas.auth import LoginIn, RegisterIn, TokenWithUser, UserOut
+from app.schemas.auth import LoginIn, ProfileUpdateIn, RegisterIn, TokenWithUser, UserOut
 from app.services import auth as auth_service
 
 router = APIRouter(prefix="/auth", tags=["authentication"])
@@ -67,3 +67,17 @@ def logout():
 def me(a_current_user: Annotated[User, Depends(get_current_user)]):
     """Return the currently authenticated user. Requires Bearer token."""
     return auth_service.user_to_out(a_current_user)
+
+
+@router.patch("/me", response_model=UserOut)
+def update_me(
+    a_body: ProfileUpdateIn,
+    a_db: Annotated[Session, Depends(get_db)],
+    a_current_user: Annotated[User, Depends(get_current_user)],
+):
+    """Update the current user's username and optionally password."""
+    try:
+        user = auth_service.update_user_profile(a_db, a_current_user, a_body)
+    except ValueError as exc:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc)) from exc
+    return auth_service.user_to_out(user)

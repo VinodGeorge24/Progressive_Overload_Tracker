@@ -185,7 +185,7 @@ export default function ProgressPage() {
               <label className="flex flex-col gap-2 text-sm xl:col-span-2">
                 <span className="text-slate-400">Exercise</span>
                 <select
-                  className="rounded-xl border border-slate-700 bg-slate-950 px-3 py-2 text-slate-50"
+                  className="dark-surface-select rounded-xl border border-slate-700 bg-slate-950 px-3 py-2 text-slate-50"
                   value={selectedExerciseId ?? ""}
                   onChange={(event) => handleExerciseChange(Number(event.target.value))}
                 >
@@ -201,7 +201,7 @@ export default function ProgressPage() {
               <label className="flex flex-col gap-2 text-sm">
                 <span className="text-slate-400">Metric</span>
                 <select
-                  className="rounded-xl border border-slate-700 bg-slate-950 px-3 py-2 capitalize text-slate-50"
+                  className="dark-surface-select rounded-xl border border-slate-700 bg-slate-950 px-3 py-2 capitalize text-slate-50"
                   value={metric}
                   onChange={(event) => setMetric(event.target.value as MetricOption)}
                 >
@@ -216,7 +216,7 @@ export default function ProgressPage() {
               <label className="flex flex-col gap-2 text-sm">
                 <span className="text-slate-400">Set number</span>
                 <select
-                  className="rounded-xl border border-slate-700 bg-slate-950 px-3 py-2 text-slate-50"
+                  className="dark-surface-select rounded-xl border border-slate-700 bg-slate-950 px-3 py-2 text-slate-50"
                   value={setNumber ?? ""}
                   onChange={(event) =>
                     setSetNumber(event.target.value ? Number(event.target.value) : undefined)

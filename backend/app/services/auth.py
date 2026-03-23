@@ -7,7 +7,7 @@ Uses app.core.security for hashing and JWT. Login by email only.
 
 from app.core import security
 from app.models.user import User
-from app.schemas.auth import RegisterIn, UserOut
+from app.schemas.auth import ProfileUpdateIn, RegisterIn, UserOut
 
 
 def register_user(a_db, a_register: RegisterIn) -> User:
@@ -54,6 +54,41 @@ def authenticate_user(a_db, a_email: str, a_password: str) -> User | None:
     if not security.verify_password(a_password, user.hashed_password):
         return None
     return user
+
+
+def update_user_profile(a_db, a_user: User, a_profile: ProfileUpdateIn) -> User:
+    """
+    Update profile fields for the current user.
+
+    SYNOPSIS
+        update_user_profile(a_db, a_user, a_profile)
+            a_db      --> SQLAlchemy session
+            a_user    --> current User model
+            a_profile --> ProfileUpdateIn
+
+    DESCRIPTION
+        Updates username and optionally password. Raises ValueError for user-facing
+        validation issues such as duplicate usernames or wrong current password.
+    """
+    if a_profile.username is not None and a_profile.username != a_user.username:
+        existing_user = (
+            a_db.query(User)
+            .filter(User.username == a_profile.username, User.id != a_user.id)
+            .first()
+        )
+        if existing_user is not None:
+            raise ValueError("Username already taken")
+        a_user.username = a_profile.username
+
+    if a_profile.new_password is not None:
+        if not security.verify_password(a_profile.current_password or "", a_user.hashed_password):
+            raise ValueError("Current password is incorrect")
+        a_user.hashed_password = security.get_password_hash(a_profile.new_password)
+
+    a_db.add(a_user)
+    a_db.commit()
+    a_db.refresh(a_user)
+    return a_user
 
 
 def user_to_out(a_user: User) -> UserOut:

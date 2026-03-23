@@ -345,7 +345,7 @@ export default function SessionEditPage() {
                   </div>
                   <div className="min-w-0 flex-1">
                     <select
-                      className="w-full bg-transparent border-none text-lg font-bold text-slate-100 focus:ring-0 focus:outline-none cursor-pointer"
+                      className="dark-surface-select w-full cursor-pointer border-none bg-transparent text-lg font-bold text-slate-100 focus:outline-none focus:ring-0"
                       value={le.exercise_id}
                       onChange={(e) => changeExercise(exIndex, Number(e.target.value))}
                     >
@@ -440,7 +440,7 @@ export default function SessionEditPage() {
                   type="button"
                   variant="outline"
                   size="sm"
-                  className="border-dashed border-slate-700 text-slate-500 hover:text-sky-400 hover:border-sky-500 w-full"
+                  className="w-full border-dashed border-slate-700 text-slate-700 hover:border-sky-500 hover:text-slate-900"
                   onClick={() => addSet(exIndex)}
                 >
                   Add Set

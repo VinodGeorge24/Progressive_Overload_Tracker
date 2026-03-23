@@ -205,7 +205,7 @@ export default function ExercisesPage() {
                         <Button
                           variant="outline"
                           size="icon"
-                          className="h-7 w-7 border-slate-700 text-slate-300 hover:text-sky-300"
+                          className="h-7 w-7 border-slate-700 text-slate-900 hover:border-sky-500/70 hover:text-slate-900"
                           onClick={() => startEdit(exercise)}
                           aria-label={`Edit ${exercise.name}`}
                         >
@@ -265,7 +265,7 @@ export default function ExercisesPage() {
                 <Button
                   type="button"
                   variant="outline"
-                  className="border-slate-700 text-slate-200"
+                  className="border-slate-700"
                   onClick={cancelForm}
                   disabled={saving}
                 >

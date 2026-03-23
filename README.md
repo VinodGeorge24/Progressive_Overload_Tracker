@@ -2,6 +2,8 @@
 
 Before reading this, please reference "PRD.md" and read it thoroughly. That is our "reference" and truth. Then, reference this document.
 
+Before making edits or starting a new slice, also read [redundant_mistakes.md](./redundant_mistakes.md). It captures repo-specific mistakes that already happened and should not be repeated.
+
 ## Overview
 
 This is a workout tracking application designed to help users systematically increase their training volume and intensity over time. The app tracks exercises, sets, reps, and weights to enable progressive overload—the fundamental principle of strength training.
@@ -84,6 +86,7 @@ npm run dev
 - [API Contract](./API_CONTRACT.md) - Backend endpoints and usage
 - [Data Model](./DATA_MODEL.md) - Database structure and relationships
 - [Coding Standards](./CODING_STANDARDS.md) - Code style and conventions
+- [Redundant Mistakes](./redundant_mistakes.md) - Repo-specific mistakes and regressions to avoid repeating
 - [AI Usage Log](./AI_USAGE.md) - Record of AI assistance
 - [Documentation (docs/)](./docs/README.md) - Research notes, project log, and doc index
 - [Plan (plan/)](./plan/README.md) - Slice order and how to use the coding plan

@@ -64,3 +64,66 @@ def test_me_with_token_returns_user(client: TestClient):
     me_resp = client.get("/api/v1/auth/me", headers={"Authorization": f"Bearer {token}"})
     assert me_resp.status_code == 200
     assert me_resp.json()["email"] == "me@example.com"
+
+
+def test_patch_me_updates_username_and_password(client: TestClient):
+    """PATCH /auth/me updates username and password for the current user."""
+    client.post(
+        "/api/v1/auth/register",
+        json={"email": "patch@example.com", "username": "before", "password": "password123"},
+    )
+    login_resp = client.post(
+        "/api/v1/auth/login",
+        json={"email": "patch@example.com", "password": "password123"},
+    )
+    token = login_resp.json()["access_token"]
+
+    patch_resp = client.patch(
+        "/api/v1/auth/me",
+        headers={"Authorization": f"Bearer {token}"},
+        json={
+            "username": "after",
+            "current_password": "password123",
+            "new_password": "newpassword456",
+        },
+    )
+    assert patch_resp.status_code == 200
+    assert patch_resp.json()["username"] == "after"
+
+    old_login_resp = client.post(
+        "/api/v1/auth/login",
+        json={"email": "patch@example.com", "password": "password123"},
+    )
+    assert old_login_resp.status_code == 401
+
+    new_login_resp = client.post(
+        "/api/v1/auth/login",
+        json={"email": "patch@example.com", "password": "newpassword456"},
+    )
+    assert new_login_resp.status_code == 200
+    assert new_login_resp.json()["user"]["username"] == "after"
+
+
+def test_patch_me_rejects_duplicate_username(client: TestClient):
+    """PATCH /auth/me returns 400 when the requested username already exists."""
+    client.post(
+        "/api/v1/auth/register",
+        json={"email": "first@example.com", "username": "firstuser", "password": "password123"},
+    )
+    client.post(
+        "/api/v1/auth/register",
+        json={"email": "second@example.com", "username": "seconduser", "password": "password123"},
+    )
+    login_resp = client.post(
+        "/api/v1/auth/login",
+        json={"email": "second@example.com", "password": "password123"},
+    )
+    token = login_resp.json()["access_token"]
+
+    patch_resp = client.patch(
+        "/api/v1/auth/me",
+        headers={"Authorization": f"Bearer {token}"},
+        json={"username": "firstuser"},
+    )
+    assert patch_resp.status_code == 400
+    assert patch_resp.json()["detail"] == "Username already taken"

@@ -20,6 +20,35 @@ Chronological log of completed and in-progress tasks.
 ---
 
 *Add new entries below as work progresses*
+ 
+## 2026-03-23 - Slice 7 dashboard experience refresh
+- [x] Audited the dashboard page, current styling approach, and existing `shadcn/ui` support before editing.
+- [x] Added reusable dashboard section components plus lightweight `Card`, `Badge`, and `Separator` UI primitives.
+- [x] Reworked the dashboard into a stronger dark-mode layout with an app-like nav, hero CTA, quick actions, stat cards, and polished recent-session activity cards.
+- [x] Preserved existing routing and functionality while improving hierarchy, spacing, contrast, and hover states.
+- [x] Updated planning docs so the dashboard refresh is Slice 7 and export/deployment prep is now Slice 8.
+- [x] Re-verified with `npm run build`.
+
+## 2026-03-23 - Slice 6 profile and polish ✅
+- [x] Added backend profile update support with `PATCH /api/v1/auth/me`, including username changes and optional password changes gated by the current password.
+- [x] Added auth regression coverage for `PATCH /auth/me`, including successful username/password updates and duplicate-username rejection.
+- [x] Added frontend profile/settings flow with protected `/settings` and `/profile` routes, auth-context profile syncing, and a dedicated account settings page.
+- [x] Added Slice 6 polish touches in the auth flow: accessible loading states, inline success/error messaging, and dashboard navigation to settings.
+- [x] Updated `API_CONTRACT.md` and `plan/coding_plan.md` to mark Slice 6 complete.
+- [x] Re-verified with `python -m pytest app/tests` and `npm run build`.
+
+## 2026-03-23 - Fix native select dropdown contrast
+- [x] Added a reusable `dark-surface-select` style so native select dropdown options stay readable on dark-themed screens.
+- [x] Fixed the reported unreadable exercise-change dropdown inside Today&apos;s Log and Session Edit exercise cards.
+- [x] Applied the same select contrast rule to other dark-surface selects in Log, Progress, and Templates for consistency.
+- [x] Added the select contrast regression pattern to `redundant_mistakes.md`.
+- [x] Re-ran `npm run build`.
+
+## 2026-03-23 - Redundant mistakes guidance
+- [x] Added root-level `redundant_mistakes.md` to capture repeat repo mistakes before future edits and slices.
+- [x] Recorded the repeated UI issue where light buttons on dark pages become hard to read until hover instead of keeping dark text at all times.
+- [x] Consolidated other logged pitfalls into the new file, including circular imports, SQLite foreign-key assumptions, duplicate `joinedload(...)` patterns, dev CORS gaps, bad dependency specifiers, Vite install confusion, and duplicate template exercise-id validation.
+- [x] Linked the new file from `README.md` and `PROJECT_GUIDE.md`.
 
 ## 2026-03-09 — Debug duplicate sets, signup behavior, and reset DB ✅
 - [x] Reproduced and reviewed the earlier “duplicate sets when re‑editing a workout” bug, confirmed the root cause was the double `joinedload(workout_exercises)` pattern in the backend, and verified that the fix (single joinedload with nested `.options(...)`) is present on `main`.

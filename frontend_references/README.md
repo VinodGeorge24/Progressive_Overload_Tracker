@@ -1,6 +1,6 @@
 # Frontend references (design inspiration)
 
-**Status:** Slice 1 complete (Login, Sign up, Dashboard implemented). Next: Slice 2 (Exercises).
+**Status:** Slices 1-7 are complete across the app, including the dashboard refresh. The remaining planned slice is Slice 8 (Export and deployment prep). These references remain design inspiration for future polish and any export-related UI placement.
 
 This folder contains **screen-level design references** for the Progressive Overload Tracker. Each subfolder is named after a screen and contains:
 

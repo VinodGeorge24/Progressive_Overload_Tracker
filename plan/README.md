@@ -6,9 +6,9 @@ This folder holds the **coding plan** for the Progressive Overload Tracker so th
 
 | File | Purpose |
 |------|--------|
-| **coding_plan.md** | Full slice-by-slice plan: Slices 0–7, substeps, checkpoints, design references (Stitch + frontend_references), libraries checklist, implementation notes. **Read this when starting or advancing a slice.** |
+| **coding_plan.md** | Full slice-by-slice plan: Slices 0-8, substeps, checkpoints, design references (Stitch + frontend_references), libraries checklist, implementation notes. **Read this when starting or advancing a slice.** |
 
-**Status:** Slices 0, 1 (Auth), 2 (Exercises CRUD), 3 (Workout sessions and sets), 4 (Analytics and progress charts), and 5 (Workout templates) complete (see [docs/project-log.md](../docs/project-log.md)). Next: Slice 6 (Profile and polish).
+**Status:** Slices 0, 1 (Auth), 2 (Exercises CRUD), 3 (Workout sessions and sets), 4 (Analytics and progress charts), 5 (Workout templates), 6 (Profile and polish), and 7 (Dashboard experience refresh) complete (see [docs/project-log.md](../docs/project-log.md)). Next: Slice 8 (Export and deployment prep).
 
 For the full screen-to-folder map and design tokens, see [frontend_references/README.md](../frontend_references/README.md).
 
@@ -16,10 +16,10 @@ For the full screen-to-folder map and design tokens, see [frontend_references/RE
 
 For **continuity across sessions** and **lower token usage**, a **global memory** rule is used so Cursor has short context in every chat without re-sending the full plan or PRD.
 
-- **Where:** User-level Cursor rules: `~/.cursor/rules/global-memory.mdc`  
+- **Where:** User-level Cursor rules: `~/.cursor/rules/global-memory.mdc`
   - On Windows: `C:\Users\<you>\.cursor\rules\global-memory.mdc`
   - Cursor injects rules from this path into every chat (see [Cursor IDE Integration](https://deepwiki.com/thedotmack/claude-mem/4.2-cursor-ide-integration) for how context injection works).
-- **What it contains:** A short "Current state" section: current project, current slice/phase, last session summary (1–3 bullets), optional key decisions.
+- **What it contains:** A short "Current state" section: current project, current slice/phase, last session summary (1-3 bullets), optional key decisions.
 - **When to update:** At **end of a session** or when **switching project or slice**. You or the agent can update the "Current state" block so the next chat knows where things stand.
 - **Why hybrid:** No worker or hooks required. You (or the agent at your request) update the file manually; Cursor always loads it, so you get memory and efficiency without running claude-mem or another service.
 

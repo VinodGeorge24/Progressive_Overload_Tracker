@@ -367,7 +367,7 @@ export default function TemplatesPage() {
                         <label className="flex flex-col gap-1 text-sm">
                           <span className="text-slate-400">Exercise</span>
                           <select
-                            className="rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-slate-50"
+                            className="dark-surface-select rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-slate-50"
                             value={exercise.exercise_id}
                             onChange={(event) =>
                               updateExerciseRow(
@@ -442,7 +442,7 @@ export default function TemplatesPage() {
                 <Button
                   type="button"
                   variant="outline"
-                  className="border-slate-700 text-slate-200"
+                  className="border-slate-700"
                   onClick={cancelForm}
                   disabled={saving}
                 >

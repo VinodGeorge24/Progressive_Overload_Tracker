@@ -4,6 +4,70 @@ Chronological log of project decisions and documentation updates. For weekly pro
 
 ---
 
+## 2026-03-23
+
+### Slice 7: Dashboard experience refresh - COMPLETE
+
+**Scope:** Redesign the dashboard presentation without changing the underlying workout, history, analytics, or navigation flows.
+
+**Done:**
+
+1. Audited the existing frontend structure, confirmed the dashboard entry point, and verified that the repo already supported `shadcn/ui`-style components cleanly.
+2. Added reusable dashboard sections plus lightweight UI primitives so the redesign stayed component-based instead of becoming a one-file JSX rewrite.
+3. Rebuilt the dashboard around an app-like top nav, stronger hero CTA, quick actions, lightweight stats, and cleaner recent-session activity cards.
+4. Kept the analytics screen direction intact while making the dashboard itself feel less empty and more polished.
+5. Updated planning docs so the dashboard refresh is now Slice 7 and the former Slice 7 export/deployment work is now Slice 8.
+6. Verified the updated UI with `npm run build` plus a mocked browser pass of the dashboard layout.
+
+**Verification:** `npm run build`
+
+---
+
+### Slice 6: Profile and polish â€” COMPLETE
+
+**Scope:** Finish the profile/settings slice with backend auth updates, frontend settings UI, and slice-level polish.
+
+**Done:**
+
+1. Added backend `PATCH /api/v1/auth/me` for authenticated profile updates, supporting username changes and optional password changes when the current password is provided.
+2. Added auth regression tests covering `GET /api/v1/auth/me`, successful profile updates, password rotation, and duplicate-username rejection.
+3. Added frontend profile API helpers plus auth-context update wiring so successful profile edits update the in-app user state immediately.
+4. Added a protected settings/profile screen with current account details, username editing, optional password change fields, inline error/success states, and accessible loading/status messaging.
+5. Added dashboard navigation to the new settings screen and documented the new endpoint in `API_CONTRACT.md`.
+6. Marked Slice 6 complete in `plan/coding_plan.md`; this was later followed by the Slice 7 dashboard refresh and the export/deployment slice moving to Slice 8.
+
+**Verification:** `python -m pytest app/tests`, `npm run build`
+
+---
+
+### Fixed native select dropdown contrast on dark pages
+
+**Scope:** Frontend readability fix for native select controls on dark surfaces.
+
+**Done:**
+
+1. Added a reusable `dark-surface-select` style in `frontend/src/index.css` so native select option lists render dark text on a light dropdown background instead of inheriting unreadable light text.
+2. Applied the reusable class to the exercise selector inside Today&apos;s Log and Session Edit exercise cards, which was the reported unreadable dropdown case.
+3. Applied the same class to the other dark-surface native selects in Log, Progress, and Templates so the contrast rule stays consistent across the app.
+4. Updated `redundant_mistakes.md` to capture this native-select contrast regression pattern for future work.
+
+**Verification:** `npm run build`
+
+---
+
+### Added root-level redundant mistakes guidance
+
+**Scope:** Documentation-only repo guidance update.
+
+**Done:**
+
+1. Added `redundant_mistakes.md` at the repo root so future edits and slices have a short list of repeated mistakes to avoid.
+2. Captured the recurring UI contrast issue where light buttons on dark pages drift into unreadable idle-state text and rely on hover to become readable.
+3. Pulled additional repeat mistakes from project logs, including circular imports through `app/db/base.py`, SQLite foreign-key assumptions, duplicate `joinedload(...)` patterns, stale dependency specifiers, Vite install confusion, CORS localhost-port assumptions, and template duplicate-id validation behavior.
+4. Linked the new file from `README.md` and `PROJECT_GUIDE.md` so it is part of the normal read-first path.
+
+---
+
 ## 2026-03-22
 
 ### Slice 5 follow-up: template duplicate-id validation and contract fix

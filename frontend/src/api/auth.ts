@@ -1,5 +1,5 @@
 /**
- * Auth API: register, login, logout, getMe.
+ * Auth API: register, login, logout, getMe, updateProfile.
  * Token is stored in localStorage; client discards on logout (no server invalidation in MVP).
  * Session expires after 30 minutes (JWT expiry); client clears token on 401 (see api/client.ts).
  */
@@ -21,6 +21,12 @@ export interface LoginResponse {
   access_token: string;
   token_type: string;
   user: User;
+}
+
+export interface UpdateProfileInput {
+  username?: string;
+  current_password?: string;
+  new_password?: string;
 }
 
 export function getStoredToken(): string | null {
@@ -63,5 +69,14 @@ export async function logout(): Promise<void> {
 
 export async function getMe(): Promise<User> {
   const { data } = await apiClient.get<User>(`${AUTH_PREFIX}/me`);
+  return data;
+}
+
+export async function getProfile(): Promise<User> {
+  return getMe();
+}
+
+export async function updateProfile(a_input: UpdateProfileInput): Promise<User> {
+  const { data } = await apiClient.patch<User>(`${AUTH_PREFIX}/me`, a_input);
   return data;
 }

@@ -6,7 +6,7 @@ Pydantic schemas for authentication: register, login, token, user out.
 
 from datetime import datetime
 
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, EmailStr, Field, model_validator
 
 
 class RegisterIn(BaseModel):
@@ -22,6 +22,25 @@ class LoginIn(BaseModel):
 
     email: EmailStr
     password: str = Field(..., min_length=1)
+
+
+class ProfileUpdateIn(BaseModel):
+    """Request body for PATCH /auth/me."""
+
+    username: str | None = Field(default=None, min_length=1, max_length=255)
+    current_password: str | None = Field(default=None, min_length=1, max_length=255)
+    new_password: str | None = Field(default=None, min_length=8, max_length=255)
+
+    @model_validator(mode="after")
+    def validate_profile_update(self) -> "ProfileUpdateIn":
+        """Require at least one change and keep password updates explicit."""
+        if self.username is None and self.new_password is None:
+            raise ValueError("At least one profile field must be provided")
+        if self.new_password is not None and not self.current_password:
+            raise ValueError("Current password is required to set a new password")
+        if self.current_password is not None and self.new_password is None:
+            raise ValueError("New password is required when current password is provided")
+        return self
 
 
 class Token(BaseModel):

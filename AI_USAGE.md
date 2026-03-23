@@ -166,3 +166,33 @@ Each entry should include:
 - **Modifications**: Kept scope tight to the two validated findings; no feature expansion beyond bugfix and contract correction.
 - **Final Result**: Duplicate exercise-id payloads no longer return misleading 404 errors, template tests cover the regression, and the contract example is valid JSON.
 
+---
+
+### 2026-03-23 - Redundant mistakes guidance
+
+- **Tool**: Cursor AI (agent)
+- **Task**: Create a root-level guidance file for repeated repo mistakes and make it part of the normal read-first documentation path.
+- **Prompt/Request**: User asked for a global `redundant_mistakes.md` file, requested the repeated light-button unreadable-text issue be recorded there, and asked for additional repeated mistakes to be pulled from the project logs.
+- **Output**:
+  - Added `redundant_mistakes.md` at the repo root with repo-specific mistakes to avoid repeating.
+  - Captured the repeated UI contrast issue: light buttons on dark pages must keep dark readable text in idle and hover states rather than relying on fade or hover to become legible.
+  - Added other logged repeat issues: circular imports via `app/db/base.py`, SQLite foreign-key assumptions, duplicate `joinedload(...)` patterns, invalid dependency specifiers, dev CORS origin gaps, Vite install confusion, and template duplicate-id validation behavior.
+  - Linked the new file from `README.md` and `PROJECT_GUIDE.md`, and logged the change in project and task logs.
+- **Modifications**: Kept the new file focused on repeat mistakes only, not general style guidance, so it stays short and usable before future slices.
+- **Final Result**: The repo now has a root-level, reusable mistake-prevention guide grounded in the project's actual logged regressions.
+
+---
+
+### 2026-03-23 - Native select dropdown contrast fix
+
+- **Tool**: Cursor AI (agent)
+- **Task**: Fix unreadable native select dropdown text on dark-themed frontend screens, especially the exercise selector inside the log/edit exercise cards.
+- **Prompt/Request**: User pointed out the exercise-change dropdown in the log card was rendering unreadable light text in the opened dropdown and asked for the issue to be fixed and logged.
+- **Output**:
+  - Added a reusable `dark-surface-select` style in `frontend/src/index.css` so opened native select dropdown options use readable dark text on a light background.
+  - Applied the reusable class to the exercise selector in `LogPage.tsx` and `SessionEditPage.tsx`.
+  - Applied the same class to other dark-surface native selects in `LogPage.tsx`, `ProgressPage.tsx`, and `TemplatesPage.tsx` to keep behavior consistent.
+  - Updated `redundant_mistakes.md`, `docs/project-log.md`, and `logs/task-log.md` to capture the pattern and the fix.
+- **Modifications**: Kept the closed-state dark-surface select styling intact; only the opened option list readability behavior was normalized.
+- **Final Result**: Dark-themed native selects now keep their in-card appearance while rendering readable dropdown options when opened.
+

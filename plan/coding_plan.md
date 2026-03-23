@@ -178,7 +178,7 @@ The UI is inspired by **Stitch (Google)**. Design direction lives in **[frontend
 
 ---
 
-## Slice 6: Profile and polish
+## Slice 6: Profile and polish â€” ✅ Complete
 
 **Goal:** View and edit profile; consistent error handling, loading states, basic accessibility.
 
@@ -192,11 +192,29 @@ The UI is inspired by **Stitch (Google)**. Design direction lives in **[frontend
 4. **Frontend — Profile page:** Display user; form to edit username (and optionally password). Use [frontend_references/app_settings_-_lift_tracker/](../frontend_references/app_settings_-_lift_tracker/) for Settings/Profile inspiration.
 5. **Frontend — App-wide polish:** Loading spinners/skeletons; error toasts or inline messages; redirect unauthenticated to login; basic a11y (focus, labels, semantic HTML).
 6. **Frontend — Routing:** `/profile` or `/settings`. Auth required.
-7. **Checkpoint:** View and edit profile; loading and error states visible; logged-out redirect works. Do not proceed to Slice 7 until this passes.
+7. **Checkpoint:** View and edit profile; loading and error states visible; logged-out redirect works. ✅ Passed.
 
 ---
 
-## Slice 7: Export and deployment prep (optional / last)
+## Slice 7: Dashboard experience refresh - ✅ Complete
+
+**Goal:** Make the dashboard feel cleaner, more premium, and more motivating while preserving current workout flows.
+
+**Scope:** Dashboard frontend only. Preserve existing navigation and analytics functionality. Do not add new backend endpoints for this slice.
+
+**Substeps (in order):**
+
+1. **Audit:** Inspect the current dashboard file, styling approach, existing data sources, and `shadcn/ui` setup before editing.
+2. **Frontend - UI foundation:** Add reusable UI primitives and dashboard section components needed for a stronger card-based layout.
+3. **Frontend - Navigation and hero:** Redesign the dashboard top nav/header and hero CTA so logging today's workout becomes the clear primary action.
+4. **Frontend - Stats and quick actions:** Add lightweight dashboard stats and quick actions using existing sessions, exercises, and templates data.
+5. **Frontend - Recent activity:** Rework recent sessions into polished activity cards with better spacing, contrast, and hover states.
+6. **Verification:** Run the frontend build and confirm the updated dashboard keeps existing routes intact.
+7. **Checkpoint:** Dashboard looks more app-like and motivating without changing core functionality. ✅ Passed.
+
+---
+
+## Slice 8: Export and deployment prep (optional / last)
 
 **Goal:** Export workout data; deployment and runbook.
 
@@ -216,7 +234,7 @@ The UI is inspired by **Stitch (Google)**. Design direction lives in **[frontend
 ## Implementation notes
 
 - **By the slice:** Implement exactly one slice at a time. Complete every substep and checkpoint before the next slice. Do not mix slices.
-- **Order:** Slices 0 → 1 → 2 → 3 → 4 → 5 → 6 → 7. Within each slice: DB → Schemas → Service → Endpoints → Router → Contract + test → Frontend API → Frontend pages → Checkpoint.
+- **Order:** Slices 0 → 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8. Within each slice: DB → Schemas → Service → Endpoints → Router → Contract + test → Frontend API → Frontend pages → Checkpoint.
 - **Naming:** Follow [CODING_STANDARDS.md](../CODING_STANDARDS.md) (e.g. function names UpperCase, parameters a_ prefix in Python).
 - **Errors:** Consistent `{"detail": "..."}` and status codes per [API_CONTRACT.md](../API_CONTRACT.md); 404 for "not found or not owner".
 - **Charts:** Backend only (**matplotlib**); frontend displays image. One chart per metric (weight, reps, volume), filter by set_number.

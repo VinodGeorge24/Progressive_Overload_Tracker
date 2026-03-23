@@ -4,6 +4,25 @@ Chronological log of backend-specific decisions and implementation notes. For pr
 
 ---
 
+## 2026-03-23
+
+### Slice 7: Dashboard experience refresh - backend note
+
+- **Scope:** No backend changes were required for the dashboard redesign; the work was frontend-only.
+- **Plan update:** The project plan now treats the dashboard redesign as Slice 7, which means the next backend-facing planned slice is Slice 8 (Export and deployment prep).
+
+---
+
+### Slice 6: Profile and polish â€” backend COMPLETE
+
+- **Endpoint:** Added `PATCH /api/v1/auth/me` alongside the existing `GET /api/v1/auth/me`. The patch endpoint updates the authenticated user's username and can also rotate the password when the request includes both `current_password` and `new_password`.
+- **Schema validation:** Added `ProfileUpdateIn` in `app/schemas/auth.py` so password changes require both fields and empty/no-op patch payloads return validation errors instead of silently succeeding.
+- **Service logic:** Added `update_user_profile` in `app/services/auth.py`. It rejects duplicate usernames with `400 "Username already taken"` and rejects wrong current passwords with `400 "Current password is incorrect"`.
+- **Tests:** Extended `app/tests/test_auth.py` to cover successful profile update + password change and duplicate-username rejection.
+- **Status:** Slice 6 checkpoint is complete. After the frontend-only Slice 7 dashboard refresh, the next backend-facing planned slice is Slice 8 (Export and deployment prep).
+
+---
+
 ## 2026-02-26
 
 ### Slice 1 (Auth) — backend decisions

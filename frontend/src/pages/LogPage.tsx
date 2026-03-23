@@ -378,7 +378,7 @@ export default function LogPage() {
             ) : (
               <div className="flex flex-col gap-3 sm:flex-row">
                 <select
-                  className="rounded-xl border border-slate-700 bg-slate-950 px-3 py-2 text-slate-50 sm:min-w-[260px]"
+                  className="dark-surface-select rounded-xl border border-slate-700 bg-slate-950 px-3 py-2 text-slate-50 sm:min-w-[260px]"
                   value={selectedTemplateId ?? ""}
                   onChange={(event) => setSelectedTemplateId(Number(event.target.value))}
                 >
@@ -440,7 +440,7 @@ export default function LogPage() {
                   </div>
                   <div className="min-w-0 flex-1">
                     <select
-                      className="w-full bg-transparent border-none text-lg font-bold text-slate-100 focus:ring-0 focus:outline-none cursor-pointer"
+                      className="dark-surface-select w-full cursor-pointer border-none bg-transparent text-lg font-bold text-slate-100 focus:outline-none focus:ring-0"
                       value={le.exercise_id}
                       onChange={(e) => changeExercise(exIndex, Number(e.target.value))}
                     >
@@ -535,7 +535,7 @@ export default function LogPage() {
                   type="button"
                   variant="outline"
                   size="sm"
-                  className="border-dashed border-slate-700 text-slate-500 hover:text-sky-400 hover:border-sky-500 w-full"
+                  className="w-full border-dashed border-slate-700 text-slate-700 hover:border-sky-500 hover:text-slate-900"
                   onClick={() => addSet(exIndex)}
                 >
                   Add Set

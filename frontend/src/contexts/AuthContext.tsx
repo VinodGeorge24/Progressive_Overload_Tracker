@@ -14,6 +14,8 @@ interface AuthContextValue extends AuthState {
   login: (email: string, password: string) => Promise<void>;
   register: (email: string, username: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
+  refreshUser: () => Promise<void>;
+  updateProfile: (input: authApi.UpdateProfileInput) => Promise<User>;
   isAuthenticated: boolean;
 }
 
@@ -72,12 +74,31 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setUser(null);
   }, []);
 
+  const refreshUser = useCallback(async () => {
+    try {
+      const me = await authApi.getProfile();
+      setUser(me);
+    } catch (error) {
+      authApi.clearStoredToken();
+      setUser(null);
+      throw error;
+    }
+  }, []);
+
+  const updateProfile = useCallback(async (input: authApi.UpdateProfileInput) => {
+    const updatedUser = await authApi.updateProfile(input);
+    setUser(updatedUser);
+    return updatedUser;
+  }, []);
+
   const value: AuthContextValue = {
     user,
     loading,
     login,
     register,
     logout,
+    refreshUser,
+    updateProfile,
     isAuthenticated: !!user,
   };
 
