@@ -388,21 +388,41 @@ Get all workout templates for the authenticated user.
 
 **Response (200):**
 ```json
+[
+  {
+    "id": 1,
+    "name": "Push Day",
+    "created_at": "2024-01-01T00:00:00Z",
+    "updated_at": "2024-01-01T00:00:00Z",
+    "exercises": [
+      {
+        "exercise_id": 1,
+        "exercise_name": "Bench Press",
+        "target_sets": 4,
+        "target_reps": 10
+      }
+    ]
+  }
+]
+```
+
+#### GET /api/v1/templates/{template_id}
+Get one workout template for the authenticated user.
+
+**Response (200):**
+```json
 {
-  "templates": [
+  "id": 1,
+  "name": "Push Day",
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "exercises": [
     {
-      "id": 1,
-      "name": "Push Day",
-      "exercises": [
-        {
-          "exercise_id": 1,
-          "exercise_name": "Bench Press",
-          "target_sets": 4,
-          "target_reps": 10
-        }
-      ]
+      "exercise_id": 1,
+      "exercise_name": "Bench Press",
+      "target_sets": 4,
+      "target_reps": 10
     }
-  ]
 }
 ```
 
@@ -428,9 +448,85 @@ Create a new workout template.
 {
   "id": 1,
   "name": "Push Day",
-  "created_at": "2024-01-01T00:00:00Z"
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "exercises": [
+    {
+      "exercise_id": 1,
+      "exercise_name": "Bench Press",
+      "target_sets": 4,
+      "target_reps": 10
+    }
+  ]
 }
 ```
+
+#### PUT /api/v1/templates/{template_id}
+Update one workout template for the authenticated user.
+
+**Request:**
+```json
+{
+  "name": "Push Day A",
+  "exercises": [
+    {
+      "exercise_id": 1,
+      "target_sets": 5,
+      "target_reps": 5
+    }
+  ]
+}
+```
+
+**Response (200):**
+```json
+{
+  "id": 1,
+  "name": "Push Day A",
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-02T00:00:00Z",
+  "exercises": [
+    {
+      "exercise_id": 1,
+      "exercise_name": "Bench Press",
+      "target_sets": 5,
+      "target_reps": 5
+    }
+  ]
+}
+```
+
+#### DELETE /api/v1/templates/{template_id}
+Delete one workout template for the authenticated user.
+
+**Response (204):** No content
+
+#### GET /api/v1/templates/{template_id}/apply
+Return a session-shaped prefill payload for Today&apos;s Log. This endpoint does **not**
+create a workout session; the frontend uses the response to populate the existing log form.
+
+**Response (200):**
+```json
+{
+  "template_id": 1,
+  "template_name": "Push Day",
+  "exercises": [
+    {
+      "exercise_id": 1,
+      "exercise_name": "Bench Press",
+      "notes": null,
+      "sets": [
+        { "set_number": 1, "reps": 10, "weight": "0" },
+        { "set_number": 2, "reps": 10, "weight": "0" },
+        { "set_number": 3, "reps": 10, "weight": "0" },
+        { "set_number": 4, "reps": 10, "weight": "0" }
+      ]
+    }
+  ]
+}
+```
+
+**Errors:** 404 if the template does not exist, does not belong to the authenticated user, or references an exercise that is not available to that user.
 
 ## Error Responses
 

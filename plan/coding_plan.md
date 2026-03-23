@@ -135,7 +135,7 @@ The UI is inspired by **Stitch (Google)**. Design direction lives in **[frontend
 
 ---
 
-## Slice 4: Analytics and progress charts
+## Slice 4: Analytics and progress charts — ✅ Complete
 
 **Goal:** Per-exercise progress data and charts; backend generates chart image; frontend displays it.
 
@@ -153,11 +153,11 @@ The UI is inspired by **Stitch (Google)**. Design direction lives in **[frontend
 6. **Frontend — Design reference:** Use [frontend_references/progress_analytics_-_lift_tracker/](../frontend_references/progress_analytics_-_lift_tracker/) for inspiration.
 7. **Frontend — Pages:** Progress page: exercise selector, set_number filter, date range; display chart (img); optionally raw data table.
 8. **Frontend — Routing:** `/progress`, `/progress/:exerciseId`. Auth required.
-9. **Checkpoint:** Progress and chart for an exercise; set_number filter works. Do not proceed to Slice 5 until this passes.
+9. **Checkpoint:** Progress and chart for an exercise; set_number filter works. ✅ Passed.
 
 ---
 
-## Slice 5: Workout templates (should-have)
+## Slice 5: Workout templates (should-have) — ✅ Complete
 
 **Goal:** User can create and list templates; optionally pre-fill session from template.
 
@@ -174,7 +174,7 @@ The UI is inspired by **Stitch (Google)**. Design direction lives in **[frontend
 7. **Frontend — Design reference:** Use [frontend_references/workout_templates_-_lift_tracker/](../frontend_references/workout_templates_-_lift_tracker/) for inspiration (see [frontend_references/README.md](../frontend_references/README.md)).
 8. **Frontend — Pages:** Templates list; create/edit template. Optionally "Start from template" on Log page (pre-fill from apply payload).
 9. **Frontend — Routing:** `/templates`, `/templates/new`, `/templates/:id/edit`. Auth required.
-10. **Checkpoint:** Create template with 2+ exercises; optionally start session from template. Do not proceed to Slice 6 until this passes.
+10. **Checkpoint:** Create template with 2+ exercises; optionally start session from template. ✅ Passed.
 
 ---
 

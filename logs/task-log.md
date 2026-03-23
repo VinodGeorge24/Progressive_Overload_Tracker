@@ -60,3 +60,16 @@ Chronological log of completed and in-progress tasks.
 - [x] Added frontend analytics API helpers, a new Progress page, and protected routes for `/progress` and `/progress/:exerciseId`.
 - [x] Updated `API_CONTRACT.md`, advanced plan status to Slice 5 next, and marked the stale CORS project-log entry complete.
 
+## 2026-03-22 — Slice 5 prep docs pass ✅
+- [x] Marked Slice 4 complete in `plan/coding_plan.md` and set the Slice 4 checkpoint to passed.
+- [x] Updated `backend/docs/log.md` to explicitly show Slice 4 completion/readiness for Slice 5.
+- [x] Refreshed `backend/README.md`, `PROJECT_GUIDE.md`, and `docs/libraries-and-tools.md` for dependency and security-doc consistency (`matplotlib` active for analytics, direct `bcrypt` hashing in runtime).
+- [x] Added repo log entries documenting this pre-Slice-5 documentation alignment pass.
+
+## 2026-03-22 — Slice 5 workout templates ✅
+- [x] Added backend template models, migration, schemas, service, endpoints, and regression tests.
+- [x] Added frontend template API helpers and a new Templates page for create/edit/delete/use actions.
+- [x] Wired Today&apos;s Log to apply a saved template into the existing session editor instead of creating a second logging flow.
+- [x] Updated API/plan/log docs to mark Slice 5 complete and Slice 6 next.
+- [x] Verified with backend tests, frontend build, Alembic upgrade, and a browser pass of the main template flow.
+

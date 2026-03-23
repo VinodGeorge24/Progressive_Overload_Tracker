@@ -14,6 +14,7 @@ import LoginPage from "@/pages/LoginPage";
 import ProgressPage from "@/pages/ProgressPage";
 import SessionEditPage from "@/pages/SessionEditPage";
 import SignupPage from "@/pages/SignupPage";
+import TemplatesPage from "@/pages/TemplatesPage";
 
 /** Placeholder home: welcome + links. If authenticated, redirect to dashboard. */
 function WelcomePage() {
@@ -95,6 +96,14 @@ function AppRoutes() {
         element={
           <ProtectedRoute>
             <ProgressPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/templates"
+        element={
+          <ProtectedRoute>
+            <TemplatesPage />
           </ProtectedRoute>
         }
       />

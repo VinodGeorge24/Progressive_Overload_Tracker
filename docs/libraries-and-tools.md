@@ -35,7 +35,8 @@ Scan of every folder, doc, and code file for what we **use**, **declare**, or **
 | **pydantic** | 2.0.0 | Validation/schemas. |
 | **pydantic-settings** | 2.0.0 | Settings from env (loads `.env`). |
 | **python-jose[cryptography]** | 3.3.0 | JWT encode/decode. |
-| **passlib[bcrypt]** | 1.7.4 | Password hashing. |
+| **passlib[bcrypt]** | 1.7.4 | Declared dependency (legacy; current runtime hashing uses direct `bcrypt` in `app/core/security.py`). |
+| **bcrypt** | (transitive) | Runtime password hashing in `app/core/security.py`. Consider making this a direct dependency in `backend/pyproject.toml`. |
 | **python-multipart** | 0.0.6 | Form/multipart for FastAPI. |
 | **psycopg2-binary** | 2.9.9 | PostgreSQL driver. |
 
@@ -68,7 +69,7 @@ All of these are satisfied by pyproject.toml except stdlib:
 - **sqlalchemy** (create_engine, sessionmaker, declarative_base, etc.)
 - **alembic** (context)
 - **jose** (JWTError, jwt) — from python-jose
-- **passlib.context** (CryptContext) — from passlib[bcrypt]
+- **bcrypt** — direct password hashing/verification in `app/core/security.py`
 - **logging**, **sys**, **datetime**, **typing** — stdlib
 
 No extra packages are imported that are not already in pyproject.toml.
@@ -152,7 +153,7 @@ Not required for the project; only “you may use them” in coding standards.
 ## 9. Summary: “Could install” (not yet declared)
 
 - **Backend**: `python-dotenv` (optional; pydantic-settings already loads `.env`).
-- **Backend charts (required for Slice 4)**: Add **matplotlib** to `backend/pyproject.toml` before implementing analytics/charts. Not currently in pyproject.toml. Use `matplotlib>=3.7.0`. See `plan/coding_plan.md` (Libraries and install checklist).
+- **Backend charts**: **matplotlib** is now installed in `backend/pyproject.toml` and used by analytics/chart endpoints (Slice 4 complete).
 - **Frontend styling**: Tailwind CSS and shadcn/ui are installed. Add shadcn components via `npx shadcn@latest add <component>`.
 - **Charts**: Python-generated in backend with **matplotlib**; frontend displays chart images. See PRD, ARCHITECTURE, and plan/coding_plan.md.
 - **Backend (if you add backend Docker image)**: Dockerfile and any base image (e.g. `python:3.11-slim`).

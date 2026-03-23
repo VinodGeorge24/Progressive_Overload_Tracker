@@ -4,6 +4,41 @@ Chronological log of project decisions and documentation updates. For weekly pro
 
 ---
 
+## 2026-03-22
+
+### Slice 5: Workout templates — COMPLETE
+
+**Scope:** Workout templates end-to-end (backend + frontend) with apply-to-log prefill flow.
+
+**Done:**
+
+1. Added backend template models and migration: `WorkoutTemplate`, `TemplateExercise`, plus Alembic revision `0c542f366960_add_workout_templates_tables.py`.
+2. Added backend schemas, service, and endpoints for template CRUD and `GET /api/v1/templates/{template_id}/apply`, which returns a session-shaped prefill payload instead of creating a session directly.
+3. Added backend regression coverage in `backend/app/tests/test_templates.py` for CRUD, apply payload generation, ownership rules, and foreign-exercise 404 behavior.
+4. Added frontend template API helpers and a new Templates page with create/edit/delete/use actions.
+5. Extended Today&apos;s Log so a saved template can prefill exercises and placeholder sets while still using the existing Slice 3 save/update session flow.
+6. Updated planning and contract docs to reflect Slice 5 completion and Slice 6 as next.
+
+**Verification:** `pytest app/tests -q`, `npm run build`, `alembic upgrade head`, plus a browser pass covering sign up → create exercises → create template → use template → save workout.
+
+---
+
+### Slice 5 prep: documentation consistency pass
+
+**Scope:** Pre-slice documentation cleanup only (no feature/code behavior changes).
+
+**Done:**
+
+1. Updated `plan/coding_plan.md` to mark **Slice 4** as complete and mark its checkpoint as passed.
+2. Updated `backend/docs/log.md` Slice 4 heading/status to clearly indicate completion and readiness for Slice 5.
+3. Updated `backend/README.md` manual dependency install line to reflect current analytics/password stack (`matplotlib`, `bcrypt`) used in the project.
+4. Updated `PROJECT_GUIDE.md` to align backend dependency/security descriptions with current implementation (Slice 4 dependency included; direct bcrypt hashing noted).
+5. Updated `docs/libraries-and-tools.md` to remove stale pre-Slice-4 wording and document that matplotlib is now in use; clarified passlib is legacy and bcrypt is the active runtime hashing library.
+
+**Result:** Planning and reference documents are now aligned for starting Slice 5.
+
+---
+
 ## 2026-02-26
 
 ### Slice 1 (Auth) — decisions and plan

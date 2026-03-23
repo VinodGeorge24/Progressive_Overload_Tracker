@@ -3,14 +3,14 @@
  * Design inspiration: frontend_references/today's_log_-_lift_tracker/
  */
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import * as exercisesApi from "@/api/exercises";
 import * as sessionsApi from "@/api/sessions";
+import * as templatesApi from "@/api/templates";
 
 type Exercise = exercisesApi.Exercise;
 type SetIn = sessionsApi.SetIn;
-type WorkoutExerciseIn = sessionsApi.WorkoutExerciseIn;
 
 interface LocalSet extends SetIn {
   localId: string;
@@ -32,24 +32,52 @@ const newSet = (setNumber: number): LocalSet => ({
   notes: undefined,
 });
 
+const templateExercisesToLocal = (
+  a_template_exercises: templatesApi.TemplateApplyExercise[],
+  a_exercises: Exercise[]
+): LocalExercise[] =>
+  a_template_exercises.map((templateExercise) => {
+    const exercise = a_exercises.find((item) => item.id === templateExercise.exercise_id);
+    return {
+      exercise_id: templateExercise.exercise_id,
+      exercise_name: templateExercise.exercise_name,
+      muscle_group: exercise?.muscle_group ?? undefined,
+      sets: templateExercise.sets.map((set) => ({
+        localId: crypto.randomUUID(),
+        set_number: set.set_number,
+        reps: set.reps,
+        weight: Number(set.weight),
+        notes: undefined,
+      })),
+      notes: templateExercise.notes ?? "",
+    };
+  });
+
 export default function LogPage() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const today = sessionsApi.todayApi();
+  const requestedTemplateId = searchParams.get("templateId");
+  const requestedTemplateNumber = requestedTemplateId ? Number(requestedTemplateId) : NaN;
 
   const [exercises, setExercises] = useState<Exercise[]>([]);
+  const [templates, setTemplates] = useState<templatesApi.WorkoutTemplate[]>([]);
   const [session, setSession] = useState<sessionsApi.SessionOut | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [applyingTemplate, setApplyingTemplate] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [localExercises, setLocalExercises] = useState<LocalExercise[]>([]);
+  const [selectedTemplateId, setSelectedTemplateId] = useState<number | null>(null);
 
   useEffect(() => {
     const load = async () => {
       try {
         setLoading(true);
         setError(null);
-        const [exList, sessionsResp] = await Promise.all([
+        const [exList, templateList, sessionsResp] = await Promise.all([
           exercisesApi.listExercises(),
+          templatesApi.listTemplates(),
           sessionsApi.listSessions({
             start_date: today,
             end_date: today,
@@ -57,6 +85,13 @@ export default function LogPage() {
           }),
         ]);
         setExercises(exList);
+        setTemplates(templateList);
+        const preferredTemplateId = Number.isFinite(requestedTemplateNumber)
+          ? templateList.find((template) => template.id === requestedTemplateNumber)?.id ??
+            templateList[0]?.id ??
+            null
+          : templateList[0]?.id ?? null;
+        setSelectedTemplateId(preferredTemplateId);
         if (sessionsResp.sessions.length > 0) {
           const full = await sessionsApi.getSession(sessionsResp.sessions[0].id);
           setSession(full);
@@ -71,10 +106,10 @@ export default function LogPage() {
                   localId: crypto.randomUUID(),
                   set_number: s.set_number,
                   reps: s.reps,
-                  weight: s.weight,
+                  weight: Number(s.weight),
                   rest_seconds: s.rest_seconds ?? undefined,
-                notes: s.notes ?? undefined,
-              })),
+                  notes: s.notes ?? undefined,
+                })),
                 notes: e.notes ?? "",
               };
             })
@@ -82,6 +117,16 @@ export default function LogPage() {
         } else {
           setSession(null);
           setLocalExercises([]);
+          if (Number.isFinite(requestedTemplateNumber)) {
+            try {
+              const applied = await templatesApi.applyTemplate(requestedTemplateNumber);
+              setLocalExercises(templateExercisesToLocal(applied.exercises, exList));
+              setSelectedTemplateId(applied.template_id);
+            } catch (err) {
+              console.error(err);
+              setError("Failed to apply the selected template.");
+            }
+          }
         }
       } catch (err) {
         console.error(err);
@@ -91,7 +136,32 @@ export default function LogPage() {
       }
     };
     load();
-  }, [today]);
+  }, [requestedTemplateNumber, today]);
+
+  const applyTemplateToLog = async () => {
+    if (!selectedTemplateId) return;
+    if (
+      localExercises.length > 0 &&
+      !window.confirm(
+        "Apply this template and replace the exercises currently shown in Today's Log?"
+      )
+    ) {
+      return;
+    }
+
+    try {
+      setApplyingTemplate(true);
+      setError(null);
+      const applied = await templatesApi.applyTemplate(selectedTemplateId);
+      setLocalExercises(templateExercisesToLocal(applied.exercises, exercises));
+      setSelectedTemplateId(applied.template_id);
+    } catch (err) {
+      console.error(err);
+      setError("Failed to apply template.");
+    } finally {
+      setApplyingTemplate(false);
+    }
+  };
 
   const addExercise = async () => {
     if (exercises.length === 0) return;
@@ -103,7 +173,7 @@ export default function LogPage() {
         initialSets = last.sets.map((s) => ({
           localId: crypto.randomUUID(),
           set_number: s.set_number,
-          weight: s.weight,
+          weight: Number(s.weight),
           reps: s.reps,
           notes: undefined,
         }));
@@ -137,7 +207,7 @@ export default function LogPage() {
         sets = last.sets.map((s) => ({
           localId: crypto.randomUUID(),
           set_number: s.set_number,
-          weight: s.weight,
+          weight: Number(s.weight),
           reps: s.reps,
           notes: undefined,
         }));
@@ -287,6 +357,53 @@ export default function LogPage() {
         )}
 
         <div className="space-y-6">
+          <div className="flex flex-col gap-3 rounded-xl border border-slate-800 bg-slate-900/40 p-4">
+            <div>
+              <label className="text-sm font-bold text-slate-400 uppercase tracking-wider">
+                Start from Template
+              </label>
+              <p className="mt-1 text-xs text-slate-500">
+                Prefill Today&apos;s Log with saved exercise structure and target reps.
+              </p>
+            </div>
+
+            {templates.length === 0 ? (
+              <p className="text-sm text-slate-400">
+                No templates yet. Create one in{" "}
+                <Link to="/templates" className="underline text-sky-400">
+                  Templates
+                </Link>
+                .
+              </p>
+            ) : (
+              <div className="flex flex-col gap-3 sm:flex-row">
+                <select
+                  className="rounded-xl border border-slate-700 bg-slate-950 px-3 py-2 text-slate-50 sm:min-w-[260px]"
+                  value={selectedTemplateId ?? ""}
+                  onChange={(event) => setSelectedTemplateId(Number(event.target.value))}
+                >
+                  {templates.map((template) => (
+                    <option key={template.id} value={template.id}>
+                      {template.name}
+                    </option>
+                  ))}
+                </select>
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="border-slate-700"
+                  onClick={applyTemplateToLog}
+                  disabled={selectedTemplateId == null || applyingTemplate}
+                >
+                  {applyingTemplate ? "Applying..." : "Apply template"}
+                </Button>
+                <Button type="button" variant="ghost" className="text-slate-400 w-fit" asChild>
+                  <Link to="/templates">Manage templates</Link>
+                </Button>
+              </div>
+            )}
+          </div>
+
           <div className="flex flex-col gap-3">
             <label className="text-sm font-bold text-slate-400 uppercase tracking-wider">
               Add Exercise

@@ -17,6 +17,8 @@ from alembic import context
 from app.db.base import Base
 from app.models.user import User  # noqa: F401
 from app.models.exercise import Exercise  # noqa: F401
+from app.models.workout_template import WorkoutTemplate  # noqa: F401
+from app.models.template_exercise import TemplateExercise  # noqa: F401
 from app.models.workout_session import WorkoutSession  # noqa: F401
 from app.models.workout_exercise import WorkoutExercise  # noqa: F401
 from app.models.set import Set  # noqa: F401

@@ -28,7 +28,7 @@ This document describes what every folder and file in the project does. Use it a
 |------|---------|
 | **backend/** | Python FastAPI application: all business logic, data persistence, and REST API. |
 | **backend/README.md** | Backend-specific readme: tech stack (FastAPI, SQLAlchemy, Alembic, JWT, Pydantic, PostgreSQL/SQLite), setup (venv, pip install -e ., .env, alembic upgrade head, uvicorn), project structure (app/main, api, core, db, models, schemas, services, tests; alembic; pyproject.toml), dev workflow (feature flow, DB changes, pytest), API docs (Swagger/ReDoc), key files, env vars. |
-| **backend/pyproject.toml** | Project config: build (setuptools), project name/version/description, Python >=3.9, dependencies (fastapi, uvicorn, sqlalchemy, alembic, pydantic, pydantic-settings, python-jose, passlib[bcrypt], python-multipart, psycopg2-binary), optional dev (pytest, pytest-asyncio, httpx, black, ruff, mypy), package "app", black/ruff line-length 100, mypy settings. |
+| **backend/pyproject.toml** | Project config: build (setuptools), project name/version/description, Python >=3.9, dependencies (fastapi, uvicorn, sqlalchemy, alembic, matplotlib, pydantic, pydantic-settings, python-jose, passlib[bcrypt], python-multipart, psycopg2-binary), optional dev (pytest, pytest-asyncio, httpx, black, ruff, mypy), package "app", black/ruff line-length 100, mypy settings. |
 | **backend/alembic.ini** | Alembic config: script_location=alembic, prepend_sys_path=., sqlalchemy.url placeholder, version_path_separator=os, logging config for root/sqlalchemy/alembic. |
 | **backend/alembic/** | Directory for database migration scripts and env. |
 | **backend/alembic/env.py** | Alembic environment: imports Base from app.db.base, then imports all app models here (so Base.metadata is populated for autogenerate; avoids circular import that would occur if models were imported in app/db/base.py). Overrides sqlalchemy.url from settings, sets target_metadata = Base.metadata, run_migrations_offline/online. |
@@ -41,13 +41,13 @@ This document describes what every folder and file in the project does. Use it a
 | **backend/app/core/__init__.py** | Package marker. |
 | **backend/app/core/config.py** | Pydantic Settings: DATABASE_URL (default SQLite), SECRET_KEY, ALGORITHM, ACCESS_TOKEN_EXPIRE_MINUTES, CORS_ORIGINS, ENVIRONMENT, DEBUG, LOG_LEVEL, API_V1_PREFIX; loads from .env. |
 | **backend/app/core/logging.py** | Configures root logger with format, date format, StreamHandler; gets module logger; sets uvicorn.access to WARNING. |
-| **backend/app/core/security.py** | Password hashing (passlib/bcrypt): verify_password, get_password_hash; JWT (python-jose): create_access_token, decode_access_token using settings. |
+| **backend/app/core/security.py** | Password hashing (direct `bcrypt`): verify_password, get_password_hash; JWT (python-jose): create_access_token, decode_access_token using settings. |
 | **backend/app/db/** | Database engine and session. |
 | **backend/app/db/__init__.py** | Package marker. |
 | **backend/app/db/base.py** | SQLAlchemy declarative Base. Do not import models here (causes circular import). Alembic discovers models via imports in alembic/env.py. |
 | **backend/app/models/** | SQLAlchemy database models; export from __init__.py. For migrations, import new models in alembic/env.py only (not in db/base). See .cursor/rules/avoid-circular-imports.mdc. |
 | **backend/app/db/session.py** | create_engine from settings.DATABASE_URL (with sqlite check_same_thread), SessionLocal sessionmaker, get_db() generator dependency for FastAPI. |
-| **backend/app/api/** | API router grouping: deps.py (shared dependencies), v1/router.py, v1/endpoints/ (the one true router home). |
+| **backend/app/api/** | API router grouping: deps.py (shared dependencies), v1/router.py, v1/endpoints/ (the one true router home: auth, exercises, sessions, analytics, templates). |
 | **backend/app/schemas/__init__.py** | Pydantic schemas package; __all__ = []. |
 | **backend/app/services/__init__.py** | Business logic package (analytics, progressive overload, calculations); __all__ = []. |
 | **backend/app/tests/__init__.py** | Tests package; __all__ = []. |
@@ -62,9 +62,9 @@ This document describes what every folder and file in the project does. Use it a
 | **frontend/README.md** | Frontend readme: tech stack (Vite + React + React Router, Tailwind CSS, shadcn/ui for select components), prerequisites (Node 18+, backend running), install (npm/yarn/pnpm), env (VITE_API_URL), dev server, suggested structure (pages, components/ui for shadcn, api, lib, hooks, utils, types), workflow, principles (separation of concerns, api abstraction, type safety, error handling, loading states, responsive), API integration example (uses /api/v1/), auth (JWT storage), build. |
 | **frontend/package.json** | Project name/version, type "module", scripts (dev, build, preview, lint, format), dependencies (react, react-dom, react-router-dom, axios, tailwindcss, shadcn-related: clsx, tailwind-merge, lucide-react, etc.), devDependencies (types, vite, @vitejs/plugin-react, @tailwindcss/vite, eslint, prettier, typescript). |
 | **frontend/src/** | Source code. |
-| **frontend/src/pages/** | Page components (e.g. Login, Signup, Dashboard, Exercises). Additional pages (WorkoutLog, History, Analytics) will be added in later slices. |
+| **frontend/src/pages/** | Page components (e.g. Login, Signup, Dashboard, Exercises, History, Progress, Templates, Today&apos;s Log / session edit). |
 | **frontend/src/components/** | Reusable UI components; `ui/` subfolder holds shadcn/ui components. |
-| **frontend/src/api/** | API helper modules that call backend endpoints (e.g. `auth.ts`, `client.ts`, `exercises.ts`). |
+| **frontend/src/api/** | API helper modules that call backend endpoints (e.g. `auth.ts`, `client.ts`, `exercises.ts`, `sessions.ts`, `analytics.ts`, `templates.ts`). |
 
 ---
 

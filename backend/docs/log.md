@@ -91,9 +91,21 @@ Chronological log of backend-specific decisions and implementation notes. For pr
 - **How to run:** From `backend/`, run `python scripts/cleanup_orphan_workout_data.py` or `python scripts/cleanup_orphan_workout_data.py --dry-run`.
 - **Verification:** Added an API regression test covering create exercise -> log session -> delete exercise -> recreate same-name exercise -> log again. The new exercise now starts clean and `last-sets` only returns the new data.
 
-### Slice 4: Analytics and progress charts
+### Slice 4: Analytics and progress charts — COMPLETE
 
 - **Backend service:** Added `app/services/analytics.py` to verify exercise ownership, aggregate per-date progress grouped by `set_number`, compute `weight`, `reps`, and `volume`, and render matplotlib PNG charts for the selected metric.
 - **Endpoints:** Added `app/api/v1/endpoints/analytics.py` and wired `/api/v1/analytics/progress/{exercise_id}` plus `/api/v1/analytics/progress/{exercise_id}/chart` into the v1 router.
 - **Dependency:** Added `matplotlib>=3.7.0` to `backend/pyproject.toml`; verified editable install still succeeds with dev extras.
 - **Tests:** Added `app/tests/test_analytics.py` to cover grouped progress JSON, date/set filters, PNG chart responses, and 404 behavior for exercises owned by another user.
+- **Status:** Slice 4 checkpoint is complete; project is ready to start Slice 5 (Workout templates).
+
+## 2026-03-22
+
+### Slice 5: Workout templates — COMPLETE
+
+- **Models and migration:** Added `app/models/workout_template.py`, `app/models/template_exercise.py`, plus Alembic revision `0c542f366960_add_workout_templates_tables.py`.
+- **Service:** Added `app/services/templates.py` for list/get/create/update/delete plus a template apply/prefill payload builder.
+- **Endpoints:** Added `app/api/v1/endpoints/templates.py` and wired `/api/v1/templates` plus `/api/v1/templates/{template_id}/apply` into the v1 router.
+- **Behavior:** Template apply returns a session-shaped payload with placeholder sets (`set_number`, target `reps`, `weight = 0`) so the frontend can reuse the existing Today&apos;s Log flow without creating a session server-side.
+- **Tests:** Added `app/tests/test_templates.py` to cover CRUD, apply output, ownership, and 404 behavior for foreign exercise ids.
+- **Status:** Slice 5 checkpoint is complete; project is ready to start Slice 6 (Profile and polish).

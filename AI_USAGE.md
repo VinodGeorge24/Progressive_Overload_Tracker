@@ -122,3 +122,32 @@ Each entry should include:
 - **Modifications**: The user validated the UI behavior manually (create/list/edit/delete exercises) and reported success. No additional feature scope was added beyond Slice 2.
 - **Final Result**: Exercises CRUD works end-to-end behind auth, with tests and logs updated. `frontend_references/` remains the source of design inspiration for future UI expansion.
 
+---
+
+### 2026-03-22 — Pre-Slice-5 documentation consistency update
+
+- **Tool**: Cursor AI (agent)
+- **Task**: Audit and refresh project docs before starting Slice 5.
+- **Prompt/Request**: "Go through all the files and ensure everything is updated ... we completed slice 4 ... prepare before slice 5."
+- **Output**:
+  - Marked Slice 4 complete in `plan/coding_plan.md` (including checkpoint pass wording).
+  - Updated backend/project reference docs for consistency (`backend/docs/log.md`, `backend/README.md`, `PROJECT_GUIDE.md`, `docs/libraries-and-tools.md`).
+  - Added log entries in `docs/project-log.md` and `logs/task-log.md` for the docs-prep pass.
+- **Modifications**: Kept scope to documentation/status alignment only; no feature or API behavior changes were introduced.
+- **Final Result**: Documentation now consistently reflects Slice 4 completion and readiness to start Slice 5.
+
+---
+
+### 2026-03-22 — Slice 5 (Workout templates)
+
+- **Tool**: Cursor AI (agent)
+- **Task**: Implement Slice 5 end-to-end with workout templates and template-to-log prefill.
+- **Prompt/Request**: "Please complete slice 5 ... ensure the status and what we have done before that keeps working ... test and ensure there are no gaps and ambiguities ... push after it is complete."
+- **Output**:
+  - Added backend template models, migration, schemas, service, endpoints, and tests.
+  - Implemented `GET /api/v1/templates/{template_id}/apply` to return a session-shaped prefill payload for Today&apos;s Log.
+  - Added frontend template API helpers, a Templates page, route/navigation updates, and Today&apos;s Log template application support.
+  - Updated slice status and contract/log docs to reflect Slice 5 completion.
+- **Modifications**: Kept template application as a non-mutating prefill flow so it builds cleanly on the existing Slice 3 session save/update behavior rather than introducing a second session-creation path.
+- **Final Result**: Users can create/edit/delete templates, use a template to prefill Today&apos;s Log, and save the resulting workout through the existing session flow. Existing backend tests, frontend build, migration, and browser verification all passed.
+

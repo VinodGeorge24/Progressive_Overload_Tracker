@@ -50,3 +50,9 @@ class User(Base):
         cascade="all, delete-orphan",
         passive_deletes=True,
     )
+    workout_templates: Mapped[List["WorkoutTemplate"]] = relationship(
+        "WorkoutTemplate",
+        back_populates="user",
+        cascade="all, delete-orphan",
+        passive_deletes=True,
+    )

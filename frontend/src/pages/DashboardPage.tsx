@@ -44,6 +44,9 @@ export default function DashboardPage() {
             <Link to="/progress">Progress</Link>
           </Button>
           <Button variant="secondary" size="sm" asChild>
+            <Link to="/templates">Templates</Link>
+          </Button>
+          <Button variant="secondary" size="sm" asChild>
             <Link to="/exercises">Exercises</Link>
           </Button>
           <Button variant="secondary" size="sm" asChild>
@@ -68,7 +71,14 @@ export default function DashboardPage() {
             >
               exercise library
             </Link>
-            , then log sets and weight.
+            , or start with a{" "}
+            <Link
+              to="/templates"
+              className="underline decoration-sky-500/70 text-sky-300 hover:text-sky-200"
+            >
+              saved template
+            </Link>
+            .
           </p>
         </section>
 

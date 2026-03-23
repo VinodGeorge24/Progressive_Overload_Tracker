@@ -33,7 +33,7 @@ The core of the senior project - a Python FastAPI application that handles all b
    ```
    Or if using the pyproject.toml directly:
    ```bash
-   pip install fastapi uvicorn sqlalchemy alembic pydantic python-jose[cryptography] passlib[bcrypt] python-multipart
+   pip install fastapi uvicorn sqlalchemy alembic matplotlib pydantic python-jose[cryptography] bcrypt python-multipart
    ```
 
 3. **Set up environment variables:**
