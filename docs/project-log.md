@@ -6,6 +6,17 @@ Chronological log of project decisions and documentation updates. For weekly pro
 
 ## 2026-03-22
 
+### Slice 5 follow-up: template duplicate-id validation and contract fix
+
+**Scope:** Post-implementation bugfix and docs correction for Slice 5 templates.
+
+**Done:**
+
+1. Fixed template create/update validation so duplicate `exercise_id` values now return a clear `400 Bad Request` instead of a misleading `404 Exercise not found`.
+2. Added backend regression test coverage (`backend/app/tests/test_templates.py`) for duplicate `exercise_id` payloads to prevent regressions.
+3. Corrected malformed JSON in the `GET /api/v1/templates/{template_id}` response example in `API_CONTRACT.md`.
+4. Updated template error docs to include `400` for duplicate `exercise_id` values.
+
 ### Slice 5: Workout templates — COMPLETE
 
 **Scope:** Workout templates end-to-end (backend + frontend) with apply-to-log prefill flow.

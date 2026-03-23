@@ -37,7 +37,12 @@ def create_template(
     """Create a new workout template for the authenticated user."""
     result, detail = templates_service.create_template_for_user(a_db, a_current_user, a_body)
     if result is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=detail)
+        status_code = (
+            status.HTTP_400_BAD_REQUEST
+            if detail == templates_service.DUPLICATE_EXERCISE_IDS_DETAIL
+            else status.HTTP_404_NOT_FOUND
+        )
+        raise HTTPException(status_code=status_code, detail=detail)
     return result
 
 
@@ -88,7 +93,12 @@ def update_template(
         a_body,
     )
     if result is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=detail)
+        status_code = (
+            status.HTTP_400_BAD_REQUEST
+            if detail == templates_service.DUPLICATE_EXERCISE_IDS_DETAIL
+            else status.HTTP_404_NOT_FOUND
+        )
+        raise HTTPException(status_code=status_code, detail=detail)
     return result
 
 

@@ -423,6 +423,7 @@ Get one workout template for the authenticated user.
       "target_sets": 4,
       "target_reps": 10
     }
+  ]
 }
 ```
 
@@ -527,6 +528,7 @@ create a workout session; the frontend uses the response to populate the existin
 ```
 
 **Errors:** 404 if the template does not exist, does not belong to the authenticated user, or references an exercise that is not available to that user.
+`400` if the template payload contains duplicate `exercise_id` values.
 
 ## Error Responses
 

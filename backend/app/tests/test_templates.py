@@ -187,3 +187,29 @@ def test_templates_other_user_and_foreign_exercise_404(client: TestClient):
         == 404
     )
     assert client.delete(f"/api/v1/templates/{template_id}", headers=headers2).status_code == 404
+
+
+def test_templates_duplicate_exercise_ids_return_400(client: TestClient):
+    """Duplicate exercise ids in one template payload should return a clear 400."""
+    token = _register_and_login(client, "template-dup@example.com", "template-dup")
+    headers = {"Authorization": f"Bearer {token}"}
+
+    exercise = client.post(
+        "/api/v1/exercises/",
+        headers=headers,
+        json={"name": "Flat Bench Press", "muscle_group": "chest"},
+    ).json()
+
+    create_resp = client.post(
+        "/api/v1/templates/",
+        headers=headers,
+        json={
+            "name": "Duplicate Exercise Template",
+            "exercises": [
+                {"exercise_id": exercise["id"], "target_sets": 3, "target_reps": 8},
+                {"exercise_id": exercise["id"], "target_sets": 2, "target_reps": 10},
+            ],
+        },
+    )
+    assert create_resp.status_code == 400
+    assert create_resp.json()["detail"] == "Duplicate exercise IDs are not allowed in a template"

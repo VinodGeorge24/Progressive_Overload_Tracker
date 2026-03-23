@@ -151,3 +151,18 @@ Each entry should include:
 - **Modifications**: Kept template application as a non-mutating prefill flow so it builds cleanly on the existing Slice 3 session save/update behavior rather than introducing a second session-creation path.
 - **Final Result**: Users can create/edit/delete templates, use a template to prefill Today&apos;s Log, and save the resulting workout through the existing session flow. Existing backend tests, frontend build, migration, and browser verification all passed.
 
+---
+
+### 2026-03-22 — Slice 5 follow-up bugfix (duplicate template exercise ids + contract JSON)
+
+- **Tool**: Cursor AI (agent)
+- **Task**: Fix two verified Slice 5 issues: duplicate `exercise_id` behavior and malformed contract example JSON.
+- **Prompt/Request**: User shared verified findings and asked to fix if needed.
+- **Output**:
+  - Updated backend template validation so duplicate `exercise_id` values in one template payload return `400 Bad Request` with a clear detail message.
+  - Updated template endpoints to map the duplicate-id validation case to 400 (while keeping non-owned/missing exercise behavior as 404).
+  - Added regression test `test_templates_duplicate_exercise_ids_return_400`.
+  - Fixed malformed JSON in `API_CONTRACT.md` for `GET /api/v1/templates/{template_id}` and documented duplicate-id 400 behavior.
+- **Modifications**: Kept scope tight to the two validated findings; no feature expansion beyond bugfix and contract correction.
+- **Final Result**: Duplicate exercise-id payloads no longer return misleading 404 errors, template tests cover the regression, and the contract example is valid JSON.
+

@@ -25,6 +25,7 @@ from app.schemas.templates import (
 
 TEMPLATE_NOT_FOUND_DETAIL = "Template not found"
 EXERCISE_NOT_FOUND_DETAIL = "Exercise not found"
+DUPLICATE_EXERCISE_IDS_DETAIL = "Duplicate exercise IDs are not allowed in a template"
 
 
 def _template_query_for_user(a_db: Session, a_user_id: int):
@@ -48,6 +49,11 @@ def _validate_exercise_ids_owned(a_db: Session, a_user_id: int, a_exercise_ids: 
         .count()
     )
     return count == len(a_exercise_ids)
+
+
+def _has_duplicate_exercise_ids(a_exercise_ids: list[int]) -> bool:
+    """Return True when a template payload repeats the same exercise_id."""
+    return len(a_exercise_ids) != len(set(a_exercise_ids))
 
 
 def _template_to_out(a_template: WorkoutTemplate) -> WorkoutTemplateOut:
@@ -125,6 +131,8 @@ def create_template_for_user(
 ) -> tuple[WorkoutTemplateOut | None, str | None]:
     """Create a new template for the user."""
     exercise_ids = [exercise.exercise_id for exercise in a_data.exercises]
+    if _has_duplicate_exercise_ids(exercise_ids):
+        return None, DUPLICATE_EXERCISE_IDS_DETAIL
     if not _validate_exercise_ids_owned(a_db, a_user.id, exercise_ids):
         return None, EXERCISE_NOT_FOUND_DETAIL
 
@@ -167,6 +175,8 @@ def update_template_for_user(
 
     if a_data.exercises is not None:
         exercise_ids = [exercise.exercise_id for exercise in a_data.exercises]
+        if _has_duplicate_exercise_ids(exercise_ids):
+            return None, DUPLICATE_EXERCISE_IDS_DETAIL
         if not _validate_exercise_ids_owned(a_db, a_user.id, exercise_ids):
             return None, EXERCISE_NOT_FOUND_DETAIL
         for template_exercise in list(template.template_exercises):

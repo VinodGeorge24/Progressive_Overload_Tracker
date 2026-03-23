@@ -73,3 +73,9 @@ Chronological log of completed and in-progress tasks.
 - [x] Updated API/plan/log docs to mark Slice 5 complete and Slice 6 next.
 - [x] Verified with backend tests, frontend build, Alembic upgrade, and a browser pass of the main template flow.
 
+## 2026-03-22 — Slice 5 follow-up bugfix ✅
+- [x] Fixed template duplicate `exercise_id` validation so duplicate rows return `400 Bad Request` with a clear message.
+- [x] Added regression test `test_templates_duplicate_exercise_ids_return_400`.
+- [x] Corrected malformed JSON in `API_CONTRACT.md` for `GET /api/v1/templates/{template_id}` and documented duplicate-id `400` behavior.
+- [x] Re-ran template tests and full backend test suite.
+
