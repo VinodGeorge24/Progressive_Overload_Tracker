@@ -26,7 +26,7 @@ Chronological log of project decisions and documentation updates. For weekly pro
 
 ### GitHub: `main` pushed to `origin`
 
-**Done:** Pushed commit `433b9c3` on branch `main` to `origin` (`git push -u origin main`) per [PUSH_TO_GITHUB.md](../PUSH_TO_GITHUB.md). Pre-push verification: `python -m pytest app/tests -q` (20 passed), `npm run build` (frontend).
+**Done:** Pushed branch `main` to `origin` (`git push -u origin main`) per [PUSH_TO_GITHUB.md](../PUSH_TO_GITHUB.md), including handoff changes and this log update. Pre-push verification on the handoff commit: `python -m pytest app/tests -q` (20 passed), `npm run build` (frontend).
 
 ---
 
