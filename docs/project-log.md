@@ -24,6 +24,10 @@ Chronological log of project decisions and documentation updates. For weekly pro
 
 **Done:** README **Project status**, `plan/README.md`, and `plan/coding_plan.md` now state that **Slices 0–7 are complete** and **Slice 8** (export + deployment prep) is **optional** and **not implemented** in the current repo state.
 
+### GitHub: `main` pushed to `origin`
+
+**Done:** Pushed commit `433b9c3` on branch `main` to `origin` (`git push -u origin main`) per [PUSH_TO_GITHUB.md](../PUSH_TO_GITHUB.md). Pre-push verification: `python -m pytest app/tests -q` (20 passed), `npm run build` (frontend).
+
 ---
 
 ## 2026-03-23
