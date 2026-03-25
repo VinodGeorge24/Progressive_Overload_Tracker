@@ -63,11 +63,11 @@ export function DashboardHero({
             </div>
           </div>
 
-          <div className="grid gap-3 sm:grid-cols-2 lg:min-w-[18rem] lg:max-w-sm">
+          <div className="grid gap-3 lg:min-w-[18rem] lg:max-w-sm xl:grid-cols-2">
             <Button
               asChild
               size="lg"
-              className="h-12 justify-between rounded-2xl bg-sky-500 px-5 text-base font-semibold text-white shadow-[0_22px_50px_rgba(14,165,233,0.3)] hover:bg-sky-400"
+              className="h-auto min-h-12 justify-center gap-2 whitespace-normal rounded-2xl bg-sky-500 px-5 py-3 text-center text-base font-semibold text-white shadow-[0_22px_50px_rgba(14,165,233,0.3)] hover:bg-sky-400"
             >
               <Link to="/log">
                 Log today&apos;s workout
@@ -78,7 +78,7 @@ export function DashboardHero({
               asChild
               variant="secondary"
               size="lg"
-              className="h-12 rounded-2xl border border-white/10 bg-white/[0.06] text-slate-100 hover:bg-white/10"
+              className="h-auto min-h-12 whitespace-normal rounded-2xl border border-white/10 bg-white/[0.06] px-5 py-3 text-center text-slate-100 hover:bg-white/10"
             >
               <Link to="/history">Review history</Link>
             </Button>
@@ -86,7 +86,7 @@ export function DashboardHero({
               <p className="text-xs uppercase tracking-[0.28em] text-slate-400">
                 Templates ready
               </p>
-              <div className="mt-2 flex items-end justify-between gap-3">
+              <div className="mt-2 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
                 <div>
                   <p className="text-2xl font-semibold text-white">
                     {templateCount}
@@ -100,7 +100,7 @@ export function DashboardHero({
                   asChild
                   variant="ghost"
                   size="sm"
-                  className="text-sky-200 hover:bg-sky-400/[0.12] hover:text-sky-100"
+                  className="self-start text-sky-200 hover:bg-sky-400/[0.12] hover:text-sky-100"
                 >
                   <Link to="/templates">Open templates</Link>
                 </Button>

@@ -153,12 +153,12 @@ export default function ProfilePage() {
   return (
     <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(56,189,248,0.16),_transparent_28%),radial-gradient(circle_at_bottom_right,_rgba(14,165,233,0.12),_transparent_32%),linear-gradient(180deg,_#020617_0%,_#0f172a_100%)] text-slate-50">
       <header className="border-b border-slate-800/80 bg-slate-950/70 backdrop-blur">
-        <div className="mx-auto flex w-full max-w-5xl items-center justify-between gap-3 px-4 py-4 sm:px-8">
+        <div className="mx-auto flex w-full max-w-5xl flex-col gap-3 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-8">
           <div>
             <p className="text-[11px] uppercase tracking-[0.35em] text-sky-300/80">Settings</p>
             <h1 className="mt-1 text-2xl font-semibold tracking-tight">Profile</h1>
           </div>
-          <div className="flex gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <Button variant="ghost" size="sm" className="text-slate-400" asChild>
               <Link to="/dashboard">Home</Link>
             </Button>

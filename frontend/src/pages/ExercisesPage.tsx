@@ -147,20 +147,22 @@ export default function ExercisesPage() {
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-50 flex flex-col">
-      <header className="border-b border-slate-800 px-4 sm:px-8 py-4 flex items-center justify-between">
+      <header className="border-b border-slate-800 px-4 py-4 sm:px-8">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex flex-col gap-1">
           <h1 className="text-xl sm:text-2xl font-semibold tracking-tight">Exercises</h1>
           <p className="text-xs sm:text-sm text-slate-400">
             Your personal library of movements used for logging workouts.
           </p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <Button variant="ghost" size="sm" className="text-slate-400" asChild>
             <Link to="/dashboard">Home</Link>
           </Button>
           <Button size="sm" onClick={startCreate}>
             Add exercise
           </Button>
+        </div>
         </div>
       </header>
 
@@ -205,7 +207,7 @@ export default function ExercisesPage() {
                         <Button
                           variant="outline"
                           size="icon"
-                          className="h-7 w-7 border-slate-700 text-slate-900 hover:border-sky-500/70 hover:text-slate-900"
+                          className="h-7 w-7 border-slate-700 text-slate-100 hover:border-sky-500/70 hover:bg-sky-500/10 hover:text-sky-100"
                           onClick={() => startEdit(exercise)}
                           aria-label={`Edit ${exercise.name}`}
                         >

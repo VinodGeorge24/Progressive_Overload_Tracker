@@ -108,3 +108,10 @@ Chronological log of completed and in-progress tasks.
 - [x] Corrected malformed JSON in `API_CONTRACT.md` for `GET /api/v1/templates/{template_id}` and documented duplicate-id `400` behavior.
 - [x] Re-ran template tests and full backend test suite.
 
+## 2026-03-24 — MVP handoff polish and push prep ✅
+- [x] Fixed `formatDateForApi` / today string to use local date parts (not UTC `toISOString`) for workout session dates; noted in `redundant_mistakes.md`.
+- [x] Responsive pass: dashboard hero/nav, page headers and sticky footers on log/history/edit flows, History list rows, and contrast tweaks for icon and dashed buttons.
+- [x] Extended `redundant_mistakes.md` with split-screen testing and table overflow guidance.
+- [x] README **Project status** (Slices 0–7 complete, Slice 8 current), GitHub link, feature list update; fixed em-dash mojibake in plan and backend log headings; plan docs updated so Slice 8 is labeled as the active slice.
+- [x] Logged in `docs/project-log.md`; verified with `pytest` and `npm run build`; committed and pushed to `origin main` per `PUSH_TO_GITHUB.md` (README/plan: core complete through Slice 7, Slice 8 optional).
+

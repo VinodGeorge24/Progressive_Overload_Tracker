@@ -4,6 +4,28 @@ Chronological log of project decisions and documentation updates. For weekly pro
 
 ---
 
+## 2026-03-24
+
+### Pre-handoff polish: local workout dates, responsive layout, README status
+
+**Scope:** Small correctness and UX fixes before declaring the MVP done and pushing to GitHub.
+
+**Done:**
+
+1. **Local calendar dates for the API:** Updated `frontend/src/api/sessions.ts` `formatDateForApi` to use local `getFullYear` / `getMonth` / `getDate` instead of `toISOString().slice(0, 10)`, so late-evening local times do not roll "today" into the wrong UTC day. Documented the pitfall in `redundant_mistakes.md`.
+2. **Responsive layout:** Adjusted dashboard hero CTAs and nav pill wrapping; reflowed page headers and sticky footers on Log, Session Edit, History, Exercises, Templates, Progress, and Profile so action clusters work on narrow and split-screen widths; aligned exercise edit icon and dashed "Add set" buttons for contrast on dark cards.
+3. **Documentation:** Added a **Project status** section and GitHub repo link to root `README.md` (core app complete through Slice 7; Slice 8 export/deploy optional and not in this snapshot). Fixed mojibake em dashes in `plan/coding_plan.md` and `backend/docs/log.md` for Slice 6 headings.
+
+**Verification:** `python -m pytest app/tests`, `npm run build`
+
+### Slice status wording (core complete; Slice 8 optional)
+
+**Scope:** Align docs with “essentially done” handoff: shipped MVP vs optional Slice 8.
+
+**Done:** README **Project status**, `plan/README.md`, and `plan/coding_plan.md` now state that **Slices 0–7 are complete** and **Slice 8** (export + deployment prep) is **optional** and **not implemented** in the current repo state.
+
+---
+
 ## 2026-03-23
 
 ### Slice 7: Dashboard experience refresh - COMPLETE
@@ -23,7 +45,7 @@ Chronological log of project decisions and documentation updates. For weekly pro
 
 ---
 
-### Slice 6: Profile and polish â€” COMPLETE
+### Slice 6: Profile and polish — COMPLETE
 
 **Scope:** Finish the profile/settings slice with backend auth updates, frontend settings UI, and slice-level polish.
 

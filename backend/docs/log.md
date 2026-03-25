@@ -13,7 +13,7 @@ Chronological log of backend-specific decisions and implementation notes. For pr
 
 ---
 
-### Slice 6: Profile and polish â€” backend COMPLETE
+### Slice 6: Profile and polish — backend COMPLETE
 
 - **Endpoint:** Added `PATCH /api/v1/auth/me` alongside the existing `GET /api/v1/auth/me`. The patch endpoint updates the authenticated user's username and can also rotate the password when the request includes both `current_password` and `new_password`.
 - **Schema validation:** Added `ProfileUpdateIn` in `app/schemas/auth.py` so password changes require both fields and empty/no-op patch payloads return validation errors instead of silently succeeding.

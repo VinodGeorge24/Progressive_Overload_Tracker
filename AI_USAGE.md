@@ -196,3 +196,18 @@ Each entry should include:
 - **Modifications**: Kept the closed-state dark-surface select styling intact; only the opened option list readability behavior was normalized.
 - **Final Result**: Dark-themed native selects now keep their in-card appearance while rendering readable dropdown options when opened.
 
+---
+
+### 2026-03-24 — MVP status README, local date fix, responsive polish, GitHub push
+
+- **Tool**: Cursor AI (agent)
+- **Task**: Align README and logs with “essentially done” MVP state; apply pending UI/date fixes; push to GitHub.
+- **Prompt/Request**: User asked to review changes, update README and related docs for current status, and push using `PUSH_TO_GITHUB.md`.
+- **Output**:
+  - README: **Project status** — core app **complete** through Slice 7 (demo-ready); Slice 8 (export/deploy) **optional** and not implemented; GitHub link, quick verify (`pytest` / `npm run build`), push note; settings/profile in features list.
+  - `plan/README.md` and `plan/coding_plan.md`: Slice 8 optional / not yet implemented.
+  - Frontend: `formatDateForApi` uses local calendar parts; responsive layout updates; `redundant_mistakes.md` UTC date and responsive notes.
+  - Docs: `docs/project-log.md` 2026-03-24 entries; fixed Slice 6 em dashes in `plan/coding_plan.md` and `backend/docs/log.md`.
+- **Modifications**: `origin` already set to `VinodGeorge24/Progressive_Overload_Tracker`; pushed with `git push -u origin main` from `main`.
+- **Final Result**: Handoff docs aligned with shipped scope; tests and build run before commit; changes pushed to GitHub.
+

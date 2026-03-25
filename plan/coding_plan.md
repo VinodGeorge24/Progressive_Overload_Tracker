@@ -178,7 +178,7 @@ The UI is inspired by **Stitch (Google)**. Design direction lives in **[frontend
 
 ---
 
-## Slice 6: Profile and polish â€” ✅ Complete
+## Slice 6: Profile and polish — ✅ Complete
 
 **Goal:** View and edit profile; consistent error handling, loading states, basic accessibility.
 
@@ -196,7 +196,7 @@ The UI is inspired by **Stitch (Google)**. Design direction lives in **[frontend
 
 ---
 
-## Slice 7: Dashboard experience refresh - ✅ Complete
+## Slice 7: Dashboard experience refresh — ✅ Complete
 
 **Goal:** Make the dashboard feel cleaner, more premium, and more motivating while preserving current workout flows.
 
@@ -214,7 +214,7 @@ The UI is inspired by **Stitch (Google)**. Design direction lives in **[frontend
 
 ---
 
-## Slice 8: Export and deployment prep (optional / last)
+## Slice 8: Export and deployment prep (optional / not yet implemented)
 
 **Goal:** Export workout data; deployment and runbook.
 

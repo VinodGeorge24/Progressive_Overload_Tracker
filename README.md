@@ -4,6 +4,16 @@ Before reading this, please reference "PRD.md" and read it thoroughly. That is o
 
 Before making edits or starting a new slice, also read [redundant_mistakes.md](./redundant_mistakes.md). It captures repo-specific mistakes that already happened and should not be repeated.
 
+## Project status
+
+**Core application: complete and demo-ready.** Slices **0–7** are implemented (through dashboard refresh): JWT auth, exercise library, one workout per calendar day with history and edit, per-exercise analytics (backend matplotlib charts), workout templates with apply-to Today’s Log, profile/settings (`PATCH /api/v1/auth/me` for username and optional password change), and the refreshed dashboard. Main routes: `/dashboard`, `/log`, `/history`, `/progress`, `/templates`, `/exercises`, `/settings`, `/profile`.
+
+**Optional follow-up ([Slice 8](./plan/coding_plan.md)):** Bulk data export endpoint and a longer deployment runbook are **not implemented** in this snapshot; add them only if you want that extra scope.
+
+**Repository:** [github.com/VinodGeorge24/Progressive_Overload_Tracker](https://github.com/VinodGeorge24/Progressive_Overload_Tracker). If the remote is not configured yet, use [PUSH_TO_GITHUB.md](./PUSH_TO_GITHUB.md). Otherwise: `git push -u origin main` from branch `main`.
+
+**Quick verification:** From `backend/`, run `python -m pytest app/tests -q`. From `frontend/`, run `npm run build`.
+
 ## Overview
 
 This is a workout tracking application designed to help users systematically increase their training volume and intensity over time. The app tracks exercises, sets, reps, and weights to enable progressive overload—the fundamental principle of strength training.
@@ -24,7 +34,8 @@ This application provides a workout tracker with per-set logging (weight and rep
 - Per-set tracking: set_number, weight (lbs per set), reps (reps per set)—see [DATA_MODEL.md](DATA_MODEL.md)
 - Historical workout data (view and edit past sessions)
 - Per-exercise progress visualization (line charts, filterable by set number)
-- Workout templates for quick logging (should-have)
+- Workout templates for quick logging (apply to Today’s Log)
+- Settings / profile: edit display name and optional password change (`/settings`, `/profile`)
 
 ## Tech Stack
 

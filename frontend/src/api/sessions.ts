@@ -120,7 +120,10 @@ export async function getLastSetsForExercise(exerciseId: number): Promise<LastSe
 
 /** Format date as YYYY-MM-DD for API. */
 export function formatDateForApi(d: Date): string {
-  return d.toISOString().slice(0, 10);
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
 }
 
 /** Today in YYYY-MM-DD. */

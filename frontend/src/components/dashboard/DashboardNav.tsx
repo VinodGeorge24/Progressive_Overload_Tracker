@@ -46,7 +46,7 @@ export function DashboardNav({ userLabel, onLogout }: DashboardNavProps) {
             </div>
           </div>
 
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2 lg:justify-end">
             <div className="rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-sm text-slate-300">
               {userLabel}
             </div>
@@ -73,7 +73,7 @@ export function DashboardNav({ userLabel, onLogout }: DashboardNavProps) {
           </div>
         </div>
 
-        <nav className="flex items-center gap-2 overflow-x-auto pb-1">
+        <nav className="flex flex-wrap items-center gap-2 pb-1">
           {navItems.map((item) => {
             const isActive =
               pathname === item.to || pathname.startsWith(`${item.to}/`);
@@ -84,7 +84,7 @@ export function DashboardNav({ userLabel, onLogout }: DashboardNavProps) {
                 key={item.to}
                 to={item.to}
                 className={cn(
-                  "inline-flex min-w-fit items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium transition-all",
+                  "inline-flex min-w-0 flex-1 basis-[calc(50%-0.25rem)] items-center justify-center gap-2 rounded-full border px-4 py-2 text-sm font-medium transition-all sm:min-w-fit sm:basis-auto sm:flex-none",
                   isActive
                     ? "border-sky-400/30 bg-sky-400/[0.14] text-sky-200 shadow-[0_12px_40px_rgba(14,165,233,0.18)]"
                     : "border-white/[0.08] bg-white/[0.04] text-slate-400 hover:border-white/[0.14] hover:bg-white/[0.08] hover:text-slate-100",

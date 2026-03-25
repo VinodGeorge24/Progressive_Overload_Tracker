@@ -54,18 +54,20 @@ export default function HistoryPage() {
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-50 flex flex-col">
-      <header className="border-b border-slate-800 px-4 sm:px-8 py-4 flex items-center justify-between">
+      <header className="border-b border-slate-800 px-4 py-4 sm:px-8">
+        <div className="mx-auto flex w-full max-w-4xl flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex flex-col gap-1">
           <h1 className="text-xl sm:text-2xl font-semibold tracking-tight">History</h1>
           <p className="text-xs sm:text-sm text-slate-400">Past workout sessions</p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <Button variant="ghost" size="sm" className="text-slate-400" asChild>
             <Link to="/dashboard">Home</Link>
           </Button>
           <Button asChild>
             <Link to="/log">Log workout</Link>
           </Button>
+        </div>
         </div>
       </header>
 
@@ -90,14 +92,17 @@ export default function HistoryPage() {
             <p className="text-xs text-slate-500 mb-2">Total: {data.total} session(s)</p>
             <ul className="divide-y divide-slate-800">
               {data.sessions.map((session) => (
-                <li key={session.id} className="py-3 flex items-center justify-between gap-4">
+                <li
+                  key={session.id}
+                  className="flex flex-col gap-3 py-3 sm:flex-row sm:items-center sm:justify-between"
+                >
                   <div className="min-w-0">
                     <p className="font-medium text-slate-100">{session.date}</p>
                     <p className="text-xs text-slate-500 truncate">
                       {session.exercises.map((e) => e.exercise_name).join(", ") || "No exercises"}
                     </p>
                   </div>
-                  <div className="flex gap-2 shrink-0">
+                  <div className="flex flex-wrap gap-2 sm:shrink-0">
                     <Button variant="outline" size="sm" className="border-slate-700" asChild>
                       <Link to={`/history/${session.id}`}>View / Edit</Link>
                     </Button>

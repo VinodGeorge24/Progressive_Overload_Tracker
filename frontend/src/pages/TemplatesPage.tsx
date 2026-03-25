@@ -201,14 +201,15 @@ export default function TemplatesPage() {
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-50 flex flex-col">
-      <header className="border-b border-slate-800 px-4 sm:px-8 py-4 flex items-center justify-between">
+      <header className="border-b border-slate-800 px-4 py-4 sm:px-8">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex flex-col gap-1">
           <h1 className="text-xl sm:text-2xl font-semibold tracking-tight">Templates</h1>
           <p className="text-xs sm:text-sm text-slate-400">
             Save repeatable workouts and apply them to Today&apos;s Log.
           </p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <Button variant="ghost" size="sm" className="text-slate-400" asChild>
             <Link to="/dashboard">Home</Link>
           </Button>
@@ -218,6 +219,7 @@ export default function TemplatesPage() {
           <Button size="sm" onClick={startCreate}>
             Create template
           </Button>
+        </div>
         </div>
       </header>
 

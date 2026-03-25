@@ -272,7 +272,8 @@ export default function SessionEditPage() {
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-50 flex flex-col">
-      <header className="border-b border-slate-800 px-4 sm:px-8 py-4 flex items-center justify-between">
+      <header className="border-b border-slate-800 px-4 py-4 sm:px-8">
+        <div className="mx-auto flex w-full max-w-4xl flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex flex-col gap-1">
           <h1 className="text-xl sm:text-2xl font-semibold tracking-tight">Edit session</h1>
           <p className="text-xs sm:text-sm text-slate-400">{date}</p>
@@ -296,6 +297,7 @@ export default function SessionEditPage() {
           >
             {deleting ? "Deleting..." : "Delete workout"}
           </Button>
+        </div>
         </div>
       </header>
 
@@ -440,7 +442,7 @@ export default function SessionEditPage() {
                   type="button"
                   variant="outline"
                   size="sm"
-                  className="w-full border-dashed border-slate-700 text-slate-700 hover:border-sky-500 hover:text-slate-900"
+                  className="w-full border-dashed border-slate-700 text-slate-100 hover:border-sky-500 hover:bg-sky-500/10 hover:text-sky-100"
                   onClick={() => addSet(exIndex)}
                 >
                   Add Set
@@ -459,14 +461,18 @@ export default function SessionEditPage() {
           </div>
         </div>
       </main>
-      <footer className="sticky bottom-0 border-t border-slate-800 bg-slate-950/95 backdrop-blur px-4 sm:px-8 py-4 flex items-center justify-end gap-3">
-        <p className="text-xs text-slate-500 mr-auto">Click Save when you&apos;re done editing.</p>
-        <Button variant="outline" className="border-slate-700" asChild>
-          <Link to="/history">Cancel</Link>
-        </Button>
-        <Button onClick={handleSave} disabled={saving}>
-          {saving ? "Saving..." : "Save"}
-        </Button>
+      <footer className="sticky bottom-0 border-t border-slate-800 bg-slate-950/95 px-4 py-4 backdrop-blur sm:px-8">
+        <div className="mx-auto flex w-full max-w-4xl flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-xs text-slate-500">Click Save when you&apos;re done editing.</p>
+          <div className="flex flex-col-reverse gap-2 sm:flex-row">
+            <Button variant="outline" className="border-slate-700" asChild>
+              <Link to="/history">Cancel</Link>
+            </Button>
+            <Button onClick={handleSave} disabled={saving}>
+              {saving ? "Saving..." : "Save"}
+            </Button>
+          </div>
+        </div>
       </footer>
     </div>
   );
