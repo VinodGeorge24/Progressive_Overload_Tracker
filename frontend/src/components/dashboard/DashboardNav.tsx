@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 
+import { BrandLogo } from "@/components/brand/BrandLogo";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -32,19 +33,17 @@ export function DashboardNav({ userLabel, onLogout }: DashboardNavProps) {
     <header className="border-b border-white/10 bg-slate-950/70 backdrop-blur-xl">
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-4 px-4 py-4 sm:px-6 lg:px-8">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-          <div className="flex items-center gap-3">
-            <div className="flex size-11 items-center justify-center rounded-2xl border border-sky-400/20 bg-sky-400/10 text-sky-300 shadow-[0_0_35px_rgba(14,165,233,0.18)]">
-              <Dumbbell className="size-5" />
-            </div>
+          <Link to="/dashboard" className="flex items-center gap-3">
+            <BrandLogo className="size-14 shrink-0 drop-shadow-[0_18px_28px_rgba(2,6,23,0.4)]" />
             <div className="min-w-0">
               <p className="text-[11px] uppercase tracking-[0.35em] text-sky-300/80">
                 Progressive Overload
               </p>
               <h1 className="text-lg font-semibold tracking-tight text-slate-50">
-                Lift Tracker
+                Training Dashboard
               </h1>
             </div>
-          </div>
+          </Link>
 
           <div className="flex flex-wrap items-center gap-2 lg:justify-end">
             <div className="rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-sm text-slate-300">

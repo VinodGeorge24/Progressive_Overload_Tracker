@@ -8,12 +8,15 @@ rest_seconds (optional), notes (optional). reps > 0, weight >= 0, set_number > 0
 """
 
 from decimal import Decimal
-from typing import Optional
+from typing import TYPE_CHECKING, Optional
 
 from sqlalchemy import ForeignKey, Integer, Numeric, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base import Base
+
+if TYPE_CHECKING:
+    from app.models.workout_exercise import WorkoutExercise
 
 
 class Set(Base):

@@ -7,12 +7,17 @@ Per DATA_MODEL.md: id, user_id (FK), name, created_at, updated_at.
 """
 
 from datetime import datetime
-from typing import List
+from typing import TYPE_CHECKING, List
 
 from sqlalchemy import DateTime, ForeignKey, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
+from app.core.time import utc_now
 from app.db.base import Base
+
+if TYPE_CHECKING:
+    from app.models.template_exercise import TemplateExercise
+    from app.models.user import User
 
 
 class WorkoutTemplate(Base):
@@ -34,13 +39,13 @@ class WorkoutTemplate(Base):
     )
     name: Mapped[str] = mapped_column(String(255), nullable=False)
     created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), nullable=False, default=datetime.utcnow
+        DateTime(timezone=True), nullable=False, default=utc_now
     )
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         nullable=False,
-        default=datetime.utcnow,
-        onupdate=datetime.utcnow,
+        default=utc_now,
+        onupdate=utc_now,
     )
 
     user: Mapped["User"] = relationship(

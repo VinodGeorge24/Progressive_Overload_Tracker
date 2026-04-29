@@ -12,10 +12,12 @@ from typing import TYPE_CHECKING, List
 from sqlalchemy import DateTime, ForeignKey, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
+from app.core.time import utc_now
 from app.db.base import Base
 
 if TYPE_CHECKING:
     from app.models.template_exercise import TemplateExercise
+    from app.models.user import User
     from app.models.workout_exercise import WorkoutExercise
 
 
@@ -39,13 +41,13 @@ class Exercise(Base):
     name: Mapped[str] = mapped_column(String(255), nullable=False)
     muscle_group: Mapped[str | None] = mapped_column(String(255), nullable=True)
     created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), nullable=False, default=datetime.utcnow
+        DateTime(timezone=True), nullable=False, default=utc_now
     )
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         nullable=False,
-        default=datetime.utcnow,
-        onupdate=datetime.utcnow,
+        default=utc_now,
+        onupdate=utc_now,
     )
 
     # Relationship to User

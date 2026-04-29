@@ -10,7 +10,9 @@ Read this before starting any edit, bugfix, or new slice. This is a repo-specifi
 - Check button states against the real page background, not only a component preview.
 - For native `<select>` controls on dark cards or dark pages, explicitly style the opened option list so it does not render white or light text on a white dropdown background.
 - Keep inputs readable on the dark theme. If an input needs a white background for visibility, its text, placeholder, and focus state must remain legible.
+- When the main app shell gets a visual refresh, revisit unauthenticated screens too. Do not leave `/`, `/login`, `/signup`, or auth-loading states on an older card/theme system if the rest of the product has already moved to a new visual direction.
 - Test action clusters at split-screen widths, not only at full desktop and phone widths. Do not switch dashboard or page-header CTAs into side-by-side layouts until the real available card/header width is proven wide enough, or labels will overlap.
+- On width-limited dashboard cards, do not place hero CTAs beside an unbounded username/email block unless the component itself has enough room. Prefer a content-first stack, wrap long identity strings explicitly, and verify no overlap at mobile, small-desktop, and wide-desktop widths.
 - When a screen needs a wide table on narrow devices, keep the overflow contained inside the table region; do not let the entire page grow horizontally.
 
 ## Backend And Data Integrity
@@ -29,6 +31,7 @@ Read this before starting any edit, bugfix, or new slice. This is a repo-specifi
 - If `npm run build` fails with `vite is not recognized`, verify that `npm install` was run in `frontend/` before changing code.
 - Duplicate `exercise_id` values inside one template payload are a `400 Bad Request` with a clear message, not a `404`.
 - For user-local workout dates, do not build `YYYY-MM-DD` with `toISOString().slice(0, 10)`. That is UTC-based and can roll late-evening local sessions into the next day. Use local date parts instead.
+- Trim environment-provided API base URLs before using them in the frontend. Do not assume shell-set `VITE_API_URL` values are free of trailing whitespace.
 
 ## Maintenance Rule
 

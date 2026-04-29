@@ -6,7 +6,8 @@
 import axios from "axios";
 import { TOKEN_KEY } from "./constants";
 
-const baseURL = import.meta.env.VITE_API_URL ?? "http://localhost:8000";
+const configuredBaseUrl = import.meta.env.VITE_API_URL?.trim();
+const baseURL = configuredBaseUrl || "http://localhost:8000";
 
 export const apiClient = axios.create({
   baseURL,

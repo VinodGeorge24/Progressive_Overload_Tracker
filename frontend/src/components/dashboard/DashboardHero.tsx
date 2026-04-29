@@ -22,8 +22,8 @@ export function DashboardHero({
     <Card className="overflow-hidden border-white/10 bg-[linear-gradient(135deg,rgba(8,47,73,0.92),rgba(15,23,42,0.96)_42%,rgba(2,6,23,1))] shadow-[0_32px_90px_rgba(2,6,23,0.45)]">
       <CardContent className="relative p-6 sm:p-8">
         <div className="absolute inset-y-0 right-0 hidden w-1/2 bg-[radial-gradient(circle_at_top,_rgba(56,189,248,0.18),_transparent_58%)] lg:block" />
-        <div className="relative flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
-          <div className="max-w-2xl">
+        <div className="relative flex flex-col gap-8">
+          <div className="min-w-0 max-w-3xl">
             <Badge
               variant="subtle"
               className="border-sky-300/15 bg-sky-400/10 text-sky-200"
@@ -35,7 +35,10 @@ export function DashboardHero({
               Today&apos;s focus
             </p>
             <h2 className="mt-3 text-3xl font-semibold tracking-tight text-white sm:text-4xl">
-              Ready for today&apos;s training, {displayName}?
+              Ready for today&apos;s training,
+              <span className="mt-1 block [overflow-wrap:anywhere]">
+                {displayName}?
+              </span>
             </h2>
             <p className="mt-3 max-w-xl text-sm leading-6 text-slate-300 sm:text-base">
               Keep the momentum moving with a clean log flow, quick access to
@@ -63,7 +66,7 @@ export function DashboardHero({
             </div>
           </div>
 
-          <div className="grid gap-3 lg:min-w-[18rem] lg:max-w-sm xl:grid-cols-2">
+          <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_minmax(16rem,20rem)]">
             <Button
               asChild
               size="lg"
@@ -82,11 +85,11 @@ export function DashboardHero({
             >
               <Link to="/history">Review history</Link>
             </Button>
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-4 sm:col-span-2">
+            <div className="rounded-2xl border border-white/10 bg-white/5 p-4 sm:col-span-2 xl:col-span-1">
               <p className="text-xs uppercase tracking-[0.28em] text-slate-400">
                 Templates ready
               </p>
-              <div className="mt-2 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+              <div className="mt-2 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between xl:flex-col xl:items-start">
                 <div>
                   <p className="text-2xl font-semibold text-white">
                     {templateCount}

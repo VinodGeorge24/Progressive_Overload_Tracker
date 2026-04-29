@@ -7,15 +7,17 @@ created_at, updated_at, is_active.
 """
 
 from datetime import datetime
-
 from typing import TYPE_CHECKING, List
 
 if TYPE_CHECKING:
+    from app.models.exercise import Exercise
     from app.models.workout_session import WorkoutSession
+    from app.models.workout_template import WorkoutTemplate
 
 from sqlalchemy import Boolean, DateTime, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
+from app.core.time import utc_now
 from app.db.base import Base
 
 
@@ -32,8 +34,8 @@ class User(Base):
     email: Mapped[str] = mapped_column(String(255), unique=True, nullable=False, index=True)
     username: Mapped[str] = mapped_column(String(255), unique=True, nullable=False, index=True)
     hashed_password: Mapped[str] = mapped_column(String(255), nullable=False)
-    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, default=datetime.utcnow)
-    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, default=utc_now)
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, default=utc_now, onupdate=utc_now)
     is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
 
     # Exercises owned by this user

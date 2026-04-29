@@ -216,6 +216,86 @@ Delete an exercise.
 
 **Response (204):** No content
 
+### Export
+
+#### GET /api/v1/export?format=json
+Download the authenticated user's data as a JSON attachment. Requires `Authorization: Bearer <token>`.
+
+**Query Parameters:**
+- `format`: currently only `json`
+
+**Response (200):**
+- `Content-Type: application/json`
+- `Content-Disposition: attachment; filename="progressive-overload-export-YYYY-MM-DD.json"`
+
+```json
+{
+  "exported_at": "2026-04-16T19:20:00Z",
+  "user": {
+    "id": 1,
+    "email": "user@example.com",
+    "username": "username",
+    "is_active": true,
+    "created_at": "2026-04-01T10:00:00Z",
+    "updated_at": "2026-04-16T19:15:00Z"
+  },
+  "exercises": [
+    {
+      "id": 1,
+      "name": "Bench Press",
+      "muscle_group": "chest",
+      "created_at": "2026-04-01T10:05:00Z",
+      "updated_at": "2026-04-01T10:05:00Z"
+    }
+  ],
+  "sessions": [
+    {
+      "id": 10,
+      "date": "2026-04-15",
+      "notes": "Heavy day",
+      "created_at": "2026-04-15T18:00:00Z",
+      "updated_at": "2026-04-15T18:00:00Z",
+      "exercises": [
+        {
+          "exercise_id": 1,
+          "exercise_name": "Bench Press",
+          "notes": "Paused reps",
+          "sets": [
+            {
+              "id": 100,
+              "set_number": 1,
+              "reps": 8,
+              "weight": "185.00",
+              "rest_seconds": null,
+              "notes": null
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "templates": [
+    {
+      "id": 5,
+      "name": "Push Day",
+      "created_at": "2026-04-10T12:00:00Z",
+      "updated_at": "2026-04-10T12:00:00Z",
+      "exercises": [
+        {
+          "exercise_id": 1,
+          "exercise_name": "Bench Press",
+          "target_sets": 4,
+          "target_reps": 8
+        }
+      ]
+    }
+  ]
+}
+```
+
+**Errors:**
+- `401` if the token is missing or invalid.
+
 ### Workout Sessions
 
 At most one workout session per user per calendar day. All session list/get endpoints scope to the current user.

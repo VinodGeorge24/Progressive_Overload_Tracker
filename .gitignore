@@ -56,6 +56,8 @@ logs/*.log
 htmlcov/
 .tox/
 .hypothesis/
+.playwright-cli/
+.playwright-mcp/
 
 # Frontend
 !frontend/src/lib/
@@ -76,6 +78,7 @@ Thumbs.db
 
 # Project Specific
 uploads/
+output/
 *.pyc
 alembic/versions/*.pyc
 

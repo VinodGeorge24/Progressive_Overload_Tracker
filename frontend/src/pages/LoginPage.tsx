@@ -5,8 +5,8 @@
 import { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { AuthShell, authInputClassName } from "@/components/auth/AuthShell";
 import { useAuth } from "@/contexts/AuthContext";
-import { cn } from "@/lib/utils";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -16,7 +16,9 @@ export default function LoginPage() {
   const { login } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const from = (location.state as { from?: { pathname: string } })?.from?.pathname ?? "/dashboard";
+  const from =
+    (location.state as { from?: { pathname: string } })?.from?.pathname ??
+    "/dashboard";
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -26,9 +28,14 @@ export default function LoginPage() {
       await login(email, password);
       navigate(from, { replace: true });
     } catch (err: unknown) {
-      const res = err && typeof err === "object" && "response" in err
-        ? (err as { response?: { data?: { detail?: string }; status?: number } }).response
-        : undefined;
+      const res =
+        err && typeof err === "object" && "response" in err
+          ? (
+              err as {
+                response?: { data?: { detail?: string }; status?: number };
+              }
+            ).response
+          : undefined;
       const status = res?.status;
       const detail = res?.data?.detail;
       const message =
@@ -44,57 +51,75 @@ export default function LoginPage() {
   }
 
   return (
-    <div className={cn("min-h-screen flex flex-col items-center justify-center p-4 bg-background")}>
-      <div className="w-full max-w-sm space-y-6">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold">Progressive Overload Tracker</h1>
-          <p className="text-muted-foreground mt-1">Welcome back</p>
-        </div>
-        <form onSubmit={handleSubmit} className="space-y-4 rounded-lg border bg-card p-6 shadow-sm">
-          {error && (
-            <p className="text-sm text-destructive" role="alert">
-              {error}
-            </p>
-          )}
-          <div className="space-y-2">
-            <label htmlFor="login-email" className="text-sm font-medium">
-              Email
-            </label>
-            <input
-              id="login-email"
-              type="email"
-              autoComplete="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-            />
-          </div>
-          <div className="space-y-2">
-            <label htmlFor="login-password" className="text-sm font-medium">
-              Password
-            </label>
-            <input
-              id="login-password"
-              type="password"
-              autoComplete="current-password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-            />
-          </div>
-          <Button type="submit" className="w-full" disabled={submitting}>
-            {submitting ? "Signing in..." : "Log in"}
-          </Button>
-          <p className="text-center text-sm text-muted-foreground">
-            Don&apos;t have an account?{" "}
-            <Link to="/signup" className="text-primary underline-offset-4 hover:underline">
-              Sign up
-            </Link>
+    <AuthShell
+      panelBadge="Welcome back"
+      title="Log in to pick up where you left off."
+      description="Use the same account you use for training history, templates, and today's log."
+      footer={
+        <p className="text-center">
+          Don&apos;t have an account?{" "}
+          <Link
+            to="/signup"
+            className="font-medium text-sky-200 underline-offset-4 transition-colors hover:text-sky-100 hover:underline"
+          >
+            Sign up
+          </Link>
+        </p>
+      }
+    >
+      <form onSubmit={handleSubmit} className="space-y-5">
+        {error && (
+          <p
+            className="rounded-2xl border border-red-400/20 bg-red-500/10 px-4 py-3 text-sm text-red-100"
+            role="alert"
+          >
+            {error}
           </p>
-        </form>
-      </div>
-    </div>
+        )}
+        <div className="space-y-2">
+          <label
+            htmlFor="login-email"
+            className="text-sm font-medium text-slate-200"
+          >
+            Email
+          </label>
+          <input
+            id="login-email"
+            type="email"
+            autoComplete="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            placeholder="you@example.com"
+            className={authInputClassName}
+          />
+        </div>
+        <div className="space-y-2">
+          <label
+            htmlFor="login-password"
+            className="text-sm font-medium text-slate-200"
+          >
+            Password
+          </label>
+          <input
+            id="login-password"
+            type="password"
+            autoComplete="current-password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            placeholder="Enter your password"
+            className={authInputClassName}
+          />
+        </div>
+        <Button
+          type="submit"
+          className="h-12 w-full rounded-2xl bg-sky-500 text-base font-semibold text-white shadow-[0_22px_50px_rgba(14,165,233,0.28)] hover:bg-sky-400"
+          disabled={submitting}
+        >
+          {submitting ? "Signing in..." : "Log in"}
+        </Button>
+      </form>
+    </AuthShell>
   );
 }

@@ -6,12 +6,17 @@ Defines the WorkoutExercise SQLAlchemy model (session–exercise junction).
 Per DATA_MODEL.md: id, session_id (FK), exercise_id (FK), order, notes (optional).
 """
 
-from typing import List
+from typing import TYPE_CHECKING, List
 
 from sqlalchemy import ForeignKey, Integer, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base import Base
+
+if TYPE_CHECKING:
+    from app.models.exercise import Exercise
+    from app.models.set import Set
+    from app.models.workout_session import WorkoutSession
 
 
 class WorkoutExercise(Base):

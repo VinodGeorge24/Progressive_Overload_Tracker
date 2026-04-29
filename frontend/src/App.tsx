@@ -3,6 +3,9 @@
  * Auth: /login, /signup; protected /dashboard; / shows welcome or redirect.
  */
 import { Routes, Route, Navigate, Link } from "react-router-dom";
+import { ArrowRight } from "lucide-react";
+
+import { AuthShell, AuthLoadingScreen } from "@/components/auth/AuthShell";
 import { Button } from "@/components/ui/button";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
@@ -21,26 +24,43 @@ import TemplatesPage from "@/pages/TemplatesPage";
 function WelcomePage() {
   const { isAuthenticated, loading } = useAuth();
   if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center" role="status" aria-live="polite">
-        Loading...
-      </div>
-    );
+    return <AuthLoadingScreen />;
   }
   if (isAuthenticated) return <Navigate to="/dashboard" replace />;
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center gap-4">
-      <h1 className="text-2xl font-bold">Progressive Overload Tracker</h1>
-      <p className="text-muted-foreground">Welcome</p>
-      <div className="flex gap-3">
-        <Button asChild>
-          <Link to="/login">Log in</Link>
+    <AuthShell
+      panelBadge="Start here"
+      title="A smoother first screen for the same training app."
+      description="Log in to jump back into today's session, or create an account and start building your workout history."
+      footer={
+        <p className="text-center">
+          Same tracker, same visual system, same path into your workouts.
+        </p>
+      }
+    >
+      <div className="space-y-4">
+        <Button
+          asChild
+          className="h-12 w-full rounded-2xl bg-sky-500 text-base font-semibold text-white shadow-[0_22px_50px_rgba(14,165,233,0.28)] hover:bg-sky-400"
+        >
+          <Link to="/login">
+            Log in
+            <ArrowRight className="size-4" />
+          </Link>
         </Button>
-        <Button variant="outline" asChild>
-          <Link to="/signup">Sign up</Link>
+        <Button
+          variant="secondary"
+          asChild
+          className="h-12 w-full rounded-2xl border border-white/10 bg-white/[0.06] text-base font-semibold text-slate-100 hover:bg-white/10"
+        >
+          <Link to="/signup">Create account</Link>
         </Button>
+        <p className="text-center text-sm leading-6 text-slate-400">
+          Pick up your recent sessions, templates, and progress insights from a
+          cleaner entry point.
+        </p>
       </div>
-    </main>
+    </AuthShell>
   );
 }
 

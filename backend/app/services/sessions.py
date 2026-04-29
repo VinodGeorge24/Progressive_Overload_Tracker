@@ -5,7 +5,7 @@ Business logic for WorkoutSession CRUD. One session per user per day (409 on dup
 Validates exercise ownership; returns 404 for wrong user or missing exercise.
 """
 
-from datetime import date, datetime
+from datetime import date
 
 from sqlalchemy.orm import Session, joinedload
 
@@ -23,7 +23,6 @@ from app.schemas.sessions import (
     SessionUpdate,
     SetOut,
     WorkoutExerciseOut,
-    WorkoutExerciseIn,
 )
 
 

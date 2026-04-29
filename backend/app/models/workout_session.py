@@ -8,12 +8,17 @@ Unique (user_id, date). One session per user per calendar day.
 """
 
 from datetime import date, datetime
-from typing import List
+from typing import TYPE_CHECKING, List
 
 from sqlalchemy import Date, DateTime, ForeignKey, Integer, Text, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
+from app.core.time import utc_now
 from app.db.base import Base
+
+if TYPE_CHECKING:
+    from app.models.user import User
+    from app.models.workout_exercise import WorkoutExercise
 
 
 class WorkoutSession(Base):
@@ -39,13 +44,13 @@ class WorkoutSession(Base):
     date: Mapped[date] = mapped_column(Date, nullable=False)
     notes: Mapped[str | None] = mapped_column(Text, nullable=True)
     created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), nullable=False, default=datetime.utcnow
+        DateTime(timezone=True), nullable=False, default=utc_now
     )
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         nullable=False,
-        default=datetime.utcnow,
-        onupdate=datetime.utcnow,
+        default=utc_now,
+        onupdate=utc_now,
     )
 
     user: Mapped["User"] = relationship(

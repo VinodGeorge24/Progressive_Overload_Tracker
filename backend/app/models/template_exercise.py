@@ -7,10 +7,16 @@ Per DATA_MODEL.md: id, template_id (FK), exercise_id (FK), target_sets,
 target_reps, order.
 """
 
+from typing import TYPE_CHECKING
+
 from sqlalchemy import ForeignKey, Integer
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base import Base
+
+if TYPE_CHECKING:
+    from app.models.exercise import Exercise
+    from app.models.workout_template import WorkoutTemplate
 
 
 class TemplateExercise(Base):

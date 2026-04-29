@@ -214,7 +214,7 @@ The UI is inspired by **Stitch (Google)**. Design direction lives in **[frontend
 
 ---
 
-## Slice 8: Export and deployment prep (optional / not yet implemented)
+## Slice 8: Export and deployment prep
 
 **Goal:** Export workout data; deployment and runbook.
 

@@ -10,6 +10,12 @@ How to run backend and frontend and manually test Slice 1 (Auth), plus backend t
 ### project-log.md
 Chronological log of project decisions and doc updates. Each entry can include a human-readable summary and an agent-friendly (structured) summary. Starts from 2/18/26.
 
+### plans/
+Execution plans, finish-up checklists, and implementation handoff docs.
+
+- `plans/2026-04-16-slice-8-and-post-mvp-cleanup.md`
+  - Current finish-up checklist for closing Slice 8 and the remaining post-MVP repo cleanup.
+
 ### weekly-reports/
 One file per week summarizing progress. These are used directly for weekly emails/meetings with your professor.
 

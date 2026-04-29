@@ -4,6 +4,25 @@ Chronological log of project decisions and documentation updates. For weekly pro
 
 ---
 
+## 2026-03-25
+
+### Restyled public and auth pages to match the live app shell
+
+**Scope:** Frontend-only public/auth UI alignment and responsive verification.
+
+**Done:**
+
+1. Audited the live unauthenticated flow against the authenticated dashboard and confirmed `/`, `/login`, and `/signup` were not all using the same visual shell.
+2. Added a shared `AuthShell` in `frontend/src/components/auth/AuthShell.tsx` plus a matching `AuthLoadingScreen`, so the welcome page, Login, Signup, and auth-related loading states now reuse the same branded dark background, glassy cards, spacing, and contrast pattern.
+3. Updated `LoginPage.tsx` and `SignupPage.tsx` to keep their existing auth behavior while restyling form fields, error states, primary buttons, and footer links to match the dashboard palette and interaction pattern.
+4. Rebuilt the root `/` welcome route onto the same shell so the public entry page no longer falls back to the older minimal placeholder layout.
+5. Updated auth-loading views to use the same dark-shell treatment instead of switching to a plain loading screen during auth state resolution.
+6. Verified that the refreshed public/auth pages stack cleanly at narrow widths and keep the sign-in path functional, including a live login from `/` through `/login` into `/dashboard`.
+
+**Verification:** `npm run build`; live browser QA on `http://localhost:5173/`, `http://localhost:5173/login`, and `http://localhost:5173/signup` at `320`, `390`, and `1440` widths with no page-level horizontal overflow; live login verification from `/` to `/login` to `/dashboard`.
+
+---
+
 ## 2026-03-24
 
 ### Pre-handoff polish: local workout dates, responsive layout, README status

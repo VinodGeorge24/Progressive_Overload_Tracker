@@ -211,3 +211,61 @@ Each entry should include:
 - **Modifications**: `origin` already set to `VinodGeorge24/Progressive_Overload_Tracker`; pushed with `git push -u origin main` from `main`.
 - **Final Result**: Handoff docs aligned with shipped scope; tests and build run before commit; changes pushed to GitHub.
 
+---
+
+### 2026-03-25 - Public/auth shell alignment
+
+**Approximate split:** ~70% of the work was done by me (identifying that the login page no longer matched the live app, then extending that requirement so the whole unauthenticated entry flow would feel like one product shell rather than a mix of old and new screens); ~30% was AI-assisted (repo inspection, the shared auth-shell implementation, the root-page and loading-state alignment, responsive browser verification, and the documentation updates).
+
+- **Tool**: Codex / Cursor-style AI agent
+- **Date**: 2026-03-25
+- **Task**: Align the public and auth-facing entry screens with the current application visual language without breaking authentication behavior.
+
+**What I did (~70%)**
+
+- I clarified the real issue: the login page still worked, but visually it felt disconnected from the homepage and the authenticated app.
+- I directed the work toward consistency in color, layout, and overall format rather than adding new features or changing the auth logic.
+- I supplied the running local app target and asked that the page be tested in the browser first instead of relying only on code inspection.
+- I then narrowed the follow-up direction further by asking that everything using the auth/public entry flow adopt the same shell rather than stopping after only the login page looked better.
+
+**What the AI helped with (~30%)**
+
+- The AI compared the live unauthenticated screens against the dashboard, traced the mismatch to the older auth/public shell, and implemented a shared `AuthShell` component plus matching loading treatment so `/`, `/login`, and `/signup` now reuse the same dark, rounded, sky-accented system.
+- It restyled the auth forms, error states, and primary buttons while keeping the existing login/signup behavior intact.
+- It rebuilt the root welcome route onto the same shell, updated auth-loading states so they no longer flash a plain page, ran `npm run build`, checked the refreshed public/auth pages at `320`, `390`, and `1440` widths, and confirmed a live login still redirects correctly from `/` through `/login` to `/dashboard`.
+- It also updated `docs/project-log.md`, `logs/task-log.md`, and `redundant_mistakes.md` so the UI pass is documented cleanly.
+
+**Modifications to AI output**
+
+- I kept the scope constrained to visual consistency and made sure the AI did not drift into auth-flow changes or broader routing work.
+- I also required that the result be validated against the live running app rather than treated as a purely stylistic code refactor.
+
+**Final Result**
+
+- The public/auth entry flow now visually matches the current app shell much more closely.
+- The root welcome page, Login, Signup, and auth-related loading states now use one consistent dark-theme presentation while preserving the existing behavior.
+- The change is documented in the usual repo logs and verification path.
+
+---
+
+### 2026-03-30 - Signup debug and environment hardening
+
+- **Tool**: Codex (GPT-5)
+- **Date**: 2026-03-30
+- **Task**: Debug a live signup failure during QA, fix the frontend issue, and document the regression pattern.
+- **Prompt/Request**: Continue investigating the signup issue, ensure it is fixed, and log it where necessary.
+- **Output**: Root-caused the browser failure to a trailing space in the runtime `VITE_API_URL` value, which produced a malformed Axios `baseURL` despite the backend auth endpoints working correctly. Updated `frontend/src/api/client.ts` to trim the configured API URL before fallback handling, and added a corresponding repo guardrail entry in `redundant_mistakes.md`.
+- **Modifications**: Kept the fix localized to API client initialization so valid environment values and existing request behavior remain unchanged.
+- **Final Result**: The frontend no longer breaks when `VITE_API_URL` includes surrounding whitespace, and the regression pattern is now documented for future sessions.
+
+---
+
+### 2026-03-30 - Dashboard hero overflow fix
+
+- **Tool**: Codex (GPT-5)
+- **Date**: 2026-03-30
+- **Task**: Fix the homepage/dashboard hero layout clipping with long account names and document the regression pattern.
+- **Prompt/Request**: Check the home page layout issue, fix it, and log it.
+- **Output**: Traced the clipping to a hero composition that still placed the CTA block beside an unbounded username-dependent heading. Reworked `frontend/src/components/dashboard/DashboardHero.tsx` into a content-first vertical layout, wrapped long identity strings explicitly, and delayed the wide action-row layout until the hero has real room for it.
+- **Modifications**: Kept the change isolated to the dashboard hero layout classes, tightened the corresponding note in `redundant_mistakes.md`, and updated the `ralph-prd` and `feature-delivery` skills to require repo context plus `redundant_mistakes.md` before work starts.
+- **Final Result**: The homepage hero now stays clean with long usernames across mobile and desktop widths, and the workflow skills now explicitly front-load context and repo-specific mistake review.

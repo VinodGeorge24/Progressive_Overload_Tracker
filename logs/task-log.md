@@ -2,6 +2,15 @@
 
 Chronological log of completed and in-progress tasks.
 
+## 2026-03-25 - Public/auth shell alignment
+- [x] Compared the live unauthenticated flow to the authenticated dashboard and confirmed `/`, `/login`, and `/signup` were not all using the same visual shell.
+- [x] Added a shared `AuthShell` plus `AuthLoadingScreen` so the welcome page, Login, Signup, and auth-loading views reuse the same dark background, branded card styling, and spacing system.
+- [x] Restyled auth form fields, error messaging, primary actions, and footer links without changing the underlying login/signup logic.
+- [x] Rebuilt the root `/` welcome route onto the same shell instead of the older minimal placeholder layout.
+- [x] Re-verified `/`, `/login`, and `/signup` at `320`, `390`, and `1440` widths with no page-level horizontal overflow.
+- [x] Logged in with `test@test.edu` and confirmed the flow still redirects from `/` to `/login` to `/dashboard`.
+- [x] Re-ran `npm run build`.
+
 ## 2026-02-26 — Slice 1: Auth ✅
 - [x] DB: User model + migration
 - [x] Backend: Schemas, auth service, deps, endpoints (register, login, logout, me)
@@ -115,3 +124,9 @@ Chronological log of completed and in-progress tasks.
 - [x] README **Project status** (Slices 0–7 complete, Slice 8 current), GitHub link, feature list update; fixed em-dash mojibake in plan and backend log headings; plan docs updated so Slice 8 is labeled as the active slice.
 - [x] Logged in `docs/project-log.md`; verified with `pytest` and `npm run build`; committed and pushed to `origin main` per `PUSH_TO_GITHUB.md` (README/plan: core complete through Slice 7, Slice 8 optional).
 
+## 2026-03-30 - Dashboard homepage hero layout fix
+- [x] Reproduced the dashboard hero clipping with a long account name on the homepage.
+- [x] Traced the issue to the `DashboardHero` split layout, where the greeting block and CTA column could not shrink safely inside the fixed page container.
+- [x] Reworked `frontend/src/components/dashboard/DashboardHero.tsx` to use a content-first vertical layout, explicit long-name wrapping, and a delayed wide action-row breakpoint so the CTA block never collides with the greeting.
+- [x] Logged the regression pattern in `redundant_mistakes.md` for future dashboard/header polish work.
+- [x] Re-verified with `npm run build` and a live browser pass on the long-name account at mobile, small-desktop, desktop, and wide-desktop widths.

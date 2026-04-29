@@ -7,13 +7,14 @@ This module handles:
 - JWT token creation and verification
 """
 
-from datetime import datetime, timedelta
+from datetime import timedelta
 from typing import Optional
 
 import bcrypt
 from jose import JWTError, jwt
 
 from app.core.config import settings
+from app.core.time import utc_now
 
 # Bcrypt truncates at 72 bytes; we truncate before hashing to avoid surprises
 _BCRYPT_MAX_PASSWORD_BYTES = 72
@@ -55,9 +56,9 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -
     """
     to_encode = data.copy()
     if expires_delta:
-        expire = datetime.utcnow() + expires_delta
+        expire = utc_now() + expires_delta
     else:
-        expire = datetime.utcnow() + timedelta(
+        expire = utc_now() + timedelta(
             minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES
         )
     to_encode.update({"exp": expire})

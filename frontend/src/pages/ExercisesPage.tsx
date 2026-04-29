@@ -10,10 +10,11 @@
  * Visual inspiration: exercises_library_-_lift_tracker/ (card-based layout).
  */
 
+import { Pencil, Trash2 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { Button } from "@/components/ui/button";
 import * as exercisesApi from "@/api/exercises";
+import { Button } from "@/components/ui/button";
 
 type Exercise = exercisesApi.Exercise;
 
@@ -37,6 +38,8 @@ export default function ExercisesPage() {
   const [mode, setMode] = useState<Mode>("idle");
   const [form, setForm] = useState<FormState>(emptyForm);
   const [error, setError] = useState<string | null>(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [muscleGroupFilter, setMuscleGroupFilter] = useState("all");
 
   useEffect(() => {
     const load = async () => {
@@ -54,21 +57,42 @@ export default function ExercisesPage() {
     load();
   }, []);
 
+  const visibleItems = useMemo(() => {
+    const normalizedSearch = searchTerm.trim().toLowerCase();
+    return items.filter((exercise) => {
+      const matchesSearch =
+        !normalizedSearch ||
+        exercise.name.toLowerCase().includes(normalizedSearch) ||
+        exercise.muscle_group?.toLowerCase().includes(normalizedSearch);
+      const normalizedGroup = exercise.muscle_group?.trim() || "Uncategorized";
+      const matchesMuscleGroup =
+        muscleGroupFilter === "all" || normalizedGroup === muscleGroupFilter;
+      return matchesSearch && matchesMuscleGroup;
+    });
+  }, [items, muscleGroupFilter, searchTerm]);
+
   const groupedByMuscle = useMemo(() => {
     const groups: Record<string, Exercise[]> = {};
-    for (const ex of items) {
-      const key = ex.muscle_group?.trim() || "Uncategorized";
+    for (const exercise of visibleItems) {
+      const key = exercise.muscle_group?.trim() || "Uncategorized";
       if (!groups[key]) {
         groups[key] = [];
       }
-      groups[key].push(ex);
+      groups[key].push(exercise);
     }
     return groups;
-  }, [items]);
+  }, [visibleItems]);
 
   const sortedGroupKeys = useMemo(
     () => Object.keys(groupedByMuscle).sort((a, b) => a.localeCompare(b)),
     [groupedByMuscle]
+  );
+  const muscleGroupOptions = useMemo(
+    () =>
+      Array.from(
+        new Set(items.map((exercise) => exercise.muscle_group?.trim() || "Uncategorized"))
+      ).sort((a, b) => a.localeCompare(b)),
+    [items]
   );
 
   const startCreate = () => {
@@ -118,7 +142,9 @@ export default function ExercisesPage() {
           name: form.name.trim(),
           muscle_group: form.muscle_group.trim() || null,
         });
-        setItems((prev) => prev.map((ex) => (ex.id === updated.id ? updated : ex)));
+        setItems((prev) =>
+          prev.map((exercise) => (exercise.id === updated.id ? updated : exercise))
+        );
       }
       cancelForm();
     } catch (err) {
@@ -133,7 +159,7 @@ export default function ExercisesPage() {
     if (!window.confirm(`Delete "${exercise.name}"? This cannot be undone.`)) return;
     try {
       await exercisesApi.deleteExercise(exercise.id);
-      setItems((prev) => prev.filter((ex) => ex.id !== exercise.id));
+      setItems((prev) => prev.filter((a_exercise) => a_exercise.id !== exercise.id));
       if (mode === "editing" && form.id === exercise.id) {
         cancelForm();
       }
@@ -144,33 +170,64 @@ export default function ExercisesPage() {
   };
 
   const hasExercises = items.length > 0;
+  const hasVisibleExercises = visibleItems.length > 0;
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-50 flex flex-col">
       <header className="border-b border-slate-800 px-4 py-4 sm:px-8">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex flex-col gap-1">
-          <h1 className="text-xl sm:text-2xl font-semibold tracking-tight">Exercises</h1>
-          <p className="text-xs sm:text-sm text-slate-400">
-            Your personal library of movements used for logging workouts.
-          </p>
-        </div>
-        <div className="flex flex-wrap items-center gap-2">
-          <Button variant="ghost" size="sm" className="text-slate-400" asChild>
-            <Link to="/dashboard">Home</Link>
-          </Button>
-          <Button size="sm" onClick={startCreate}>
-            Add exercise
-          </Button>
-        </div>
+          <div className="flex flex-col gap-1">
+            <h1 className="text-xl sm:text-2xl font-semibold tracking-tight">Exercises</h1>
+            <p className="text-xs sm:text-sm text-slate-400">
+              Your personal library of movements used for logging workouts.
+            </p>
+          </div>
+          <div className="flex flex-wrap items-center gap-2">
+            <Button variant="ghost" size="sm" className="text-slate-400" asChild>
+              <Link to="/dashboard">Home</Link>
+            </Button>
+            <Button size="sm" onClick={startCreate}>
+              Add exercise
+            </Button>
+          </div>
         </div>
       </header>
 
-      <main className="flex-1 px-4 sm:px-8 py-6 flex flex-col gap-6">
+      <main className="flex-1 px-4 py-6 sm:px-8 flex flex-col gap-6">
         {error && (
           <div className="rounded-md border border-red-500/60 bg-red-500/10 px-3 py-2 text-sm text-red-200">
             {error}
           </div>
+        )}
+
+        {hasExercises && (
+          <section className="grid gap-3 rounded-xl border border-slate-800 bg-slate-900/40 p-4 sm:grid-cols-[minmax(0,1fr)_220px]">
+            <label className="flex flex-col gap-1.5 text-xs text-slate-400">
+              Search exercises
+              <input
+                type="text"
+                value={searchTerm}
+                onChange={(event) => setSearchTerm(event.target.value)}
+                placeholder="Bench, squat, hamstrings..."
+                className="rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-50 placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-sky-500/70"
+              />
+            </label>
+            <label className="flex flex-col gap-1.5 text-xs text-slate-400">
+              Muscle group
+              <select
+                value={muscleGroupFilter}
+                onChange={(event) => setMuscleGroupFilter(event.target.value)}
+                className="rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-50 focus:outline-none focus:ring-2 focus:ring-sky-500/70"
+              >
+                <option value="all">All muscle groups</option>
+                {muscleGroupOptions.map((group) => (
+                  <option key={group} value={group}>
+                    {group}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </section>
         )}
 
         {loading ? (
@@ -184,14 +241,32 @@ export default function ExercisesPage() {
               Create your first exercise
             </Button>
           </div>
+        ) : !hasVisibleExercises ? (
+          <div className="flex-1 flex flex-col items-center justify-center gap-3 rounded-xl border border-slate-800 bg-slate-900/30 px-6 py-10 text-center text-slate-400">
+            <p className="text-sm sm:text-base">No exercises match the current filters.</p>
+            <Button
+              size="sm"
+              variant="outline"
+              className="border-slate-700"
+              onClick={() => {
+                setSearchTerm("");
+                setMuscleGroupFilter("all");
+              }}
+            >
+              Clear filters
+            </Button>
+          </div>
         ) : (
           <section className="flex-1 space-y-4">
+            <p className="text-xs text-slate-500">
+              Showing {visibleItems.length} of {items.length} exercise(s)
+            </p>
             {sortedGroupKeys.map((group) => (
               <div key={group} className="space-y-2">
                 <h2 className="text-xs font-medium uppercase tracking-wide text-slate-400">
                   {group}
                 </h2>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
                   {groupedByMuscle[group].map((exercise) => (
                     <article
                       key={exercise.id}
@@ -211,7 +286,7 @@ export default function ExercisesPage() {
                           onClick={() => startEdit(exercise)}
                           aria-label={`Edit ${exercise.name}`}
                         >
-                          ✏️
+                          <Pencil className="h-3.5 w-3.5" />
                         </Button>
                         <Button
                           variant="outline"
@@ -220,7 +295,7 @@ export default function ExercisesPage() {
                           onClick={() => handleDelete(exercise)}
                           aria-label={`Delete ${exercise.name}`}
                         >
-                          🗑
+                          <Trash2 className="h-3.5 w-3.5" />
                         </Button>
                       </div>
                     </article>
@@ -247,7 +322,7 @@ export default function ExercisesPage() {
                   className="w-full rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-50 placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-sky-500/70"
                   placeholder="e.g., Barbell Bench Press"
                   value={form.name}
-                  onChange={(e) => handleChange("name", e.target.value)}
+                  onChange={(event) => handleChange("name", event.target.value)}
                 />
               </div>
               <div className="space-y-1.5">
@@ -260,7 +335,7 @@ export default function ExercisesPage() {
                   className="w-full rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-50 placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-sky-500/70"
                   placeholder="e.g., Chest, Back, Legs"
                   value={form.muscle_group}
-                  onChange={(e) => handleChange("muscle_group", e.target.value)}
+                  onChange={(event) => handleChange("muscle_group", event.target.value)}
                 />
               </div>
               <div className="flex justify-end gap-2 pt-2">
@@ -284,4 +359,3 @@ export default function ExercisesPage() {
     </div>
   );
 }
-
